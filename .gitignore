@@ -1,0 +1,22 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Kotlin Multiplatform
+.kotlin
+shared/build
+app/build
+
+# iOS
+iosApp/DerivedData
+iosApp/Pods
+iosApp/*.xcworkspace
+iosApp/.test_run_metadata.json
+iosApp/Config.xcconfig
