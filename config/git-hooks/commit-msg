@@ -1,54 +1,99 @@
 #!/bin/bash
 
 COMMIT_MSG_FILE=$1
-COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 
-# Commit is not empty
-if [ -z "$COMMIT_MSG" ]; then
+# Strip everything below git's "scissors" cut line (present with `git commit --verbose`)
+# and any comment lines, so a message with no real content (just the boilerplate
+# git shows in the editor) isn't mistaken for an actual commit message.
+CLEANED_MSG=$(sed '/^# ------------------------ >8 ------------------------$/,$d' "$COMMIT_MSG_FILE" | grep -v '^#')
+
+# 1. Reject a genuinely empty commit message
+if [ -z "$(echo "$CLEANED_MSG" | tr -d '[:space:]')" ]; then
     echo "❌ Commit message cannot be empty."
     exit 1
 fi
 
-# Ignore automatic commits from git (merge, rebase, etc.)
-if echo "$COMMIT_MSG" | grep -qE "^(Merge|Rebase|fixup!|squash!)"; then
+FIRST_LINE_NUM=$(echo "$CLEANED_MSG" | grep -n '[^[:space:]]' | head -1 | cut -d: -f1)
+SUBJECT=$(echo "$CLEANED_MSG" | sed -n "${FIRST_LINE_NUM}p")
+BODY=$(echo "$CLEANED_MSG" | sed -n "$((FIRST_LINE_NUM + 1)),\$p")
+
+# 2. Ignore automatic commits from git (merge, rebase, etc.)
+if echo "$SUBJECT" | grep -qE "^(Merge|Rebase|fixup!|squash!)"; then
     exit 0
 fi
 
-# Validate branch name and extract Task ID
+# 3. Validate branch name and extract Task ID
 BRANCH=$(git symbolic-ref --short HEAD)
-# Expected branch format: (task|feature|refactor|bug)-DEB-XX-description
-BRANCH_PATTERN="^(task|feature|refactor|bug)-(DEB-[0-9]+)-"
+# Expected branch format: (task|feature|refactor|bug)/DEB-XX-description
+BRANCH_PATTERN="^(task|feature|refactor|bug)/(DEB-[0-9]+)-"
 
 if [[ ! $BRANCH =~ $BRANCH_PATTERN ]]; then
     echo "❌ Branch name '$BRANCH' is not valid."
-    echo "Branch must start with: task-, feature-, refactor- or bug-, followed by DEB-XX- and description."
-    echo "Example: feature-DEB-123-add-home-screen"
+    echo "Branch must start with: task/, feature/, refactor/ or bug/, followed by DEB-XX- and description."
+    echo "Example: feature/DEB-123-add-home-screen"
     exit 1
 fi
 
-# Extract Task ID from branch (e.g., DEB-123)
+# Extract branch prefix and Task ID (e.g., feature / DEB-123)
+BRANCH_PREFIX="${BASH_REMATCH[1]}"
 TASK_ID="${BASH_REMATCH[2]}"
-TASK_PATTERN="^\[$TASK_ID\]"
 
-# Validate minimum commit length
-if [ ${#COMMIT_MSG} -lt 10 ]; then
-    echo "❌ Commit message is too short. Please be more descriptive."
+# Fallback type inferred from the branch prefix, used only when the message
+# itself doesn't already specify a recognized Conventional Commits type.
+case "$BRANCH_PREFIX" in
+    feature) DEFAULT_TYPE="feat" ;;
+    bug)     DEFAULT_TYPE="fix" ;;
+    refactor) DEFAULT_TYPE="refactor" ;;
+    task)    DEFAULT_TYPE="chore" ;;
+    spike)   DEFAULT_TYPE="spike" ;;
+esac
+
+# 4. Enforce Conventional Commits: type(DEB-XX): description
+TYPES="feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert"
+CC_PATTERN="^(${TYPES})(\(DEB-[0-9]+\))?: (.+)$"
+
+if [[ $SUBJECT =~ $CC_PATTERN ]]; then
+    TYPE="${BASH_REMATCH[1]}"
+    SCOPE="${BASH_REMATCH[2]}"
+    DESCRIPTION="${BASH_REMATCH[3]}"
+    TYPE_INFERRED=false
+else
+    # No recognizable "type(...): " prefix at all — infer the type from the
+    # branch instead of rejecting, and treat the whole subject as the description.
+    TYPE="$DEFAULT_TYPE"
+    SCOPE=""
+    DESCRIPTION="$SUBJECT"
+    TYPE_INFERRED=true
+fi
+
+# 5. Validate minimum description length
+if [ ${#DESCRIPTION} -lt 5 ]; then
+    echo "❌ Commit description is too short. Please be more descriptive."
     exit 1
 fi
 
-# Check if the commit message already starts with the correct [DEB-XX]
-if echo "$COMMIT_MSG" | grep -qE "$TASK_PATTERN"; then
-    echo "✅ Commit message format is valid."
+EXPECTED_SUBJECT="${TYPE}(${TASK_ID}): ${DESCRIPTION}"
+
+# 6. Scope must match this branch's task ID; auto-correct if missing/mismatched.
+# Type is auto-inferred from the branch prefix when the message didn't specify one.
+if [ "$SUBJECT" != "$EXPECTED_SUBJECT" ]; then
+    if [ "$TYPE_INFERRED" = true ]; then
+        echo "⚠️  No Conventional Commits type found. Inferring '${TYPE}' from branch '${BRANCH_PREFIX}/' and adding scope (${TASK_ID})."
+    elif [ -z "$SCOPE" ]; then
+        echo "⚠️  No scope found. Adding scope (${TASK_ID}) from the branch name."
+    else
+        echo "⚠️  Scope ${SCOPE} doesn't match this branch's task. Correcting to (${TASK_ID})."
+    fi
+
+    if [ -n "$BODY" ]; then
+        printf '%s\n\n%s\n' "$EXPECTED_SUBJECT" "$BODY" > "$COMMIT_MSG_FILE"
+    else
+        echo "$EXPECTED_SUBJECT" > "$COMMIT_MSG_FILE"
+    fi
+
+    echo "✅ Commit message updated to: $EXPECTED_SUBJECT"
     exit 0
 fi
 
-# If it starts with a different [DEB-XX], remove it first
-CLEAN_MSG=$(echo "$COMMIT_MSG" | sed -E "s/^\[DEB-[0-9]+\] //")
-# In case there was no space after the bracket
-CLEAN_MSG=$(echo "$CLEAN_MSG" | sed -E "s/^\[DEB-[0-9]+\]//")
-
-NEW_MSG="[$TASK_ID] $CLEAN_MSG"
-echo "$NEW_MSG" > "$COMMIT_MSG_FILE"
-
-echo "✅ Commit message updated to: $NEW_MSG"
+echo "✅ Commit message format is valid."
 exit 0
