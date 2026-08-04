@@ -1,0 +1,13 @@
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  disable: true  # This disables comments in Pull Requests
+
+coverage:
+  status:
+    project:
+      default:
+        informational: true # Codecov checks will be informational and won't block merges
+    patch:
+      default:
+        informational: true

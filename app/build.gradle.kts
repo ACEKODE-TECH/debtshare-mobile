@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+apply(from = "$rootDir/gradle/jacoco.gradle.kts")
+
 android {
     namespace = "acekode.debtshare"
     compileSdk = 37
