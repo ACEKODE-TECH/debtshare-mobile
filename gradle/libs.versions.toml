@@ -12,6 +12,7 @@ compose-multiplatform = "1.7.3"
 detekt = "1.23.8"
 detekt-compose = "0.6.3"
 spotless = "8.9.0"
+jacoco = "0.8.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
