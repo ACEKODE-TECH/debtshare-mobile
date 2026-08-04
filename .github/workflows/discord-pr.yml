@@ -29,7 +29,7 @@ jobs:
           # 1. Safely construct the JSON payload using jq
           PAYLOAD=$(jq -n \
             --arg title "🔀 New PR Opened: #$PR_NUMBER" \
-            --arg desc "**[$PR_TITLE]($PR_URL)**\nAuthor: @$PR_AUTHOR" \
+            --arg desc "**[$PR_TITLE]($PR_URL)**"$'\n'"Author: @$PR_AUTHOR" \
             '{embeds: [{title: $title, description: $desc, color: 3447003}]}')
 
           # 2. Send message to Discord using ?wait=true to receive the response ID
