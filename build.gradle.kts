@@ -54,3 +54,25 @@ spotless {
         ktlint()
     }
 }
+
+
+tasks.register("testAndroid") {
+    group = "verification"
+    description = "Runs all Android unit tests in app and shared modules"
+    dependsOn(":app:testDebugUnitTest")
+    dependsOn(":shared:testAndroidHostTest")
+}
+
+tasks.register("testIos") {
+    group = "verification"
+    description = "Runs all iOS tests in the shared module (requires macOS)"
+    dependsOn(":shared:iosSimulatorArm64Test")
+    dependsOn(":shared:iosX64Test")
+}
+
+tasks.register("testAll") {
+    group = "verification"
+    description = "Runs all tests in all modules (Android and iOS)"
+    dependsOn("testAndroid")
+    dependsOn("testIos")
+}
