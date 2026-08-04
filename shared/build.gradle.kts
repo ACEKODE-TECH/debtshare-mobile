@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+apply(from = "$rootDir/gradle/jacoco.gradle.kts")
+
 kotlin {
     android {
         namespace = "acekode.debtshare.shared"

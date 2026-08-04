@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.internal.builtins.StandardNames.FqNames.target
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -8,6 +10,17 @@ plugins {
     alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.spotless)
+    jacoco
+}
+
+val jacocoVersion = libs.versions.jacoco.get()
+
+subprojects {
+    apply(plugin = "jacoco")
+    
+    extensions.configure<JacocoPluginExtension> {
+        toolVersion = jacocoVersion
+    }
 }
 
 tasks.register<Copy>("installGitHooks") {
@@ -75,4 +88,22 @@ tasks.register("testAll") {
     description = "Runs all tests in all modules (Android and iOS)"
     dependsOn("testAndroid")
     dependsOn("testIos")
+}
+
+tasks.register<JacocoReport>("jacocoRootReport") {
+    group = "Reporting"
+    description = "Combined Jacoco coverage report for all modules"
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val jacocoTasks = subprojects.mapNotNull { it.tasks.findByName("jacocoTestReport") as? JacocoReport }
+    
+    dependsOn(jacocoTasks)
+
+    sourceDirectories.setFrom(files(jacocoTasks.map { it.sourceDirectories }))
+    classDirectories.setFrom(files(jacocoTasks.map { it.classDirectories }))
+    executionData.setFrom(files(jacocoTasks.map { it.executionData }))
 }
