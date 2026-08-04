@@ -1,0 +1,54 @@
+#!/bin/bash
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Commit is not empty
+if [ -z "$COMMIT_MSG" ]; then
+    echo "❌ Commit message cannot be empty."
+    exit 1
+fi
+
+# Ignore automatic commits from git (merge, rebase, etc.)
+if echo "$COMMIT_MSG" | grep -qE "^(Merge|Rebase|fixup!|squash!)"; then
+    exit 0
+fi
+
+# Validate branch name and extract Task ID
+BRANCH=$(git symbolic-ref --short HEAD)
+# Expected branch format: (task|feature|refactor|bug)-DEB-XX-description
+BRANCH_PATTERN="^(task|feature|refactor|bug)-(DEB-[0-9]+)-"
+
+if [[ ! $BRANCH =~ $BRANCH_PATTERN ]]; then
+    echo "❌ Branch name '$BRANCH' is not valid."
+    echo "Branch must start with: task-, feature-, refactor- or bug-, followed by DEB-XX- and description."
+    echo "Example: feature-DEB-123-add-home-screen"
+    exit 1
+fi
+
+# Extract Task ID from branch (e.g., DEB-123)
+TASK_ID="${BASH_REMATCH[2]}"
+TASK_PATTERN="^\[$TASK_ID\]"
+
+# Validate minimum commit length
+if [ ${#COMMIT_MSG} -lt 10 ]; then
+    echo "❌ Commit message is too short. Please be more descriptive."
+    exit 1
+fi
+
+# Check if the commit message already starts with the correct [DEB-XX]
+if echo "$COMMIT_MSG" | grep -qE "$TASK_PATTERN"; then
+    echo "✅ Commit message format is valid."
+    exit 0
+fi
+
+# If it starts with a different [DEB-XX], remove it first
+CLEAN_MSG=$(echo "$COMMIT_MSG" | sed -E "s/^\[DEB-[0-9]+\] //")
+# In case there was no space after the bracket
+CLEAN_MSG=$(echo "$CLEAN_MSG" | sed -E "s/^\[DEB-[0-9]+\]//")
+
+NEW_MSG="[$TASK_ID] $CLEAN_MSG"
+echo "$NEW_MSG" > "$COMMIT_MSG_FILE"
+
+echo "✅ Commit message updated to: $NEW_MSG"
+exit 0
