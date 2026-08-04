@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.compose.multiplatform) apply false
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.spotless)
 }
 
 tasks.register<Copy>("installGitHooks") {
@@ -19,5 +21,36 @@ tasks.register<Copy>("installGitHooks") {
 subprojects {
     afterEvaluate {
         tasks.findByName("preBuild")?.dependsOn(":installGitHooks")
+    }
+}
+
+
+subprojects {
+    plugins.apply("io.gitlab.arturbosch.detekt")
+
+    detekt {
+        toolVersion = "1.23.8"
+        config.setFrom(files("$rootDir/config/detekt.yml"))
+        buildUponDefaultConfig = true
+    }
+
+    dependencies {
+        add("detektPlugins", "io.nlopez.compose.rules:detekt:0.6.3")
+    }
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("**/build/**/*.kt")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
+            ),
+        )
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint()
     }
 }

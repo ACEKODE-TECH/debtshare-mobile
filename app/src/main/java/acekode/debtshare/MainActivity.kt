@@ -1,5 +1,6 @@
 package acekode.debtshare
 
+import acekode.debtshare.ui.theme.DebtshareTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import acekode.debtshare.ui.theme.DebtshareTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     GreetingView(
                         name = Greeting().greet(),
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
                     )
                 }
             }
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 fun GreetingView(name: String, modifier: Modifier = Modifier) {
     Text(
         text = name,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 

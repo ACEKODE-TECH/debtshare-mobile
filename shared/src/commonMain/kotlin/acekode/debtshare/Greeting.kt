@@ -3,9 +3,7 @@ package acekode.debtshare
 class Greeting {
     private val platform: Platform = getPlatform()
 
-    fun greet(): String {
-        return "Hello, ${platform.name}!"
-    }
+    fun greet(): String = "Hello, ${platform.name}!"
 }
 
 interface Platform {
