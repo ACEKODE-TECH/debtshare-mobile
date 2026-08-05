@@ -1,0 +1,15 @@
+import org.gradle.internal.Actions.add
+
+plugins {
+    id("io.gitlab.arturbosch.detekt")
+}
+
+detekt {
+    toolVersion = "1.23.8"
+    config.setFrom(files("$rootDir/config/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+dependencies {
+    add("detektPlugins", "io.nlopez.compose.rules:detekt:0.6.3")
+}
