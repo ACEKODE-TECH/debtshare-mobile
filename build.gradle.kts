@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.internal.builtins.StandardNames.FqNames.target
-
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
@@ -8,19 +5,12 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.compose.multiplatform) apply false
-    alias(libs.plugins.detekt)
-    alias(libs.plugins.spotless)
-    jacoco
+    alias(libs.plugins.compose.stability) apply false
+    id("jacoco")
 }
 
-val jacocoVersion = libs.versions.jacoco.get()
-
-subprojects {
-    apply(plugin = "jacoco")
-    
-    extensions.configure<JacocoPluginExtension> {
-        toolVersion = jacocoVersion
-    }
+jacoco {
+    toolVersion = libs.versions.jacoco.get()
 }
 
 tasks.register<Copy>("installGitHooks") {
@@ -36,38 +26,6 @@ subprojects {
         tasks.findByName("preBuild")?.dependsOn(":installGitHooks")
     }
 }
-
-
-subprojects {
-    plugins.apply("io.gitlab.arturbosch.detekt")
-
-    detekt {
-        toolVersion = "1.23.8"
-        config.setFrom(files("$rootDir/config/detekt.yml"))
-        buildUponDefaultConfig = true
-    }
-
-    dependencies {
-        add("detektPlugins", "io.nlopez.compose.rules:detekt:0.6.3")
-    }
-}
-
-spotless {
-    kotlin {
-        target("**/*.kt")
-        targetExclude("**/build/**/*.kt")
-        ktlint().editorConfigOverride(
-            mapOf(
-                "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
-            ),
-        )
-    }
-    kotlinGradle {
-        target("*.gradle.kts")
-        ktlint()
-    }
-}
-
 
 tasks.register("testAndroid") {
     group = "verification"
@@ -96,14 +54,24 @@ tasks.register<JacocoReport>("jacocoRootReport") {
 
     reports {
         xml.required.set(true)
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/jacocoRootReport/jacocoRootReport.xml"))
         html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/jacocoRootReport/html"))
     }
 
-    val jacocoTasks = subprojects.mapNotNull { it.tasks.findByName("jacocoTestReport") as? JacocoReport }
-    
-    dependsOn(jacocoTasks)
+    jacocoClasspath = configurations.getByName("jacocoAnt")
 
-    sourceDirectories.setFrom(files(jacocoTasks.map { it.sourceDirectories }))
-    classDirectories.setFrom(files(jacocoTasks.map { it.classDirectories }))
-    executionData.setFrom(files(jacocoTasks.map { it.executionData }))
+    subprojects.forEach { subproject ->
+        subproject.plugins.withId("jacoco") {
+            val jacocoTestReport = subproject.tasks.matching { it.name == "jacocoTestReport" }
+            dependsOn(jacocoTestReport)
+
+            jacocoTestReport.configureEach {
+                val reportTask = this as JacocoReport
+                this@register.sourceDirectories.from(reportTask.sourceDirectories)
+                this@register.classDirectories.from(reportTask.classDirectories)
+                this@register.executionData.from(reportTask.executionData.filter { it.exists() })
+            }
+        }
+    }
 }

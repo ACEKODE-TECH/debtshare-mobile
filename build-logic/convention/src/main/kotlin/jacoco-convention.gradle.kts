@@ -1,4 +1,11 @@
-tasks.withType<Test> {
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+import org.gradle.testing.jacoco.tasks.JacocoReport
+
+plugins {
+    id("jacoco")
+}
+
+tasks.withType<Test>().configureEach {
     configure<JacocoTaskExtension> {
         isIncludeNoLocationClasses = true
         excludes = listOf("jdk.internal.*")
@@ -15,7 +22,6 @@ val fileFilter = listOf(
     "**/*$[0-9]*.*",
     "**/*Component*.*",
     "**/*BR*.*",
-    "**/Manifest*.*",
     "**/*\$Lambda\$*.*",
     "**/*Companion*.*",
     "**/*Module*.*",
@@ -25,7 +31,6 @@ val fileFilter = listOf(
     "**/*_Factory*.*",
     "**/*_Provide*Factory*.*",
     "**/*Extensions*.*",
-    // Compose
     "**/*Composable*.*",
     "**/*Compose*.*",
     "**/*Activity*.*",
@@ -39,12 +44,13 @@ val fileFilter = listOf(
     "**/*Route*.*"
 )
 
-val debugTree = fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+val debugTree = fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug")) {
     exclude(fileFilter)
 }
-val mainSrc = "${project.projectDir}/src/main/java"
-val commonSrc = "${project.projectDir}/src/commonMain/kotlin"
-val androidSrc = "${project.projectDir}/src/androidMain/kotlin"
+
+val mainSrc = "$projectDir/src/main/java"
+val commonSrc = "$projectDir/src/commonMain/kotlin"
+val androidSrc = "$projectDir/src/androidMain/kotlin"
 
 tasks.register<JacocoReport>("jacocoTestReport") {
     group = "Reporting"
@@ -52,7 +58,6 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 
     val testTaskNames = listOf("testDebugUnitTest", "testAndroidHostTest")
     val availableTestTasks = testTaskNames.mapNotNull { tasks.findByName(it) }
-    
     dependsOn(availableTestTasks)
 
     reports {
@@ -62,12 +67,14 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 
     sourceDirectories.setFrom(files(mainSrc, commonSrc, androidSrc))
     classDirectories.setFrom(files(debugTree))
-    executionData.setFrom(fileTree(project.layout.buildDirectory.get()) {
-        include(
-            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
-            "jacoco/testDebugUnitTest.exec",
-            "jacoco/testAndroidHostTest.exec",
-            "outputs/unit_test_code_coverage/androidHostTest/testAndroidHostTest.exec"
-        )
-    })
+    executionData.setFrom(
+        fileTree(layout.buildDirectory) {
+            include(
+                "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
+                "jacoco/testDebugUnitTest.exec",
+                "jacoco/testAndroidHostTest.exec",
+                "outputs/unit_test_code_coverage/androidHostTest/testAndroidHostTest.exec"
+            )
+        }
+    )
 }
