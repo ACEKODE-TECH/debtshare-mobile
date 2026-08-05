@@ -19,11 +19,27 @@ tasks.register<Copy>("installGitHooks") {
 
     from(layout.projectDirectory.dir("config/git-hooks"))
     into(layout.projectDirectory.dir(".git/hooks"))
+
+    filePermissions {
+        user {
+            read = true
+            write = true
+            execute = true
+        }
+        group {
+            read = true
+            execute = true
+        }
+        other {
+            read = true
+            execute = true
+        }
+    }
 }
 
-subprojects {
-    afterEvaluate {
-        tasks.findByName("preBuild")?.dependsOn(":installGitHooks")
+allprojects {
+    tasks.matching { it.name == "preBuild" }.configureEach {
+        dependsOn(":installGitHooks")
     }
 }
 
