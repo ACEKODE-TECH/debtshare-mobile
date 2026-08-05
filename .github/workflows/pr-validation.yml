@@ -1,0 +1,165 @@
+name: PR Validation
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detekt:
+    name: Detekt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Detekt
+        run: ./gradlew detekt
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
+
+      - name: Upload Detekt reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detekt-reports
+          path: '**/build/reports/detekt/'
+          retention-days: 7
+
+  spotless:
+    name: Spotless
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Spotless
+        run: ./gradlew spotlessCheck
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
+
+  stability-check:
+    name: Compose Stability Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Compose Stability Check
+        run: ./gradlew stabilityCheck
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
+          SERVER_ENDPOINT: ${{ secrets.SERVER_ENDPOINT }}
+          SERVER_API_KEY: ${{ secrets.SERVER_API_KEY }}
+
+      - name: Upload stability report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stability-report
+          path: app/stability/
+          retention-days: 7
+
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build and Test
+        run: ./gradlew testAndroid jacocoRootReport
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
+          SERVER_ENDPOINT: ${{ secrets.SERVER_ENDPOINT }}
+          SERVER_API_KEY: ${{ secrets.SERVER_API_KEY }}
+
+      - name: Upload Jacoco reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-reports
+          path: "**/build/reports/jacoco/**/*.xml"
+          retention-days: 1
+
+  codecov:
+    name: Codecov
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.base_ref == 'develop'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Jacoco reports
+        uses: actions/download-artifact@v4
+        with:
+          name: jacoco-reports
+          path: .
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: "**/build/reports/jacoco/**/*.xml"
+          slug: ${{ github.repository }}
+          codecov_yml_path: "config/codecov.yml"
+          fail_ci_if_error: true

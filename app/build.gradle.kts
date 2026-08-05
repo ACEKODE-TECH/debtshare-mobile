@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose.stability)
+    id("jacoco-convention")
+    id("detekt-convention")
+    id("spotless-convention")
 }
-
-apply(from = "$rootDir/gradle/jacoco.gradle.kts")
 
 android {
     namespace = "acekode.debtshare"
