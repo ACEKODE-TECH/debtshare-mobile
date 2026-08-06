@@ -45,16 +45,16 @@ allprojects {
 
 tasks.register("testAndroid") {
     group = "verification"
-    description = "Runs all Android unit tests in app and shared modules"
-    dependsOn(":app:testDebugUnitTest")
-    dependsOn(":shared:testAndroidHostTest")
+    description = "Runs all Android unit tests in androidApp and app modules"
+    dependsOn(":androidApp:testDebugUnitTest")
+    dependsOn(":app:testAndroidHostTest")
 }
 
 tasks.register("testIos") {
     group = "verification"
-    description = "Runs all iOS tests in the shared module (requires macOS)"
-    dependsOn(":shared:iosSimulatorArm64Test")
-    dependsOn(":shared:iosX64Test")
+    description = "Runs all iOS tests in the app module (requires macOS)"
+    dependsOn(":app:iosSimulatorArm64Test")
+    dependsOn(":app:iosX64Test")
 }
 
 tasks.register("testAll") {
