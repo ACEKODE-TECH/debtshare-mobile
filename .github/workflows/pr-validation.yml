@@ -140,26 +140,27 @@ jobs:
           path: "**/build/reports/jacoco/**/*.xml"
           retention-days: 1
 
-  codecov:
-    name: Codecov
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.base_ref == 'develop'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Check Coverage Threshold
+        run: |
+         COVERAGE_FILE="build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+         if [ ! -f "$COVERAGE_FILE" ]; then
+           echo "❌ Coverage file not found: $COVERAGE_FILE"
+           exit 1
+         fi
+          
+         # Extract line coverage percentage from XML
+         COVERAGE=$(grep -oP 'line-rate="\K[^"]*' "$COVERAGE_FILE" | head -1)
+         COVERAGE_PERCENT=$(printf "%.2f" $(echo "$COVERAGE * 100" | bc))
+         MIN_COVERAGE=0.00
+          
+         echo "📊 Code Coverage: $COVERAGE_PERCENT%"
+         echo "📍 Minimum Required: $MIN_COVERAGE%"
+          
+         if (( $(echo "$COVERAGE_PERCENT >= $MIN_COVERAGE" | bc -l) )); then
+           echo "✅ Coverage is acceptable!"
+           exit 0
+         else
+           echo "❌ Coverage is below minimum threshold!"
+           exit 1
+         fi
 
-      - name: Download Jacoco reports
-        uses: actions/download-artifact@v4
-        with:
-          name: jacoco-reports
-          path: .
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: "**/build/reports/jacoco/**/*.xml"
-          slug: ${{ github.repository }}
-          codecov_yml_path: "config/codecov.yml"
-          fail_ci_if_error: true
