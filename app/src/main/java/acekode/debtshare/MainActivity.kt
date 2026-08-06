@@ -19,29 +19,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DebtshareTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    GreetingView(
-                        name = Greeting().greet(),
-                        modifier = Modifier.padding(innerPadding),
-                    )
-                }
+                App()
             }
         }
     }
-}
-
-@Composable
-fun GreetingView(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = name,
-        modifier = modifier,
-    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     DebtshareTheme {
-        GreetingView(Greeting().greet())
+        App()
     }
 }
