@@ -43,4 +43,5 @@ develocity {
 
 rootProject.name = "Debtshare"
 include(":app")
+include(":iosApp")
 include(":shared")

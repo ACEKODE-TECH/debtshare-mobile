@@ -4,7 +4,7 @@ plugins {
 
 spotless {
     kotlin {
-        target("**/*.kt")
+        target("src/**/*.kt")
         targetExclude("**/build/**/*.kt")
         ktlint().editorConfigOverride(
             mapOf(

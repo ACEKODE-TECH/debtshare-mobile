@@ -1,0 +1,28 @@
+# User-specific Xcode settings
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcuserdatad
+xcuserdata/
+
+# Xcode build outputs & cache
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# CocoaPods / SPM (en caso de que uses en el futuro)
+Pods/
+.build/
