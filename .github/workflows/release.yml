@@ -85,6 +85,3 @@ jobs:
           name: release-apk-${{ github.event.inputs.branch }}
           path: androidApp/build/outputs/apk/release/androidApp-release.apk
           if-no-files-found: ignore
-
-
-
