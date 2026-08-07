@@ -54,6 +54,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isDebuggable = true
+            versionNameSuffix = "-Debug"
         }
         release {
             signingConfig = signingConfigs.getByName("release")
@@ -66,6 +67,7 @@ android {
             optimization {
                 enable = true
             }
+            versionNameSuffix = "-Release"
         }
     }
     compileOptions {
