@@ -13,6 +13,34 @@ jacoco {
     toolVersion = libs.versions.jacoco.get()
 }
 
+fun gitVersionCode(versionName: String): Int {
+    val parts = versionName.split(".").map { it.toIntOrNull() ?: 0 }
+    val major = parts.getOrElse(0) { 0 }
+    val minor = parts.getOrElse(1) { 0 }
+    val patch = parts.getOrElse(2) { 0 }
+    return major * 10000 + minor * 100 + patch
+}
+
+val appVersionName: Provider<String> = providers.exec {
+    commandLine("git", "describe", "--tags", "--abbrev=0")
+    workingDir(rootDir)
+    isIgnoreExitValue = true
+}.standardOutput.asText.map { output ->
+    val trimmed = output.trim()
+    if (trimmed.isBlank()) "1.0.0" else trimmed.removePrefix("v")
+}.orElse("1.0.0")
+
+val appVersionCode: Provider<Int> = appVersionName.map { versionName ->
+    gitVersionCode(versionName)
+}
+
+extra["appVersionName"] = appVersionName.get()
+extra["appVersionCode"] = appVersionCode.get()
+
+logger.lifecycle("Resolved app version from Git tag: ${appVersionName.get()} (code ${appVersionCode.get()})")
+
+// ----------------------- Gradle Tasks -----------------------------
+
 tasks.register<Copy>("installGitHooks") {
     description = "Installs the git hooks from config/git-hooks to .git/hooks"
     group = "git hooks"

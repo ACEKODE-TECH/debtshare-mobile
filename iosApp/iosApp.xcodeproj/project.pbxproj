@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5B822D993025D37100674887 /* set-ios-version.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5B822D983025D36A00674887 /* set-ios-version.sh */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		5B822D983025D36A00674887 /* set-ios-version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-ios-version.sh"; sourceTree = "<group>"; };
 		98A9B558EBA5ECCF838DA75F /* Debtshare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Debtshare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -58,6 +63,7 @@
 		3CE34CE816AE64F0D635DA3E = {
 			isa = PBXGroup;
 			children = (
+				5B822D983025D36A00674887 /* set-ios-version.sh */,
 				89911ACF5FB6162C0D9A35DA /* Configuration */,
 				DDE764ACEF8C0227831E137F /* iosApp */,
 				2C7615940C20680ECC7A8D3E /* Products */,
@@ -129,6 +135,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B822D993025D37100674887 /* set-ios-version.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

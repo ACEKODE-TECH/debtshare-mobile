@@ -1,0 +1,48 @@
+name: create-main-tag
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  create-tag:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.title, 'Release v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Extract version from PR title
+        id: extract
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          VERSION=$(echo "$TITLE" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+
+          if [ -z "$VERSION" ]; then
+            echo "Could not extract a version (expected 'Release vX.Y.Z') from PR title: $TITLE"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure the tag doesn't already exist
+        run: |
+          if git rev-parse "${{ steps.extract.outputs.version }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.extract.outputs.version }} already exists. Aborting to avoid overwriting it."
+            exit 1
+          fi
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.extract.outputs.version }}" -m "Release ${{ steps.extract.outputs.version }}"
+          git push origin "${{ steps.extract.outputs.version }}"
