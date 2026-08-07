@@ -1,0 +1,80 @@
+name: develop-to-main
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Check for an existing open release PR
+        id: existing_pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          EXISTING=$(gh pr list --base main --head develop --state open --json number --jq '.[0].number')
+          echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+
+      - name: Calculate new version
+        id: version
+        run: |
+          set -e
+          LATEST_TAG=$(git tag --list 'v*.*.*' --sort=-v:refname | head -n 1)
+
+          if [ -z "$LATEST_TAG" ]; then
+            NEW_VERSION="v1.0.0"
+            echo "No tag exists yet. Proposing $NEW_VERSION"
+          else
+            VERSION=${LATEST_TAG#v}
+            MAJOR=$(echo "$VERSION" | cut -d. -f1)
+            MINOR=$(echo "$VERSION" | cut -d. -f2)
+            PATCH=$(echo "$VERSION" | cut -d. -f3)
+
+            case "${{ github.event.inputs.bump_type }}" in
+              major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+              minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+              patch) PATCH=$((PATCH + 1)) ;;
+            esac
+
+            NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+            echo "Latest tag: $LATEST_TAG -> New version: $NEW_VERSION"
+          fi
+
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create develop -> main pull request
+        if: steps.existing_pr.outputs.pr_number == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create \
+            --base main \
+            --head develop \
+            --title "Release ${{ steps.version.outputs.new_version }}" \
+            --body "Automated release PR. Proposed version: **${{ steps.version.outputs.new_version }}**. Once merged with a merge commit, the \`main-tag\` workflow will create the corresponding tag on \`main\`." \
+            --label release
+
+      - name: Warn if a PR is already open
+        if: steps.existing_pr.outputs.pr_number != ''
+        run: |
+          echo "A release PR is already open (#${{ steps.existing_pr.outputs.pr_number }}). Not creating a new one."
+          echo "If you need a different version, close that PR first or rerun this workflow after it's merged."
