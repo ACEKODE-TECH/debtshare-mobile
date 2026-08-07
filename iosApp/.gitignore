@@ -25,4 +25,5 @@ DerivedData/
 
 # CocoaPods / SPM (en caso de que uses en el futuro)
 Pods/
-.build/
+.build/iosApp.xcodeproj/xcuserdata/
+iosApp.xcodeproj/project.xcworkspace/xcuserdata/

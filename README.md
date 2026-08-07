@@ -181,6 +181,29 @@ These workflows run on:
 - ✅ Every Pull Request
 - ✅ Every release tag
 
+## 🏷️ Versioning
+
+The app version is automatically extracted from Git tags and used for both development builds (Android Studio) and CI/CD pipelines.
+
+### Release Flow
+
+1. **Trigger Release**: Run `develop-to-main` workflow (manual dispatch)
+   - Select bump type: `patch`, `minor`, or `major`
+   - Workflow creates a Release PR from `develop` → `main`
+
+2. **Merge to Main**: Merge the Release PR with a merge commit
+   - PR title contains the proposed version (e.g., `Release v1.2.3`)
+
+3. **Automatic Tagging**: Once merged, `create-main-tag` workflow automatically:
+   - Creates a Git tag (e.g., `v1.2.3`) on `main`
+
+4. **Build & Deploy**: All builds (local, Android Studio, CI/CD) automatically:
+   - Read the latest Git tag
+   - Use it as the app version
+   - Support configuration cache
+
+**Note**: Tags follow the format `v1.2.3` (the `v` prefix is automatically removed). If no tags exist, the app defaults to version `1.0.0`.
+
 ## 📝 License
 
 This project is **proprietary** and **not for public use**. All rights reserved.
