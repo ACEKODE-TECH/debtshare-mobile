@@ -25,11 +25,11 @@ fi
 # 3. Validate branch name and extract Task ID
 BRANCH=$(git symbolic-ref --short HEAD)
 # Expected branch format: (task|feature|refactor|bug)/DEB-XX-description
-BRANCH_PATTERN="^(task|feature|refactor|bug)/(DEB-[0-9]+)-"
+BRANCH_PATTERN="^(task|feature|refactor|bug|spike)/(DEB-[0-9]+)-"
 
 if [[ ! $BRANCH =~ $BRANCH_PATTERN ]]; then
     echo "❌ Branch name '$BRANCH' is not valid."
-    echo "Branch must start with: task/, feature/, refactor/ or bug/, followed by DEB-XX- and description."
+    echo "Branch must start with: task/, feature/, refactor/, spike/ or bug/, followed by DEB-XX- and description."
     echo "Example: feature/DEB-123-add-home-screen"
     exit 1
 fi
