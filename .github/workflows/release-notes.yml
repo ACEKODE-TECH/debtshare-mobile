@@ -1,0 +1,66 @@
+name: Generate Release Notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      from_tag:
+        description: 'Starting tag (leave empty to start from initial commit)'
+        required: false
+        type: string
+      to_tag:
+        description: 'Ending tag (required)'
+        required: true
+        type: string
+      project:
+        description: 'Project where to publish release notes'
+        required: true
+        type: choice
+        options:
+          - Mobile
+          - Front-End
+          - Back-End
+
+jobs:
+  generate-release-notes:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm install axios
+
+      - name: Generate Release Notes
+        env:
+          ATLASSIAN_EMAIL: ${{ secrets.ATLASSIAN_EMAIL }}
+          ATLASSIAN_API_TOKEN: ${{ secrets.ATLASSIAN_API_TOKEN }}
+          JIRA_URL: ${{ secrets.JIRA_URL }}
+          CONFLUENCE_URL: ${{ secrets.CONFLUENCE_URL }}
+          CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_PARENT_PAGE: ${{ inputs.project }}
+          PROJECT_KEY: ${{ secrets.PROJECT_KEY }}
+        run: node .github/workflows/scripts/generate-release-notes.js
+
+      - name: Set outputs
+        id: release_output
+        run: |
+          if [ -f /tmp/release_notes_summary.txt ]; then
+            cat /tmp/release_notes_summary.txt
+          fi
+
+      - name: Post result to job summary
+        if: always()
+        run: |
+          if [ -f /tmp/release_notes_summary.txt ]; then
+            echo "## Release Notes Generated" >> $GITHUB_STEP_SUMMARY
+            cat /tmp/release_notes_summary.txt >> $GITHUB_STEP_SUMMARY
+          fi
