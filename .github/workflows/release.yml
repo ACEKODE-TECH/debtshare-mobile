@@ -1,0 +1,90 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build from'
+        required: true
+        default: 'main'
+        type: string
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - debug
+          - release
+          - both
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: List available branches
+        run: |
+          echo "📋 Available branches in the repository:"
+          git ls-remote --heads https://github.com/${{ github.repository }}.git | sed 's?.*refs/heads/?  ?' | sort
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      
+      - name: Verify branch exists
+        run: |
+          echo "✓ Building from branch: ${{ github.event.inputs.branch }}"
+          git branch -a
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+      
+      - name: Create keystore.properties
+        run: |
+          cat > keystore.properties << EOF
+          storeFile=keystore.jks
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAliasRelease=${{ secrets.KEY_ALIAS_RELEASE }}
+          keyAliasDebug=${{ secrets.KEY_ALIAS_DEBUG }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+      
+      - name: Build debug APK
+        if: github.event.inputs.build_type == 'debug' || github.event.inputs.build_type == 'both'
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug -x detekt
+      
+      - name: Build release APK
+        if: github.event.inputs.build_type == 'release' || github.event.inputs.build_type == 'both'
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease -x detekt
+      
+      - name: Upload debug APK
+        if: (github.event.inputs.build_type == 'debug' || github.event.inputs.build_type == 'both') && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk-${{ github.event.inputs.branch }}
+          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+          if-no-files-found: ignore
+      
+      - name: Upload release APK
+        if: (github.event.inputs.build_type == 'release' || github.event.inputs.build_type == 'both') && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk-${{ github.event.inputs.branch }}
+          path: androidApp/build/outputs/apk/release/androidApp-release.apk
+          if-no-files-found: ignore
+
+
+

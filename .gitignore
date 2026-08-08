@@ -21,3 +21,8 @@ iosApp/Pods
 iosApp/*.xcworkspace
 iosApp/.test_run_metadata.json
 iosApp/Config.xcconfig
+
+# Keystore
+*.jks
+*.keystore
+keystore.properties
