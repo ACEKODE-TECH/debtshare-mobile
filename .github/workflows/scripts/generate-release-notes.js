@@ -6,6 +6,11 @@ const ATLASSIAN_EMAIL = process.env.ATLASSIAN_EMAIL;
 const ATLASSIAN_API_TOKEN = process.env.ATLASSIAN_API_TOKEN;
 const JIRA_URL = process.env.JIRA_URL;
 
+// Normalize CONFLUENCE_URL so it works whether the secret includes the
+// trailing "/wiki" path or not, e.g.:
+//   https://yourcompany.atlassian.net        -> https://yourcompany.atlassian.net/wiki
+//   https://yourcompany.atlassian.net/wiki    -> https://yourcompany.atlassian.net/wiki
+//   https://yourcompany.atlassian.net/wiki/   -> https://yourcompany.atlassian.net/wiki
 const CONFLUENCE_URL = process.env.CONFLUENCE_URL
   .replace(/\/+$/, '')
   .replace(/\/wiki$/, '') + '/wiki';
@@ -14,9 +19,13 @@ const CONFLUENCE_SPACE_KEY = process.env.CONFLUENCE_SPACE_KEY;
 const CONFLUENCE_PARENT_PAGE = process.env.CONFLUENCE_PARENT_PAGE;
 const PROJECT_KEY = process.env.PROJECT_KEY;
 
+// URL raíz del sitio (sin /wiki), usada solo para obtener el cloudId.
+const SITE_URL = CONFLUENCE_URL.replace(/\/wiki$/, '');
+
 const FROM_TAG = process.env.INPUT_FROM_TAG || '';
 const TO_TAG = process.env.INPUT_TO_TAG;
 
+// Create axios instance with auth
 const atlassianAxios = axios.create({
   auth: {
     username: ATLASSIAN_EMAIL,
@@ -68,23 +77,7 @@ function extractJiraKeys(commits) {
   return Array.from(issuesMap.values());
 }
 
-async function getJiraIssue(issueKey) {
-  try {
-    const response = await atlassianAxios.get(
-      `${JIRA_URL}/rest/api/3/issue/${issueKey}`,
-      {
-        params: {
-          fields: 'summary,description,status,issuetype,priority,assignee'
-        }
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching Jira issue ${issueKey}:`, error.message);
-    return null;
-  }
-}
-
+// Resolve a space key (e.g. "ENG") to its numeric space id, which the v2 API requires.
 async function getConfluenceSpaceId(spaceKey) {
   try {
     const response = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/spaces`, {
@@ -103,6 +96,7 @@ async function getConfluenceSpaceId(spaceKey) {
   }
 }
 
+// Find a page by exact title within a space (space id, not key).
 async function getPageIdByTitle(title, spaceId) {
   try {
     const response = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/pages`, {
@@ -119,6 +113,7 @@ async function getPageIdByTitle(title, spaceId) {
   }
 }
 
+// List direct child pages of a given page id.
 async function getPagesByParent(parentPageId) {
   try {
     const response = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/pages/${parentPageId}/children`, {
@@ -163,6 +158,7 @@ async function createConfluencePage(title, content, spaceId, parentPageId = null
 
 async function updateConfluencePage(pageId, title, content) {
   try {
+    // Need the current version number before we can update.
     const current = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/pages/${pageId}`);
     const version = current.data.version.number;
 
@@ -192,54 +188,82 @@ async function updateConfluencePage(pageId, title, content) {
   }
 }
 
-async function buildReleaseNotesContent(issues) {
-  let content = '<div>';
+function escapeXml(value) {
+  if (!value) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
 
-  for (const issue of issues) {
-    const jiraIssue = await getJiraIssue(issue.key);
-
-    if (jiraIssue) {
-      const issueUrl = `${JIRA_URL}/browse/${issue.key}`;
-      const status = jiraIssue.fields.status?.name || 'Unknown';
-      const priority = jiraIssue.fields.priority?.name || 'No Priority';
-      const issueType = jiraIssue.fields.issuetype?.name || 'Task';
-      const summary = jiraIssue.fields.summary || 'No summary';
-      const assignee = jiraIssue.fields.assignee?.displayName || 'Unassigned';
-
-      content += `
-        <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 4px;">
-          <p><strong><a href="${issueUrl}">${issue.key}</a>: ${summary}</strong></p>
-          <p>
-            <span style="display: inline-block; background: #f0f0f0; padding: 2px 8px; border-radius: 3px; margin-right: 5px;">
-              <strong>Type:</strong> ${issueType}
-            </span>
-            <span style="display: inline-block; background: #f0f0f0; padding: 2px 8px; border-radius: 3px; margin-right: 5px;">
-              <strong>Status:</strong> ${status}
-            </span>
-            <span style="display: inline-block; background: #f0f0f0; padding: 2px 8px; border-radius: 3px; margin-right: 5px;">
-              <strong>Priority:</strong> ${priority}
-            </span>
-            <span style="display: inline-block; background: #f0f0f0; padding: 2px 8px; border-radius: 3px;">
-              <strong>Assignee:</strong> ${assignee}
-            </span>
-          </p>
-        </div>
-      `;
+// Obtiene el cloudId del sitio a partir del dominio, vía el endpoint público de Atlassian.
+async function getCloudId() {
+  try {
+    const response = await axios.get(`${SITE_URL}/_edge/tenant_info`);
+    if (!response.data || !response.data.cloudId) {
+      throw new Error('La respuesta no contiene cloudId');
     }
+    return response.data.cloudId;
+  } catch (error) {
+    console.error('Error obteniendo el cloudId del sitio:', error.response?.status, error.message);
+    throw error;
+  }
+}
+
+// Construye un "smart link" de Jira en formato storage de Confluence: una
+// tabla en vivo con las incidencias encontradas (tipo, clave, resumen,
+// asignado, prioridad, estado y fecha de actualización), resuelta por
+// Confluence directamente contra Jira cada vez que se ve la página.
+function buildReleaseNotesContent(issueKeys, cloudId) {
+  if (issueKeys.length === 0) {
+    return '<p>No se encontraron incidencias de Jira para esta release.</p>';
   }
 
-  content += '</div>';
-  return content;
+  const jqlQuery = `key in (${issueKeys.join(', ')}) ORDER BY created DESC`;
+  const issuesUrl = `${JIRA_URL}/issues/?jql=${encodeURIComponent(jqlQuery)}`;
+
+  const datasource = {
+    id: 'd8b75300-dfda-4519-b6cd-e49abbd50401',
+    parameters: {
+      cloudId,
+      jql: jqlQuery
+    },
+    views: [
+      {
+        type: 'table',
+        properties: {
+          columns: [
+            { key: 'issuetype' },
+            { key: 'key' },
+            { key: 'summary' },
+            { key: 'assignee' },
+            { key: 'priority' },
+            { key: 'status' },
+            { key: 'updated' }
+          ]
+        }
+      }
+    ]
+  };
+
+  return `
+    <p />
+    <a href="${escapeXml(issuesUrl)}" data-card-appearance="block" data-datasource="${escapeXml(JSON.stringify(datasource))}">${escapeXml(issuesUrl)}</a>
+  `;
 }
 
 async function main() {
   try {
     console.log(`\n📝 Generating Release Notes from ${FROM_TAG || 'initial commit'} to ${TO_TAG}\n`);
 
+    // Get commits
     console.log('🔍 Fetching commits...');
     const commits = await getCommitsBetweenTags();
     console.log(`✅ Found ${commits.length} commits\n`);
 
+    // Extract Jira keys
     console.log('🔎 Extracting Jira keys from commits...');
     const issues = extractJiraKeys(commits);
     console.log(`✅ Found ${issues.length} unique Jira issues\n`);
@@ -250,14 +274,19 @@ async function main() {
       return;
     }
 
+    // Build release notes content
     console.log('📄 Building release notes content...');
-    const releaseNotesContent = await buildReleaseNotesContent(issues);
+    const cloudId = await getCloudId();
+    const releaseNotesContent = buildReleaseNotesContent(issues.map(i => i.key), cloudId);
 
+    // Get or create parent Release Notes page
     console.log(`\n📍 Setting up Confluence pages in space "${CONFLUENCE_SPACE_KEY}"...`);
 
+    // Step 0: Resolve the space key to the numeric space id the v2 API requires
     const spaceId = await getConfluenceSpaceId(CONFLUENCE_SPACE_KEY);
     console.log(`✅ Resolved space "${CONFLUENCE_SPACE_KEY}" to ID: ${spaceId}`);
 
+    // Step 1: Find the project page (Mobile, Front-End, or Back-End)
     console.log(`Looking for "${CONFLUENCE_PARENT_PAGE}" page...`);
     const projectPage = await getPageIdByTitle(CONFLUENCE_PARENT_PAGE, spaceId);
 
@@ -269,6 +298,7 @@ async function main() {
     const projectPageId = projectPage.id;
     console.log(`✅ Found "${CONFLUENCE_PARENT_PAGE}" page (ID: ${projectPageId})`);
 
+    // Step 2: Find or create Release Notes page under the project
     console.log(`\nLooking for "📓Release Notes" page under "${CONFLUENCE_PARENT_PAGE}"...`);
     const childPages = await getPagesByParent(projectPageId);
     let releaseNotesPage = childPages.find(p => p.title === '📓Release Notes');
@@ -294,6 +324,7 @@ async function main() {
       console.log(`✅ 📓Release Notes page already exists (ID: ${releaseNotesPageId})`);
     }
 
+    // Step 3: Create or update version-specific page
     console.log(`\nLooking for "Release ${TO_TAG}" page under "Release Notes"...`);
     const versionPageTitle = `Release ${TO_TAG}`;
     const versionPages = await getPagesByParent(releaseNotesPageId);
@@ -303,14 +334,21 @@ async function main() {
     if (!versionPage) {
       console.log(`Creating "${versionPageTitle}" page...`);
       try {
+        // Los "smart links" de Jira (data-datasource) no siempre se resuelven
+        // como tabla cuando se crea la página por primera vez vía API, pero sí
+        // lo hacen al actualizarla. Por eso creamos con contenido provisional
+        // y de inmediato actualizamos con el contenido real.
         const newVersionPage = await createConfluencePage(
           versionPageTitle,
-          releaseNotesContent,
+          '<p>Generando contenido...</p>',
           spaceId,
           releaseNotesPageId
         );
         versionPageId = newVersionPage.id;
         console.log(`✅ Created "${versionPageTitle}" page (ID: ${versionPageId})`);
+
+        await updateConfluencePage(versionPageId, versionPageTitle, releaseNotesContent);
+        console.log(`✅ Filled in "${versionPageTitle}" page content`);
       } catch (error) {
         console.error(`Failed to create "${versionPageTitle}" page:`, error.message);
         throw error;
@@ -327,6 +365,7 @@ async function main() {
       }
     }
 
+    // Summary
     const summary = `
 ✅ **Release Notes Generated Successfully**
 
