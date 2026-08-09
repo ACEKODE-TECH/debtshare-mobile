@@ -48,6 +48,8 @@ jobs:
           CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
           CONFLUENCE_PARENT_PAGE: ${{ inputs.project }}
           PROJECT_KEY: ${{ secrets.PROJECT_KEY }}
+          INPUT_FROM_TAG: ${{ inputs.from_tag }}
+          INPUT_TO_TAG: ${{ inputs.to_tag }}
         run: node .github/workflows/scripts/generate-release-notes.js
 
       - name: Set outputs

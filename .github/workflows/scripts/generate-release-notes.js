@@ -5,13 +5,18 @@ const fs = require('fs');
 const ATLASSIAN_EMAIL = process.env.ATLASSIAN_EMAIL;
 const ATLASSIAN_API_TOKEN = process.env.ATLASSIAN_API_TOKEN;
 const JIRA_URL = process.env.JIRA_URL;
-const CONFLUENCE_URL = process.env.CONFLUENCE_URL;
+
+const CONFLUENCE_URL = process.env.CONFLUENCE_URL
+  .replace(/\/+$/, '')
+  .replace(/\/wiki$/, '') + '/wiki';
+
+const CONFLUENCE_SPACE_KEY = process.env.CONFLUENCE_SPACE_KEY;
 const CONFLUENCE_PARENT_PAGE = process.env.CONFLUENCE_PARENT_PAGE;
+const PROJECT_KEY = process.env.PROJECT_KEY;
 
 const FROM_TAG = process.env.INPUT_FROM_TAG || '';
 const TO_TAG = process.env.INPUT_TO_TAG;
 
-// Create axios instance with auth
 const atlassianAxios = axios.create({
   auth: {
     username: ATLASSIAN_EMAIL,
@@ -22,16 +27,16 @@ const atlassianAxios = axios.create({
 async function getCommitsBetweenTags() {
   try {
     let gitCommand;
-    
+
     if (!FROM_TAG) {
       gitCommand = `git log ${TO_TAG} --pretty=format:"%H|%s|%an|%ae|%ai"`;
     } else {
       gitCommand = `git log ${FROM_TAG}..${TO_TAG} --pretty=format:"%H|%s|%an|%ae|%ai"`;
     }
-    
+
     const output = execSync(gitCommand, { encoding: 'utf-8' });
     const commits = output.trim().split('\n').filter(line => line.length > 0);
-    
+
     return commits.map(line => {
       const [hash, subject, author, email, date] = line.split('|');
       return { hash, subject, author, email, date };
@@ -45,7 +50,7 @@ async function getCommitsBetweenTags() {
 function extractJiraKeys(commits) {
   const jiraKeyRegex = new RegExp(`${PROJECT_KEY}-\\d+`, 'g');
   const issuesMap = new Map();
-  
+
   commits.forEach(commit => {
     const matches = [...commit.subject.matchAll(jiraKeyRegex)];
     matches.forEach(match => {
@@ -59,14 +64,14 @@ function extractJiraKeys(commits) {
       issuesMap.get(key).commits.push(commit);
     });
   });
-  
+
   return Array.from(issuesMap.values());
 }
 
 async function getJiraIssue(issueKey) {
   try {
     const response = await atlassianAxios.get(
-      `${JIRA_URL}/rest/api/3/issues/${issueKey}`,
+      `${JIRA_URL}/rest/api/3/issue/${issueKey}`,
       {
         params: {
           fields: 'summary,description,status,issuetype,priority,assignee'
@@ -80,128 +85,119 @@ async function getJiraIssue(issueKey) {
   }
 }
 
-async function getConfluencePage(title, spaceKey, parentPageId = null) {
-  try {
-    let url = `${CONFLUENCE_URL}/rest/api/v3/pages?space-key=${spaceKey}&title=${encodeURIComponent(title)}&limit=1`;
-    
-    const response = await atlassianAxios.get(url);
-    return response.data.results && response.data.results.length > 0 ? response.data.results[0] : null;
-  } catch (error) {
-    console.error(`Error searching Confluence page "${title}":`, error.message);
-    return null;
-  }
-}
-
-async function createConfluencePage(title, content, spaceKey, parentPageId = null) {
-  try {
-    const payload = {
-      spaceId: (await getConfluenceSpaceId(spaceKey)),
-      type: 'page',
-      title,
-      body: {
-        representation: 'storage',
-        value: content
-      }
-    };
-    
-    if (parentPageId) {
-      payload.parentId = parentPageId;
-    }
-    
-    const response = await atlassianAxios.post(
-      `${CONFLUENCE_URL}/rest/api/v3/pages`,
-      payload
-    );
-    
-    return response.data;
-  } catch (error) {
-    console.error(`Error creating Confluence page "${title}":`, error.message);
-    throw error;
-  }
-}
-
-async function updateConfluencePage(pageId, title, content) {
-  try {
-    const response = await atlassianAxios.get(`${CONFLUENCE_URL}/rest/api/v3/pages/${pageId}`);
-    const version = response.data.version.number;
-    
-    const updatePayload = {
-      type: 'page',
-      title,
-      body: {
-        representation: 'storage',
-        value: content
-      },
-      version: {
-        number: version + 1
-      }
-    };
-    
-    const updateResponse = await atlassianAxios.put(
-      `${CONFLUENCE_URL}/rest/api/v3/pages/${pageId}`,
-      updatePayload
-    );
-    
-    return updateResponse.data;
-  } catch (error) {
-    console.error(`Error updating Confluence page ${pageId}:`, error.message);
-    throw error;
-  }
-}
-
 async function getConfluenceSpaceId(spaceKey) {
   try {
-    const response = await atlassianAxios.get(`${CONFLUENCE_URL}/rest/api/v3/spaces`, {
+    const response = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/spaces`, {
       params: {
-        'space-keys': spaceKey,
+        keys: spaceKey,
         limit: 1
       }
     });
+    if (!response.data.results || response.data.results.length === 0) {
+      throw new Error(`No space found for key "${spaceKey}"`);
+    }
     return response.data.results[0].id;
   } catch (error) {
-    console.error(`Error getting space ID for ${spaceKey}:`, error.message);
+    console.error(`Error getting space ID for ${spaceKey}:`, error.response?.data?.errors?.[0]?.title || error.message);
     throw error;
   }
 }
 
-async function getPageIdByTitle(title, spaceKey) {
+async function getPageIdByTitle(title, spaceId) {
   try {
-    const response = await atlassianAxios.get(`${CONFLUENCE_URL}/rest/api/v3/pages`, {
+    const response = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/pages`, {
       params: {
-        'space-keys': spaceKey,
+        'space-id': spaceId,
         title,
         limit: 1
       }
     });
     return response.data.results && response.data.results.length > 0 ? response.data.results[0] : null;
   } catch (error) {
-    console.error(`Error getting page ID for "${title}":`, error.message);
+    console.error(`Error getting page ID for "${title}":`, error.response?.data?.errors?.[0]?.title || error.message);
     return null;
   }
 }
 
-async function getPagesByParent(parentPageId, spaceKey) {
+async function getPagesByParent(parentPageId) {
   try {
-    const response = await atlassianAxios.get(`${CONFLUENCE_URL}/rest/api/v3/pages`, {
+    const response = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/pages/${parentPageId}/children`, {
       params: {
-        'space-keys': spaceKey,
-        'parent-id': parentPageId,
         limit: 50
       }
     });
     return response.data.results || [];
   } catch (error) {
-    console.error(`Error getting child pages:`, error.message);
+    console.error(`Error getting child pages:`, error.response?.data?.errors?.[0]?.title || error.message);
     return [];
+  }
+}
+
+async function createConfluencePage(title, content, spaceId, parentPageId = null) {
+  try {
+    const payload = {
+      spaceId,
+      status: 'current',
+      title,
+      body: {
+        representation: 'storage',
+        value: content
+      }
+    };
+
+    if (parentPageId) {
+      payload.parentId = parentPageId;
+    }
+
+    const response = await atlassianAxios.post(
+      `${CONFLUENCE_URL}/api/v2/pages`,
+      payload
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error creating Confluence page "${title}":`, error.response?.data?.errors?.[0]?.title || error.message);
+    throw error;
+  }
+}
+
+async function updateConfluencePage(pageId, title, content) {
+  try {
+    const current = await atlassianAxios.get(`${CONFLUENCE_URL}/api/v2/pages/${pageId}`);
+    const version = current.data.version.number;
+
+    const updatePayload = {
+      id: pageId,
+      status: 'current',
+      title,
+      body: {
+        representation: 'storage',
+        value: content
+      },
+      version: {
+        number: version + 1,
+        message: 'Updated by release notes automation'
+      }
+    };
+
+    const updateResponse = await atlassianAxios.put(
+      `${CONFLUENCE_URL}/api/v2/pages/${pageId}`,
+      updatePayload
+    );
+
+    return updateResponse.data;
+  } catch (error) {
+    console.error(`Error updating Confluence page ${pageId}:`, error.response?.data?.errors?.[0]?.title || error.message);
+    throw error;
   }
 }
 
 async function buildReleaseNotesContent(issues) {
   let content = '<div>';
-  
+
   for (const issue of issues) {
     const jiraIssue = await getJiraIssue(issue.key);
-    
+
     if (jiraIssue) {
       const issueUrl = `${JIRA_URL}/browse/${issue.key}`;
       const status = jiraIssue.fields.status?.name || 'Unknown';
@@ -209,7 +205,7 @@ async function buildReleaseNotesContent(issues) {
       const issueType = jiraIssue.fields.issuetype?.name || 'Task';
       const summary = jiraIssue.fields.summary || 'No summary';
       const assignee = jiraIssue.fields.assignee?.displayName || 'Unassigned';
-      
+
       content += `
         <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 4px;">
           <p><strong><a href="${issueUrl}">${issue.key}</a>: ${summary}</strong></p>
@@ -231,7 +227,7 @@ async function buildReleaseNotesContent(issues) {
       `;
     }
   }
-  
+
   content += '</div>';
   return content;
 }
@@ -239,34 +235,32 @@ async function buildReleaseNotesContent(issues) {
 async function main() {
   try {
     console.log(`\n📝 Generating Release Notes from ${FROM_TAG || 'initial commit'} to ${TO_TAG}\n`);
-    
-    // Get commits
+
     console.log('🔍 Fetching commits...');
     const commits = await getCommitsBetweenTags();
     console.log(`✅ Found ${commits.length} commits\n`);
-    
-    // Extract Jira keys
+
     console.log('🔎 Extracting Jira keys from commits...');
     const issues = extractJiraKeys(commits);
     console.log(`✅ Found ${issues.length} unique Jira issues\n`);
-    
+
     if (issues.length === 0) {
       console.log('⚠️  No Jira issues found in commit messages');
       fs.writeFileSync('/tmp/release_notes_summary.txt', '⚠️  No Jira issues found in commits between tags.');
       return;
     }
-    
-    // Build release notes content
+
     console.log('📄 Building release notes content...');
     const releaseNotesContent = await buildReleaseNotesContent(issues);
-    
-    // Get or create parent Release Notes page
+
     console.log(`\n📍 Setting up Confluence pages in space "${CONFLUENCE_SPACE_KEY}"...`);
-    
-    // Step 1: Find the project page (Mobile, Front-End, or Back-End)
+
+    const spaceId = await getConfluenceSpaceId(CONFLUENCE_SPACE_KEY);
+    console.log(`✅ Resolved space "${CONFLUENCE_SPACE_KEY}" to ID: ${spaceId}`);
+
     console.log(`Looking for "${CONFLUENCE_PARENT_PAGE}" page...`);
-    const projectPage = await getPageIdByTitle(CONFLUENCE_PARENT_PAGE, CONFLUENCE_SPACE_KEY);
-    
+    const projectPage = await getPageIdByTitle(CONFLUENCE_PARENT_PAGE, spaceId);
+
     if (!projectPage) {
       console.error(`❌ Project page "${CONFLUENCE_PARENT_PAGE}" not found in Confluence`);
       fs.writeFileSync('/tmp/release_notes_summary.txt', `❌ Error: Project page "${CONFLUENCE_PARENT_PAGE}" not found in Confluence. Make sure it exists.`);
@@ -274,20 +268,19 @@ async function main() {
     }
     const projectPageId = projectPage.id;
     console.log(`✅ Found "${CONFLUENCE_PARENT_PAGE}" page (ID: ${projectPageId})`);
-    
-    // Step 2: Find or create Release Notes page under the project
+
     console.log(`\nLooking for "📓Release Notes" page under "${CONFLUENCE_PARENT_PAGE}"...`);
-    const childPages = await getPagesByParent(projectPageId, CONFLUENCE_SPACE_KEY);
+    const childPages = await getPagesByParent(projectPageId);
     let releaseNotesPage = childPages.find(p => p.title === '📓Release Notes');
     let releaseNotesPageId;
-    
+
     if (!releaseNotesPage) {
       console.log('Creating "📓Release Notes" page...');
       try {
         const newPage = await createConfluencePage(
           '📓Release Notes',
           '<p>Release notes for ' + CONFLUENCE_PARENT_PAGE + ' releases.</p>',
-          CONFLUENCE_SPACE_KEY,
+          spaceId,
           projectPageId
         );
         releaseNotesPageId = newPage.id;
@@ -300,21 +293,20 @@ async function main() {
       releaseNotesPageId = releaseNotesPage.id;
       console.log(`✅ 📓Release Notes page already exists (ID: ${releaseNotesPageId})`);
     }
-    
-    // Step 3: Create or update version-specific page
+
     console.log(`\nLooking for "Release ${TO_TAG}" page under "Release Notes"...`);
     const versionPageTitle = `Release ${TO_TAG}`;
-    const versionPages = await getPagesByParent(releaseNotesPageId, CONFLUENCE_SPACE_KEY);
+    const versionPages = await getPagesByParent(releaseNotesPageId);
     let versionPage = versionPages.find(p => p.title === versionPageTitle);
     let versionPageId;
-    
+
     if (!versionPage) {
       console.log(`Creating "${versionPageTitle}" page...`);
       try {
         const newVersionPage = await createConfluencePage(
           versionPageTitle,
           releaseNotesContent,
-          CONFLUENCE_SPACE_KEY,
+          spaceId,
           releaseNotesPageId
         );
         versionPageId = newVersionPage.id;
@@ -334,8 +326,7 @@ async function main() {
         throw error;
       }
     }
-    
-    // Summary
+
     const summary = `
 ✅ **Release Notes Generated Successfully**
 
@@ -343,15 +334,15 @@ async function main() {
 - **From Tag:** ${FROM_TAG || 'Initial commit'}
 - **Total Commits:** ${commits.length}
 - **Issues Found:** ${issues.length}
-- **Confluence Page:** [${versionPageTitle}](${CONFLUENCE_URL}/wiki/spaces/${CONFLUENCE_SPACE_KEY}/pages/${versionPageId})
+- **Confluence Page:** [${versionPageTitle}](${CONFLUENCE_URL}/spaces/${CONFLUENCE_SPACE_KEY}/pages/${versionPageId})
 
 **Issues in this release:**
 ${issues.map(i => `- ${i.key}`).join('\n')}
     `;
-    
+
     fs.writeFileSync('/tmp/release_notes_summary.txt', summary);
     console.log(summary);
-    
+
   } catch (error) {
     console.error('\n❌ Error generating release notes:', error.message);
     fs.writeFileSync('/tmp/release_notes_summary.txt', `❌ Error: ${error.message}`);
