@@ -1,4 +1,4 @@
-name: create-main-tag
+name: Create Main Tag
 
 on:
   pull_request:

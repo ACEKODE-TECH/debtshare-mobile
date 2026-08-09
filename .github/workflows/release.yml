@@ -1,0 +1,113 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - debug
+          - release
+          - both
+
+jobs:
+  build-debug:
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event.inputs.build_type == 'debug' || github.event.inputs.build_type == 'both' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+
+      - name: Create keystore.properties
+        run: |
+          cat > keystore.properties << EOF
+          storeFile=keystore.jks
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAliasRelease=${{ secrets.KEY_ALIAS_RELEASE }}
+          keyAliasDebug=${{ secrets.KEY_ALIAS_DEBUG }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+      - name: Decode google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_ANDROID }}" | base64 -d > androidApp/google-services.json
+
+      - name: Build debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug -x detekt
+
+      - name: Upload debug to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
+          groups: testers
+          file: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+          releaseNotes: "Debug build"
+
+  build-release:
+    runs-on: ubuntu-latest
+
+    if: ${{ (github.event.inputs.build_type == 'release' || github.event.inputs.build_type == 'both') && github.ref_name == 'main' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+
+      - name: Create keystore.properties
+        run: |
+          cat > keystore.properties << EOF
+          storeFile=keystore.jks
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAliasRelease=${{ secrets.KEY_ALIAS_RELEASE }}
+          keyAliasDebug=${{ secrets.KEY_ALIAS_DEBUG }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+      - name: Decode google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_ANDROID }}" | base64 -d > androidApp/google-services.json
+
+      - name: Build release APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease -x detekt
+
+      - name: Upload release to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
+          groups: testers
+          file: androidApp/build/outputs/apk/release/androidApp-release.apk
+          releaseNotes: "Release build"
