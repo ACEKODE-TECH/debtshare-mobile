@@ -22,12 +22,12 @@ fun gitVersionCode(versionName: String): Int {
 }
 
 val appVersionName: Provider<String> = providers.exec {
-    commandLine("git", "describe", "--tags", "--abbrev=0")
+    commandLine("git", "tag", "--list", "v*.*.*", "--sort=-v:refname")
     workingDir(rootDir)
     isIgnoreExitValue = true
 }.standardOutput.asText.map { output ->
-    val trimmed = output.trim()
-    if (trimmed.isBlank()) "1.0.0" else trimmed.removePrefix("v")
+    val latestTag = output.trim().lineSequence().firstOrNull { it.isNotBlank() }
+    latestTag?.removePrefix("v") ?: "1.0.0"
 }.orElse("1.0.0")
 
 val appVersionCode: Provider<Int> = appVersionName.map { versionName ->

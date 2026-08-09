@@ -54,7 +54,15 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isDebuggable = true
-            versionNameSuffix = "-Debug"
+
+            val buildDate = project.findProperty("buildDate") as String?
+            val buildNumberToday = project.findProperty("buildNumberToday") as String?
+            versionNameSuffix =
+                if (!buildDate.isNullOrBlank() && !buildNumberToday.isNullOrBlank()) {
+                    "-Debug+$buildDate.$buildNumberToday"
+                } else {
+                    "-Debug"
+                }
         }
         release {
             signingConfig = signingConfigs.getByName("release")
@@ -67,7 +75,15 @@ android {
             optimization {
                 enable = true
             }
-            versionNameSuffix = "-Release"
+
+            val buildDate = project.findProperty("buildDate") as String?
+            val buildNumberToday = project.findProperty("buildNumberToday") as String?
+            versionNameSuffix =
+                if (!buildDate.isNullOrBlank() && !buildNumberToday.isNullOrBlank()) {
+                    "-Release+$buildDate.$buildNumberToday"
+                } else {
+                    "-Release"
+                }
         }
     }
     compileOptions {
