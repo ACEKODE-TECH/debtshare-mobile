@@ -19,7 +19,6 @@ const CONFLUENCE_SPACE_KEY = process.env.CONFLUENCE_SPACE_KEY;
 const CONFLUENCE_PARENT_PAGE = process.env.CONFLUENCE_PARENT_PAGE;
 const PROJECT_KEY = process.env.PROJECT_KEY;
 
-// URL raíz del sitio (sin /wiki), usada solo para obtener el cloudId.
 const SITE_URL = CONFLUENCE_URL.replace(/\/wiki$/, '');
 
 const FROM_TAG = process.env.INPUT_FROM_TAG || '';
@@ -198,7 +197,6 @@ function escapeXml(value) {
     .replace(/'/g, '&apos;');
 }
 
-// Obtiene el cloudId del sitio a partir del dominio, vía el endpoint público de Atlassian.
 async function getCloudId() {
   try {
     const response = await axios.get(`${SITE_URL}/_edge/tenant_info`);
@@ -212,10 +210,6 @@ async function getCloudId() {
   }
 }
 
-// Construye un "smart link" de Jira en formato storage de Confluence: una
-// tabla en vivo con las incidencias encontradas (tipo, clave, resumen,
-// asignado, prioridad, estado y fecha de actualización), resuelta por
-// Confluence directamente contra Jira cada vez que se ve la página.
 function buildReleaseNotesContent(issueKeys, cloudId) {
   if (issueKeys.length === 0) {
     return '<p>No se encontraron incidencias de Jira para esta release.</p>';
@@ -334,10 +328,6 @@ async function main() {
     if (!versionPage) {
       console.log(`Creating "${versionPageTitle}" page...`);
       try {
-        // Los "smart links" de Jira (data-datasource) no siempre se resuelven
-        // como tabla cuando se crea la página por primera vez vía API, pero sí
-        // lo hacen al actualizarla. Por eso creamos con contenido provisional
-        // y de inmediato actualizamos con el contenido real.
         const newVersionPage = await createConfluencePage(
           versionPageTitle,
           '<p>Generando contenido...</p>',
