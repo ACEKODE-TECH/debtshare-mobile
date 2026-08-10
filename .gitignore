@@ -26,3 +26,7 @@ iosApp/Config.xcconfig
 *.jks
 *.keystore
 keystore.properties
+
+# Firebase
+androidApp/google-services.json
+iosApp/iosApp/GoogleService-Info.plist
