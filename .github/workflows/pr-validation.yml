@@ -55,6 +55,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      # TEMPORARY: remove once the Google Cloud OAuth client fingerprint is configured
+      - name: Print keystore fingerprints
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+          keytool -keystore keystore.jks -list -v -storepass "${{ secrets.KEYSTORE_PASSWORD }}"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
