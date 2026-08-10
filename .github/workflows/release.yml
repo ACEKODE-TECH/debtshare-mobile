@@ -13,6 +13,10 @@ on:
           - release
           - both
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   build-debug:
     runs-on: ubuntu-latest
@@ -24,6 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
       - name: Set up JDK 11
         uses: actions/setup-java@v4
@@ -49,10 +54,37 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON_ANDROID }}" | base64 -d > androidApp/google-services.json
 
+      - name: Compute daily build number
+        id: build_number
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TODAY=$(date -u +%F)
+          COUNT=$(gh run list --workflow=release.yml --limit 100 --json createdAt \
+            --jq "[.[] | select(.createdAt >= \"${TODAY}T00:00:00Z\")] | length")
+          echo "date=$TODAY" >> "$GITHUB_OUTPUT"
+          echo "build_number=$COUNT" >> "$GITHUB_OUTPUT"
+
       - name: Build debug APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug -x detekt
+          ./gradlew assembleDebug -x detekt \
+            -PbuildDate=${{ steps.build_number.outputs.date }} \
+            -PbuildNumberToday=${{ steps.build_number.outputs.build_number }}
+
+      - name: Compute release notes
+        run: |
+          LATEST_TAG=$(git tag --list 'v*.*.*' --sort=-v:refname | sed -n '1p')
+
+          if [ -z "$LATEST_TAG" ]; then
+            git log --pretty=format:"- %s" > release_notes.txt
+          else
+            git log "${LATEST_TAG}"..HEAD --pretty=format:"- %s" > release_notes.txt
+          fi
+
+          if [ ! -s release_notes.txt ]; then
+            echo "No new commits since ${LATEST_TAG:-the beginning}" > release_notes.txt
+          fi
 
       - name: Upload debug to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -61,7 +93,7 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
           groups: testers
           file: androidApp/build/outputs/apk/debug/androidApp-debug.apk
-          releaseNotes: "Debug build"
+          releaseNotesFile: release_notes.txt
 
   build-release:
     runs-on: ubuntu-latest
@@ -73,6 +105,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
       - name: Set up JDK 11
         uses: actions/setup-java@v4
@@ -98,10 +131,40 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON_ANDROID }}" | base64 -d > androidApp/google-services.json
 
+      - name: Compute daily build number
+        id: build_number
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TODAY=$(date -u +%F)
+          COUNT=$(gh run list --workflow=release.yml --limit 100 --json createdAt \
+            --jq "[.[] | select(.createdAt >= \"${TODAY}T00:00:00Z\")] | length")
+          echo "date=$TODAY" >> "$GITHUB_OUTPUT"
+          echo "build_number=$COUNT" >> "$GITHUB_OUTPUT"
+
       - name: Build release APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease -x detekt
+          ./gradlew assembleRelease -x detekt \
+            -PbuildDate=${{ steps.build_number.outputs.date }} \
+            -PbuildNumberToday=${{ steps.build_number.outputs.build_number }}
+
+      - name: Compute release notes
+        run: |
+          LATEST_TAG=$(git tag --list 'v*.*.*' --sort=-v:refname | sed -n '1p')
+          PREVIOUS_TAG=$(git tag --list 'v*.*.*' --sort=-v:refname | sed -n '2p')
+
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No tags found" > release_notes.txt
+          elif [ -z "$PREVIOUS_TAG" ]; then
+            git log "${LATEST_TAG}" --pretty=format:"- %s" > release_notes.txt
+          else
+            git log "${PREVIOUS_TAG}..${LATEST_TAG}" --pretty=format:"- %s" > release_notes.txt
+          fi
+
+          if [ ! -s release_notes.txt ]; then
+            echo "No new commits since ${PREVIOUS_TAG:-the beginning}" > release_notes.txt
+          fi
 
       - name: Upload release to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -110,4 +173,4 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
           groups: testers
           file: androidApp/build/outputs/apk/release/androidApp-release.apk
-          releaseNotes: "Release build"
+          releaseNotesFile: release_notes.txt
