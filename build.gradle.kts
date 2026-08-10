@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.androidLibraryKmp) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.compose.multiplatform) apply false
@@ -77,7 +76,7 @@ tasks.register("testAndroid") {
     group = "verification"
     description = "Runs all Android unit tests in androidApp and app modules"
     dependsOn(":androidApp:testDebugUnitTest")
-    dependsOn(":app:testAndroidHostTest")
+    dependsOn(":app:testDebugUnitTest")
 }
 
 tasks.register("testIos") {
