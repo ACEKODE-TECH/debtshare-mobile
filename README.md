@@ -14,6 +14,8 @@
 [![Coverage](https://img.shields.io/codecov/c/github/ACEKODE-TECH/debtshare-mobile/main?style=flat&logo=codecov&logoColor=white&labelColor=f01f7a&color=grey)](https://codecov.io/gh/ACEKODE-TECH/debtshare-mobile)
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-grey?style=flat&logo=githubactions&logoColor=white&labelColor=2088FF)
 ![Develocity](https://img.shields.io/badge/Develocity-Build%20Cache-grey?style=flat&logo=gradle&logoColor=white&labelColor=02303A)
+![Firebase Crashlytics](https://img.shields.io/badge/Firebase-Crashlytics-grey?style=flat&logo=firebase&logoColor=white&labelColor=FFCA28)
+![Firebase App Distribution](https://img.shields.io/badge/Firebase-App%20Distribution-grey?style=flat&logo=firebase&logoColor=white&labelColor=FFCA28)
 ![License](https://img.shields.io/badge/License-Proprietary-grey?style=flat&labelColor=red)
 
 ## Overview
@@ -75,6 +77,8 @@ debtshare-mobile/
 - **GitHub Actions**: CI/CD automation
 - **Gradle Build Cache**: Build performance optimization
 - **Develocity**: Build insights and caching
+- **Firebase Crashlytics**: Real-time crash reporting to monitor and analyze crashes in production
+- **Firebase App Distribution**: Distributes debug and release builds to testers
 
 ## 🚀 Quick Start
 

@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose.stability)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
     id("jacoco-convention")
     id("detekt-convention")
     id("spotless-convention")
@@ -98,6 +100,9 @@ android {
 dependencies {
     implementation(project(":app"))
     implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
