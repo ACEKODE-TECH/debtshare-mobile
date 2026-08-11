@@ -2,6 +2,8 @@ package acekode.debtshare.presentation.login
 
 import acekode.debtshare.auth.ContinueWithGoogleButton
 import acekode.debtshare.auth.GoogleSignInResult
+import acekode.debtshare.ui.theme.DebtshareTheme
+import acekode.debtshare.ui.utils.DebtshareScreenPreview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
@@ -66,10 +67,10 @@ fun LoginContent(
     }
 }
 
-@Preview
+@DebtshareScreenPreview
 @Composable
 private fun LoginScreenPreview() {
-    MaterialTheme {
+    DebtshareTheme {
         LoginContent("Hello world!")
     }
 }

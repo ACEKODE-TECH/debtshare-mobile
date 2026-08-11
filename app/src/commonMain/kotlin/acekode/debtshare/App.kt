@@ -2,12 +2,12 @@ package acekode.debtshare
 
 import acekode.debtshare.di.AppModule
 import acekode.debtshare.presentation.login.LoginScreen
+import acekode.debtshare.ui.theme.DebtshareTheme
+import acekode.debtshare.ui.utils.DebtshareScreenPreview
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.ksp.generated.module
 
@@ -18,10 +18,10 @@ fun App() {
             modules(AppModule().module)
         },
     ) {
-        MaterialTheme {
+        DebtshareTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background,
+                color = DebtshareTheme.colors.background,
             ) {
                 LoginScreen()
             }
@@ -29,7 +29,7 @@ fun App() {
     }
 }
 
-@Preview
+@DebtshareScreenPreview
 @Composable
 private fun AppPreview() {
     App()
