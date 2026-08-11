@@ -1,5 +1,7 @@
 package acekode.debtshare.presentation.login
 
-data class LoginUiState(
-    val platform: String,
-)
+sealed interface LoginUiState {
+    data object Idle : LoginUiState
+    data object Loading : LoginUiState
+    data class Error(val message: String) : LoginUiState
+}

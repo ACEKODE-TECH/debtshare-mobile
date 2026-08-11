@@ -21,7 +21,6 @@ internal data class ButtonStyle(
     val border: Color?,
     val ring: Color,
     val elevation: Dp,
-    val shadow: Color,
 )
 
 @Immutable
@@ -87,7 +86,6 @@ private fun primaryStyle(
     border = null,
     ring = DebtshareColors.Brand.primaryLight,
     elevation = if (enabled) elevation.large else elevation.none,
-    shadow = elevation.brandShadow,
 )
 
 private fun secondaryStyle(
@@ -100,7 +98,6 @@ private fun secondaryStyle(
     border = colors.border,
     ring = DebtshareColors.Brand.primary,
     elevation = elevation.none,
-    shadow = elevation.neutralShadow,
 )
 
 private fun ghostStyle(
@@ -117,7 +114,6 @@ private fun ghostStyle(
     border = null,
     ring = DebtshareColors.Brand.primary,
     elevation = elevation.none,
-    shadow = elevation.neutralShadow,
 )
 
 private fun destructiveStyle(
@@ -134,5 +130,4 @@ private fun destructiveStyle(
     border = null,
     ring = DebtshareColors.Semantic.errorLight,
     elevation = elevation.none,
-    shadow = elevation.neutralShadow,
 )

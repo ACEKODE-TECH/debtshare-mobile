@@ -181,15 +181,15 @@ private fun DebtshareBadgeSize.badgeSize(): BadgeSize = when (this) {
 @Composable
 private fun BadgeVariantsGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
-        PreviewLabel("Variantes")
+        PreviewLabel("Variants")
         Row(
             horizontalArrangement = Arrangement.spacedBy(DebtshareTheme.spacing.small),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            DebtshareBadge(text = "5 grupos")
-            DebtshareBadge(text = "Grupo", variant = DebtshareBadgeVariant.Brand)
+            DebtshareBadge(text = "5 groups")
+            DebtshareBadge(text = "Group", variant = DebtshareBadgeVariant.Brand)
             DebtshareBadge(
-                text = "Saldado",
+                text = "Settled",
                 variant = DebtshareBadgeVariant.Success,
                 uppercase = true,
             )
@@ -199,22 +199,22 @@ private fun BadgeVariantsGallery(darkTheme: Boolean) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             DebtshareBadge(
-                text = "Pendiente",
+                text = "Pending",
                 variant = DebtshareBadgeVariant.Warning,
                 uppercase = true,
             )
-            DebtshareBadge(text = "Vencido", variant = DebtshareBadgeVariant.Danger, uppercase = true)
-            DebtshareBadge(text = "Viaje", variant = DebtshareBadgeVariant.Plum)
+            DebtshareBadge(text = "Overdue", variant = DebtshareBadgeVariant.Danger, uppercase = true)
+            DebtshareBadge(text = "Trip", variant = DebtshareBadgeVariant.Plum)
             DebtshareBadge(text = "3", variant = DebtshareBadgeVariant.SolidDanger)
         }
-        PreviewLabel("Con punto")
+        PreviewLabel("With dot")
         Row(
             horizontalArrangement = Arrangement.spacedBy(DebtshareTheme.spacing.small),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            DebtshareBadge(text = "Activo", variant = DebtshareBadgeVariant.Success, showDot = true)
-            DebtshareBadge(text = "Pendiente", variant = DebtshareBadgeVariant.Warning, showDot = true)
-            DebtshareBadge(text = "Nuevo", variant = DebtshareBadgeVariant.Brand, showDot = true)
+            DebtshareBadge(text = "Active", variant = DebtshareBadgeVariant.Success, showDot = true)
+            DebtshareBadge(text = "Pending", variant = DebtshareBadgeVariant.Warning, showDot = true)
+            DebtshareBadge(text = "New", variant = DebtshareBadgeVariant.Brand, showDot = true)
         }
     }
 }
@@ -239,15 +239,15 @@ private fun BadgeSizesGallery(darkTheme: Boolean) {
             horizontalArrangement = Arrangement.spacedBy(DebtshareTheme.spacing.small),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            DebtshareBadge(text = "SALDADO", size = DebtshareBadgeSize.Small, variant = DebtshareBadgeVariant.Success)
-            DebtshareBadge(text = "SALDADO", size = DebtshareBadgeSize.Medium, variant = DebtshareBadgeVariant.Success)
-            DebtshareBadge(text = "SALDADO", size = DebtshareBadgeSize.Large, variant = DebtshareBadgeVariant.Success)
+            DebtshareBadge(text = "SETTLED", size = DebtshareBadgeSize.Small, variant = DebtshareBadgeVariant.Success)
+            DebtshareBadge(text = "SETTLED", size = DebtshareBadgeSize.Medium, variant = DebtshareBadgeVariant.Success)
+            DebtshareBadge(text = "SETTLED", size = DebtshareBadgeSize.Large, variant = DebtshareBadgeVariant.Success)
         }
-        PreviewLabel("Clickable (chip filtro)")
+        PreviewLabel("Clickable (filter chip)")
         Row(horizontalArrangement = Arrangement.spacedBy(DebtshareTheme.spacing.small)) {
-            DebtshareBadge(text = "Todos", variant = DebtshareBadgeVariant.Brand, onClick = {})
-            DebtshareBadge(text = "Pendientes", onClick = {})
-            DebtshareBadge(text = "Saldados", onClick = {})
+            DebtshareBadge(text = "All", variant = DebtshareBadgeVariant.Brand, onClick = {})
+            DebtshareBadge(text = "Pending", onClick = {})
+            DebtshareBadge(text = "Settled", onClick = {})
         }
     }
 }

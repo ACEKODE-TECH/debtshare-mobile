@@ -44,9 +44,12 @@ import debtshare.app.generated.resources.car
 import debtshare.app.generated.resources.cup
 import debtshare.app.generated.resources.dots
 import debtshare.app.generated.resources.house
+import debtshare.app.generated.resources.no_impact
+import debtshare.app.generated.resources.settled
 import debtshare.app.generated.resources.star
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
 
 enum class ExpenseCategory { FoodAndDrink, Transport, Lodging, Leisure, Shopping, Other }
@@ -203,7 +206,7 @@ private fun ExpenseTexts(
         )
         if (settled) {
             DebtshareBadge(
-                text = "Saldado",
+                text = stringResource(Res.string.settled),
                 size = DebtshareBadgeSize.Small,
                 uppercase = true,
             )
@@ -229,7 +232,7 @@ private fun ExpenseAmounts(amount: Double, personalDelta: Double, settled: Boole
             maxLines = 1,
         )
         Text(
-            text = if (neutralDelta) "Sin impacto" else formatSignedEuros(personalDelta),
+            text = if (neutralDelta) stringResource(Res.string.no_impact) else formatSignedEuros(personalDelta),
             style = DebtshareTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
             color = when {
                 settled || neutralDelta -> textTertiary
@@ -292,48 +295,48 @@ private const val HOTEL_AMOUNT = 640.0
 @Composable
 private fun ExpenseCardCategoriesGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
-        PreviewLabel("Categorías")
+        PreviewLabel("Categories")
         DebtshareExpenseCard(
-            title = "Cena en Casa Paco",
-            subtitle = "Pagó María · hace 2 h",
+            title = "Dinner at Casa Paco",
+            subtitle = "Paid by Maria · 2h ago",
             amount = DINNER_AMOUNT,
             personalDelta = DINNER_DELTA,
             category = ExpenseCategory.FoodAndDrink,
             onClick = {},
         )
         DebtshareExpenseCard(
-            title = "Vuelos Madrid–Reikiavik",
-            subtitle = "Pagó Jorge · ayer",
+            title = "Flights Madrid–Reykjavik",
+            subtitle = "Paid by Jorge · yesterday",
             amount = TAXI_AMOUNT,
             personalDelta = TAXI_DELTA,
             category = ExpenseCategory.Transport,
             onClick = {},
         )
         DebtshareExpenseCard(
-            title = "Apartamento centro",
-            subtitle = "Pagó Ana · hace 3 días",
+            title = "Downtown apartment",
+            subtitle = "Paid by Ana · 3 days ago",
             amount = HOTEL_AMOUNT,
             personalDelta = 0.0,
             category = ExpenseCategory.Lodging,
             onClick = {},
         )
         DebtshareExpenseCard(
-            title = "Entradas concierto",
-            subtitle = "Pagó Carlos · hace 1 semana",
+            title = "Concert tickets",
+            subtitle = "Paid by Carlos · 1 week ago",
             amount = DINNER_AMOUNT,
             personalDelta = DINNER_DELTA,
             category = ExpenseCategory.Leisure,
         )
         DebtshareExpenseCard(
-            title = "Compra semanal",
-            subtitle = "Pagó Lucía · hoy",
+            title = "Weekly groceries",
+            subtitle = "Paid by Lucia · today",
             amount = DINNER_AMOUNT,
             personalDelta = -DINNER_DELTA,
             category = ExpenseCategory.Shopping,
         )
         DebtshareExpenseCard(
-            title = "Varios",
-            subtitle = "Pagó Jorge · hace 1 mes",
+            title = "Misc",
+            subtitle = "Paid by Jorge · 1 month ago",
             amount = DINNER_AMOUNT,
             personalDelta = DINNER_DELTA,
             category = ExpenseCategory.Other,
@@ -358,8 +361,8 @@ private fun ExpenseCardVariantsGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         PreviewLabel("Default")
         DebtshareExpenseCard(
-            title = "Cena en Casa Paco",
-            subtitle = "Pagó María · hace 2 h",
+            title = "Dinner at Casa Paco",
+            subtitle = "Paid by Maria · 2h ago",
             amount = DINNER_AMOUNT,
             personalDelta = DINNER_DELTA,
             category = ExpenseCategory.FoodAndDrink,
@@ -367,8 +370,8 @@ private fun ExpenseCardVariantsGallery(darkTheme: Boolean) {
         )
         PreviewLabel("Compact")
         DebtshareExpenseCard(
-            title = "Cena en Casa Paco",
-            subtitle = "Pagó María · hace 2 h",
+            title = "Dinner at Casa Paco",
+            subtitle = "Paid by Maria · 2h ago",
             amount = DINNER_AMOUNT,
             personalDelta = -DINNER_DELTA,
             category = ExpenseCategory.FoodAndDrink,
@@ -376,17 +379,17 @@ private fun ExpenseCardVariantsGallery(darkTheme: Boolean) {
         )
         PreviewLabel("Settled")
         DebtshareExpenseCard(
-            title = "Cena en Casa Paco",
-            subtitle = "Pagó María · hace 2 h",
+            title = "Dinner at Casa Paco",
+            subtitle = "Paid by Maria · 2h ago",
             amount = DINNER_AMOUNT,
             personalDelta = DINNER_DELTA,
             category = ExpenseCategory.FoodAndDrink,
             variant = ExpenseCardVariant.Settled,
         )
-        PreviewLabel("Título largo + importe largo")
+        PreviewLabel("Long title + long amount")
         DebtshareExpenseCard(
-            title = "Alquiler del apartamento con vistas al mar en Reikiavik",
-            subtitle = "Pagó Jorge Sanzo Hernando · hace 12 minutos",
+            title = "Apartment rental with ocean views in Reykjavik",
+            subtitle = "Paid by Jorge Sanzo Hernando · 12 minutes ago",
             amount = TAXI_AMOUNT,
             personalDelta = 0.0,
             category = ExpenseCategory.Lodging,
