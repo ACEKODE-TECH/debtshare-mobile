@@ -9,6 +9,7 @@ import acekode.debtshare.ui.items.DebtshareTextFieldVariant
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
+import acekode.debtshare.ui.utils.clearFocusOnTap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -65,12 +66,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onNavigateToSignUp: () -> Unit,
+) {
     val viewModel = koinViewModel<LoginViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        // Handle navigation events
-    }
 
     with(uiState) {
         LoginContent(
@@ -79,7 +79,7 @@ fun LoginScreen() {
             onLoginClick = viewModel::onLoginClick,
             onGoogleSignIn = viewModel::onGoogleSignIn,
             onForgotPasswordClick = viewModel::onForgotPasswordClick,
-            onCreateAccountClick = viewModel::onCreateAccountClick,
+            onCreateAccountClick = onNavigateToSignUp,
         )
     }
 }
@@ -105,6 +105,7 @@ fun LoginContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(DebtshareTheme.colors.background)
+                .clearFocusOnTap()
                 .verticalScroll(rememberScrollState())
                 .safeDrawingPadding()
                 .padding(innerPaddings)

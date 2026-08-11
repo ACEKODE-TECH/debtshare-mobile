@@ -1,7 +1,7 @@
 package acekode.debtshare
 
 import acekode.debtshare.di.AppModule
-import acekode.debtshare.presentation.login.LoginScreen
+import acekode.debtshare.navigation.NavGraph
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +23,7 @@ fun App() {
                 modifier = Modifier.fillMaxSize(),
                 color = DebtshareTheme.colors.background,
             ) {
-                LoginScreen()
+                NavGraph()
             }
         }
     }

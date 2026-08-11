@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import debtshare.app.generated.resources.Res
+import debtshare.app.generated.resources.check
 import debtshare.app.generated.resources.close
 import debtshare.app.generated.resources.eye
 import debtshare.app.generated.resources.eye_off
@@ -52,7 +53,7 @@ import debtshare.app.generated.resources.search
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
-enum class DebtshareTextFieldVariant { Text, TextArea, Numeric, Search, Password }
+enum class DebtshareTextFieldVariant { Text, TextArea, Numeric, Search, Password, Alias }
 
 object DebtshareTextFieldDefaults {
     val minHeight: Dp = 32.dp
@@ -78,6 +79,9 @@ fun DebtshareTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     currencySymbol: String? = null,
+    isAliasAvailable: Boolean = false,
+    aliasAvailableLabel: String = "",
+    isAliasTaken: Boolean = false,
 ) {
     val textTertiary = DebtshareTheme.colors.textTertiary
 
@@ -98,7 +102,10 @@ fun DebtshareTextField(
             enabled = enabled,
             readOnly = readOnly,
             currencySymbol = currencySymbol,
-            isError = errorText != null,
+            isError = errorText != null || isAliasTaken,
+            isAliasAvailable = isAliasAvailable,
+            aliasAvailableLabel = aliasAvailableLabel,
+            isAliasTaken = isAliasTaken,
         )
         val footer = errorText ?: helpText
         if (footer != null) {
@@ -124,6 +131,9 @@ private fun DebtshareTextFieldBox(
     readOnly: Boolean,
     currencySymbol: String?,
     isError: Boolean,
+    isAliasAvailable: Boolean = false,
+    aliasAvailableLabel: String = "",
+    isAliasTaken: Boolean = false,
 ) {
     val textTertiary = DebtshareTheme.colors.textTertiary
     val textMuted = DebtshareTheme.colors.textMuted
@@ -134,6 +144,7 @@ private fun DebtshareTextFieldBox(
     val isNumeric = variant == DebtshareTextFieldVariant.Numeric
     val isTextArea = variant == DebtshareTextFieldVariant.TextArea
     val isPassword = variant == DebtshareTextFieldVariant.Password
+    val isAlias = variant == DebtshareTextFieldVariant.Alias
     var passwordVisible by remember { mutableStateOf(false) }
 
     Row(
@@ -155,6 +166,13 @@ private fun DebtshareTextFieldBox(
                 text = currencySymbol,
                 style = DebtshareTheme.typography.bodyMedium,
                 color = textTertiary,
+            )
+        }
+        if (isAlias) {
+            Text(
+                text = "@",
+                style = DebtshareTheme.typography.bodyMedium,
+                color = textMuted,
             )
         }
         DebtshareTextFieldInput(
@@ -183,6 +201,12 @@ private fun DebtshareTextFieldBox(
                     focusRequester.requestFocus()
                 },
             )
+        }
+        if (isAlias) {
+            when {
+                isAliasAvailable -> AliasAvailableBadge(label = aliasAvailableLabel)
+                isAliasTaken -> FieldIcon(icon = Res.drawable.close, tint = DebtshareColors.Semantic.error)
+            }
         }
         if (isPassword) {
             FieldIcon(
@@ -311,6 +335,30 @@ private fun fieldContainerModifier(
             horizontal = DebtshareTextFieldDefaults.horizontalPadding,
             vertical = DebtshareTextFieldDefaults.verticalPadding,
         )
+}
+
+@Composable
+private fun AliasAvailableBadge(
+    label: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Icon(
+            painter = painterResource(Res.drawable.check),
+            contentDescription = null,
+            tint = DebtshareColors.Semantic.success,
+            modifier = Modifier.size(12.dp),
+        )
+        Text(
+            text = label,
+            style = DebtshareTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+            color = DebtshareColors.Semantic.success,
+        )
+    }
 }
 
 private fun sanitizeNumeric(input: String): String {
