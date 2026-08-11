@@ -1,4 +1,4 @@
-package acekode.debtshare
+package acekode.debtshare.domain
 
 import android.os.Build
 

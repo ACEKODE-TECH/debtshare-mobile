@@ -1,4 +1,4 @@
-package acekode.debtshare
+package acekode.debtshare.domain
 
 class Greeting {
     private val platform: Platform = getPlatform()
