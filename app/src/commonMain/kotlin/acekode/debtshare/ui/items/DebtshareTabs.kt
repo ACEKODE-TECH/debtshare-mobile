@@ -287,16 +287,16 @@ private fun TabLabel(
 }
 
 private val tabsPreviewNavigationTabs = listOf(
-    DebtshareTabItem(label = "Gastos", count = 12),
+    DebtshareTabItem(label = "Expenses", count = 12),
     DebtshareTabItem(label = "Balances"),
-    DebtshareTabItem(label = "Actividad", count = 3),
-    DebtshareTabItem(label = "Ajustes", enabled = false),
+    DebtshareTabItem(label = "Activity", count = 3),
+    DebtshareTabItem(label = "Settings", enabled = false),
 )
 
 private val tabsPreviewFilterTabs = listOf(
-    DebtshareTabItem(label = "Todos"),
-    DebtshareTabItem(label = "Pendientes", count = 4),
-    DebtshareTabItem(label = "Saldados"),
+    DebtshareTabItem(label = "All"),
+    DebtshareTabItem(label = "Pending", count = 4),
+    DebtshareTabItem(label = "Settled"),
 )
 
 private val tabsPreviewPeriodTabs = listOf(

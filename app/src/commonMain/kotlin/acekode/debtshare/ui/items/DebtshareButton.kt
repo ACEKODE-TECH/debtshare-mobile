@@ -28,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -45,7 +44,7 @@ enum class DebtshareButtonSize { Small, Medium, Large }
 object DebtshareButtonDefaults {
     val heightSmall: Dp = 16.dp
     val heightMedium: Dp = 24.dp
-    val heightLarge: Dp = 32.dp
+    val heightLarge: Dp = 48.dp
     val iconSmall: Dp = 12.dp
     val iconMedium: Dp = 16.dp
     val iconLarge: Dp = 20.dp
@@ -84,12 +83,6 @@ fun DebtshareButton(
 
     Box(
         modifier = modifier
-            .shadow(
-                elevation = style.elevation,
-                shape = shape,
-                spotColor = style.shadow,
-                ambientColor = style.shadow,
-            )
             .clip(shape)
             .background(container)
             .buttonOutline(focused && enabled, style, shape)
@@ -132,7 +125,6 @@ fun DebtshareIconButton(
     Box(
         modifier = modifier
             .size(buttonSize.minHeight)
-            .shadow(style.elevation, shape, spotColor = style.shadow, ambientColor = style.shadow)
             .clip(shape)
             .background(style.container)
             .buttonOutline(focused && enabled, style, shape)
@@ -204,22 +196,22 @@ private fun ButtonContent(
 private fun ButtonVariantsGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         PreviewLabel("Primary")
-        DebtshareButton(text = "Añadir gasto", onClick = {})
+        DebtshareButton(text = "Add expense", onClick = {})
         PreviewLabel("Secondary")
         DebtshareButton(
-            text = "Ver detalles",
+            text = "View details",
             onClick = {},
             variant = DebtshareButtonVariant.Secondary,
         )
         PreviewLabel("Ghost")
         DebtshareButton(
-            text = "Cancelar",
+            text = "Cancel",
             onClick = {},
             variant = DebtshareButtonVariant.Ghost,
         )
         PreviewLabel("Destructive")
         DebtshareButton(
-            text = "Salir del grupo",
+            text = "Leave group",
             onClick = {},
             variant = DebtshareButtonVariant.Destructive,
         )
@@ -252,18 +244,18 @@ private fun ButtonSizesGallery(darkTheme: Boolean) {
         ) {
             DebtshareIconButton(
                 icon = Res.drawable.plus,
-                contentDescription = "Añadir",
+                contentDescription = "Add",
                 onClick = {},
                 size = DebtshareButtonSize.Small,
             )
             DebtshareIconButton(
                 icon = Res.drawable.plus,
-                contentDescription = "Añadir",
+                contentDescription = "Add",
                 onClick = {},
             )
             DebtshareIconButton(
                 icon = Res.drawable.plus,
-                contentDescription = "Añadir",
+                contentDescription = "Add",
                 onClick = {},
                 variant = DebtshareButtonVariant.Primary,
                 size = DebtshareButtonSize.Large,
@@ -287,10 +279,10 @@ private fun DebtshareButtonSizesDarkPreview() {
 @Composable
 private fun ButtonStatesGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
-        PreviewLabel("Con icono")
-        DebtshareButton(text = "Añadir gasto", onClick = {}, icon = Res.drawable.plus)
+        PreviewLabel("With icon")
+        DebtshareButton(text = "Add expense", onClick = {}, icon = Res.drawable.plus)
         PreviewLabel("Loading")
-        DebtshareButton(text = "Añadir gasto", onClick = {}, loading = true)
+        DebtshareButton(text = "Add expense", onClick = {}, loading = true)
         PreviewLabel("Disabled")
         DebtshareButton(text = "Primary", onClick = {}, enabled = false)
         DebtshareButton(

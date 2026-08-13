@@ -334,41 +334,41 @@ private fun TextFieldVariantsGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         PreviewLabel("Text")
         DebtshareTextField(
-            value = "Cena en Casa Paco",
+            value = "Dinner at Casa Paco",
             onValueChange = {},
-            label = "Concepto",
-            placeholder = "Añade un concepto",
+            label = "Description",
+            placeholder = "Add a description",
         )
         PreviewLabel("Numeric")
         DebtshareTextField(
-            value = "1284,50",
+            value = "1284.50",
             onValueChange = {},
             variant = DebtshareTextFieldVariant.Numeric,
-            label = "Importe",
+            label = "Amount",
             currencySymbol = "€",
         )
         PreviewLabel("Search")
         DebtshareTextField(
-            value = "playa",
+            value = "beach",
             onValueChange = {},
             variant = DebtshareTextFieldVariant.Search,
-            placeholder = "Buscar gastos",
+            placeholder = "Search expenses",
         )
         PreviewLabel("Text area")
         DebtshareTextField(
-            value = "Notas del gasto compartido entre los cuatro del piso.",
+            value = "Notes for the shared expense between the four of us.",
             onValueChange = {},
             variant = DebtshareTextFieldVariant.TextArea,
-            label = "Notas",
-            helpText = "Máximo 6 líneas visibles",
+            label = "Notes",
+            helpText = "Maximum 6 visible lines",
         )
         PreviewLabel("Password")
         DebtshareTextField(
-            value = "miContraseña123",
+            value = "myPassword123",
             onValueChange = {},
             variant = DebtshareTextFieldVariant.Password,
-            label = "Contraseña",
-            placeholder = "Introduce tu contraseña",
+            label = "Password",
+            placeholder = "Enter your password",
         )
     }
 }
@@ -389,12 +389,12 @@ private fun DebtshareTextFieldVariantsDarkPreview() {
 private fun TextFieldStatesGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         PreviewLabel("Empty")
-        DebtshareTextField(value = "", onValueChange = {}, placeholder = "Añade un concepto")
+        DebtshareTextField(value = "", onValueChange = {}, placeholder = "Add a description")
         PreviewLabel("Filled + help")
         DebtshareTextField(
-            value = "Cena en Casa Paco",
+            value = "Dinner at Casa Paco",
             onValueChange = {},
-            helpText = "Se repartirá entre 4 personas",
+            helpText = "Will be split among 4 people",
         )
         PreviewLabel("Error")
         DebtshareTextField(
@@ -402,12 +402,12 @@ private fun TextFieldStatesGallery(darkTheme: Boolean) {
             onValueChange = {},
             variant = DebtshareTextFieldVariant.Numeric,
             currencySymbol = "€",
-            errorText = "El importe debe ser mayor que cero",
+            errorText = "Amount must be greater than zero",
         )
         PreviewLabel("Disabled")
-        DebtshareTextField(value = "Cena en Casa Paco", onValueChange = {}, enabled = false)
+        DebtshareTextField(value = "Dinner at Casa Paco", onValueChange = {}, enabled = false)
         PreviewLabel("Read only")
-        DebtshareTextField(value = "Grupo Islandia 2026", onValueChange = {}, readOnly = true)
+        DebtshareTextField(value = "Iceland 2026 Group", onValueChange = {}, readOnly = true)
     }
 }
 

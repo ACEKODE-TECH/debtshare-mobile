@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Auth -->
+    <string name="sign_in_with_google">Continuar con Google</string>
+
+    <!-- Login -->
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="welcome_back">Bienvenido de vuelta</string>
+    <string name="welcome_subtitle">Gestiona los gastos compartidos de tu grupo en segundos.</string>
+    <string name="or_with_email">o con tu email</string>
+    <string name="email">Email</string>
+    <string name="email_placeholder">tu@email.com</string>
+    <string name="password">Contraseña</string>
+    <string name="password_placeholder">Introduce tu contraseña</string>
+    <string name="remember_me">Recordarme</string>
+    <string name="forgot_password">¿Olvidaste la contraseña?</string>
+    <string name="no_account">¿No tienes cuenta?</string>
+    <string name="create_account">Crear cuenta</string>
+
+    <!-- Expense card -->
+    <string name="settled">Saldado</string>
+    <string name="no_impact">Sin impacto</string>
+</resources>

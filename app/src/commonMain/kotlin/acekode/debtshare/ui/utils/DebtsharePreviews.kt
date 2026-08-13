@@ -16,14 +16,12 @@ annotation class DebtshareComponentPreview
     device = "spec:width=411dp,height=891dp,dpi=420",
     apiLevel = 36,
     showBackground = true,
-    locale = "es",
 )
 @Preview(
     name = "Medium Phone RTL",
     device = "spec:width=411dp,height=891dp,dpi=420",
     apiLevel = 36,
     showBackground = true,
-    locale = "ar",
 )
 @Preview(
     name = "Large Phone",

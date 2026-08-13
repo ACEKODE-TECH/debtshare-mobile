@@ -31,8 +31,6 @@ data class DebtshareElevation(
     val small: Dp = 2.dp,
     val medium: Dp = 6.dp,
     val large: Dp = 10.dp,
-    val brandShadow: Color = DebtshareColors.Brand.primary,
-    val neutralShadow: Color = Color(0xFF0C0E14),
 )
 
 val LocalDebtshareSpacing = staticCompositionLocalOf { DebtshareSpacing() }

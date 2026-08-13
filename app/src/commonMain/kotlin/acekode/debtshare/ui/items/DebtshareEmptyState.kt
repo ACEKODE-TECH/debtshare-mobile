@@ -179,10 +179,10 @@ private fun DebtshareEmptyStateVariant.style(): EmptyStateStyle = when (this) {
 private fun EmptyStateNeutralGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         DebtshareEmptyState(
-            title = "Aún no hay gastos",
-            description = "Añade el primer gasto del grupo y empezaremos a repartir el balance.",
-            primaryAction = DebtshareEmptyStateAction(label = "Añadir gasto", onClick = {}),
-            secondaryAction = DebtshareEmptyStateAction(label = "Invitar a alguien", onClick = {}),
+            title = "No expenses yet",
+            description = "Add the first group expense and we'll start splitting the balance.",
+            primaryAction = DebtshareEmptyStateAction(label = "Add expense", onClick = {}),
+            secondaryAction = DebtshareEmptyStateAction(label = "Invite someone", onClick = {}),
         )
     }
 }
@@ -203,8 +203,8 @@ private fun DebtshareEmptyStateNeutralDarkPreview() {
 private fun EmptyStateSuccessGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         DebtshareEmptyState(
-            title = "Todo saldado",
-            description = "Nadie debe nada en este grupo. Buen trabajo.",
+            title = "All settled",
+            description = "Nobody owes anything in this group. Great job.",
             variant = DebtshareEmptyStateVariant.Success,
         )
     }
@@ -226,10 +226,10 @@ private fun DebtshareEmptyStateSuccessDarkPreview() {
 private fun EmptyStateErrorGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         DebtshareEmptyState(
-            title = "No hemos podido cargar los gastos",
-            description = "Revisa tu conexión e inténtalo de nuevo.",
+            title = "We couldn't load the expenses",
+            description = "Check your connection and try again.",
             variant = DebtshareEmptyStateVariant.Error,
-            primaryAction = DebtshareEmptyStateAction(label = "Reintentar", onClick = {}),
+            primaryAction = DebtshareEmptyStateAction(label = "Retry", onClick = {}),
         )
     }
 }
@@ -250,10 +250,10 @@ private fun DebtshareEmptyStateErrorDarkPreview() {
 private fun EmptyStateSearchGallery(darkTheme: Boolean) {
     PreviewGallery(darkTheme = darkTheme) {
         DebtshareEmptyState(
-            title = "Sin resultados",
-            description = "No encontramos gastos que coincidan con «playa».",
+            title = "No results",
+            description = "We couldn't find any expenses matching «beach».",
             variant = DebtshareEmptyStateVariant.Search,
-            secondaryAction = DebtshareEmptyStateAction(label = "Limpiar filtros", onClick = {}),
+            secondaryAction = DebtshareEmptyStateAction(label = "Clear filters", onClick = {}),
         )
     }
 }
