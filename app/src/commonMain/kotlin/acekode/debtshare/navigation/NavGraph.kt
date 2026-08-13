@@ -1,5 +1,6 @@
 package acekode.debtshare.navigation
 
+import acekode.debtshare.presentation.SplashScreen
 import acekode.debtshare.presentation.login.LoginScreen
 import acekode.debtshare.presentation.signup.SignUpScreen
 import androidx.compose.runtime.Composable
@@ -13,8 +14,17 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route,
+        startDestination = Screen.Splash.route,
     ) {
+        composable(route = Screen.Splash.route) {
+            SplashScreen(
+                onSplashFinished = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+            )
+        }
         composable(route = Screen.Login.route) {
             LoginScreen(
                 onNavigateToSignUp = {
