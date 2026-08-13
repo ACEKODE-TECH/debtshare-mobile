@@ -1,6 +1,7 @@
 package acekode.debtshare.presentation.login
 
 import acekode.debtshare.auth.GoogleSignInResult
+import acekode.debtshare.navigation.Screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,9 +19,6 @@ class LoginViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-//    private val _navEvent = MutableSharedFlow<NavEvent>()
-//    val navEvent: SharedFlow<NavEvent> = _navEvent.asSharedFlow()
-
     fun onLoginClick(email: String, password: String, rememberMe: Boolean) {
         // Handle Login Click
     }
@@ -31,9 +29,5 @@ class LoginViewModel : ViewModel() {
 
     fun onForgotPasswordClick() {
         // Handle Password Click
-    }
-
-    fun onCreateAccountClick() {
-        // Handle Create Account Click
     }
 }

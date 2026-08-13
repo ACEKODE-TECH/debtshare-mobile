@@ -55,6 +55,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.annotations)
             implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.navigation.compose)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

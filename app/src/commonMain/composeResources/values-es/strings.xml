@@ -17,6 +17,24 @@
     <string name="no_account">¿No tienes cuenta?</string>
     <string name="create_account">Crear cuenta</string>
 
+    <!-- Sign Up -->
+    <string name="signup_title">Crea tu cuenta</string>
+    <string name="signup_subtitle">Elige un alias que te identifique en tus grupos. Podrás cambiarlo después.</string>
+    <string name="alias">Alias</string>
+    <string name="alias_placeholder">tu_alias</string>
+    <string name="alias_hint">3-20 caracteres · letras, números, punto y guión bajo</string>
+    <string name="alias_available">Disponible</string>
+    <string name="alias_taken_prefix">Ese alias ya está en uso. Prueba</string>
+    <string name="password_strength_weak">Débil</string>
+    <string name="password_strength_fair">Aceptable</string>
+    <string name="password_strength_strong">Fuerte · 10+ caracteres, número, símbolo</string>
+    <string name="password_strength_very_strong">Muy fuerte</string>
+    <string name="terms_accept_prefix">Acepto los </string>
+    <string name="terms_link">Términos</string>
+    <string name="terms_and_conjunction"> y la </string>
+    <string name="privacy_policy_link">Política de privacidad</string>
+    <string name="already_have_account">¿Ya tienes cuenta?</string>
+
     <!-- Expense card -->
     <string name="settled">Saldado</string>
     <string name="no_impact">Sin impacto</string>
