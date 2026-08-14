@@ -5,6 +5,8 @@ import acekode.debtshare.presentation.SplashScreen
 import acekode.debtshare.presentation.googlealias.GoogleAliasScreen
 import acekode.debtshare.presentation.login.LoginScreen
 import acekode.debtshare.presentation.signup.SignUpScreen
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +34,11 @@ fun NavGraph() {
                 },
             )
         }
-        composable(route = Screen.Login.route) {
+        composable(
+            route = Screen.Login.route,
+            exitTransition = { slideOutHorizontally { -it } },
+            popEnterTransition = { slideInHorizontally { -it } },
+        ) {
             LoginScreen(
                 onNavigateToSignUp = {
                     navController.navigate(Screen.Signup.route)
@@ -43,14 +49,22 @@ fun NavGraph() {
                 },
             )
         }
-        composable(route = Screen.Signup.route) {
+        composable(
+            route = Screen.Signup.route,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } },
+        ) {
             SignUpScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 },
             )
         }
-        composable(route = Screen.GoogleAlias.route) {
+        composable(
+            route = Screen.GoogleAlias.route,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } },
+        ) {
             googleAccount?.let { account ->
                 GoogleAliasScreen(
                     account = account,
