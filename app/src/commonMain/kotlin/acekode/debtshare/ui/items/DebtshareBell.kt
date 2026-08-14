@@ -44,23 +44,6 @@ import debtshare.app.generated.resources.Res
 import debtshare.app.generated.resources.bell
 import org.jetbrains.compose.resources.painterResource
 
-object DebtshareBellDefaults {
-    val buttonSize: Dp = 32.dp
-    val iconSize: Dp = 16.dp
-    val badgeSize: Dp = 16.dp
-    val dotSize: Dp = 8.dp
-    val badgeOffsetX: Dp = 4.dp
-    val badgeOffsetY: Dp = (-4).dp
-    val badgeCutOut: Dp = 2.dp
-    val badgeHorizontalPadding: Dp = 4.dp
-    val borderWidth: Dp = 1.dp
-    val focusRingWidth: Dp = 2.dp
-    const val MAX_COUNT = 99
-    const val ENTER_MILLIS = 200
-    const val EXIT_MILLIS = 150
-    const val ENTER_SCALE = 0.5f
-}
-
 @Composable
 fun DebtshareBell(
     onClick: () -> Unit,
@@ -194,6 +177,23 @@ private fun BellBadgeContent(count: Int, dotOnly: Boolean, scale: Float) {
             )
         }
     }
+}
+
+object DebtshareBellDefaults {
+    val buttonSize: Dp = 32.dp
+    val iconSize: Dp = 16.dp
+    val badgeSize: Dp = 16.dp
+    val dotSize: Dp = 8.dp
+    val badgeOffsetX: Dp = 4.dp
+    val badgeOffsetY: Dp = (-4).dp
+    val badgeCutOut: Dp = 2.dp
+    val badgeHorizontalPadding: Dp = 4.dp
+    val borderWidth: Dp = 1.dp
+    val focusRingWidth: Dp = 2.dp
+    const val MAX_COUNT = 99
+    const val ENTER_MILLIS = 200
+    const val EXIT_MILLIS = 150
+    const val ENTER_SCALE = 0.5f
 }
 
 private val bellPreviewCounts = listOf(0, 1, 5, 42, 99, 150)

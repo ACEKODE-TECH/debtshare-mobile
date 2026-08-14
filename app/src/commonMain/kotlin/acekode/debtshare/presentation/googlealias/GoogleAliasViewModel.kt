@@ -16,10 +16,10 @@ class GoogleAliasViewModel : ViewModel() {
     val aliasValidation: StateFlow<AliasValidation> = _aliasValidation.asStateFlow()
 
     fun onAliasChange(alias: String) {
-        // Trigger debounced alias availability check
+        println(alias)
     }
 
     fun onContinueClick(alias: String) {
-        // Handle continue
+        println(alias)
     }
 }
