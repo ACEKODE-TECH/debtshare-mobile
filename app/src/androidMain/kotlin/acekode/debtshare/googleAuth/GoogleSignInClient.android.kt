@@ -1,7 +1,8 @@
-package acekode.debtshare.auth
+package acekode.debtshare.googleAuth
 
+import acekode.debtshare.utils.logDebug
+import acekode.debtshare.utils.logError
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -40,13 +41,13 @@ actual class GoogleSignInClient(private val context: Context) {
                     email = googleIdTokenCredential.id,
                     photoUrl = googleIdTokenCredential.profilePictureUri?.toString(),
                 )
-            Log.i(TAG, "Signed in: ${account.email} (${account.displayName})")
+            logDebug(TAG, "Signed in: ${account.email} (${account.displayName})")
             GoogleSignInResult.Success(account)
         } catch (e: GetCredentialException) {
-            Log.e(TAG, "Credential Manager sign-in failed", e)
+            logError(TAG, "Credential Manager sign-in failed", e)
             GoogleSignInResult.Error(e.message ?: "Google sign-in was cancelled or failed")
         } catch (e: GoogleIdTokenParsingException) {
-            Log.e(TAG, "Failed to parse Google ID token", e)
+            logError(TAG, "Failed to parse Google ID token", e)
             GoogleSignInResult.Error("Failed to parse Google credential")
         }
     }

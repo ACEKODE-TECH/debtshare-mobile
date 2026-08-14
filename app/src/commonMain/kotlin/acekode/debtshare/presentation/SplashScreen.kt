@@ -18,10 +18,17 @@ import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SplashScreen(onSplashFinished: () -> Unit) {
-    SplashContent(onSplashFinished = onSplashFinished)
+    val viewModel = koinViewModel<SplashViewModel>()
+    SplashContent(
+        onSplashFinished = {
+            viewModel.checkSession()
+            onSplashFinished()
+        },
+    )
 }
 
 @Composable

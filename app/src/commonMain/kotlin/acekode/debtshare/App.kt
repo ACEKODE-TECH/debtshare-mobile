@@ -1,6 +1,8 @@
 package acekode.debtshare
 
 import acekode.debtshare.di.AppModule
+import acekode.debtshare.di.ktorModule
+import acekode.debtshare.di.localSettingsModule
 import acekode.debtshare.navigation.NavGraph
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
@@ -15,7 +17,7 @@ import org.koin.ksp.generated.module
 fun App() {
     KoinApplication(
         application = {
-            modules(AppModule().module)
+            modules(AppModule().module, ktorModule, localSettingsModule)
         },
     ) {
         DebtshareTheme {

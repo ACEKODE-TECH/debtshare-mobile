@@ -1,4 +1,4 @@
-package acekode.debtshare.auth
+package acekode.debtshare.googleAuth
 
 sealed interface GoogleSignInResult {
     data class Success(val account: GoogleAccount) : GoogleSignInResult

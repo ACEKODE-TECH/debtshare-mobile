@@ -1,4 +1,4 @@
-package acekode.debtshare.auth
+package acekode.debtshare.googleAuth
 
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareComponentPreview

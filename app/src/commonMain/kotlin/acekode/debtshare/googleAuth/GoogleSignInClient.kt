@@ -1,4 +1,4 @@
-package acekode.debtshare.auth
+package acekode.debtshare.googleAuth
 
 import androidx.compose.runtime.Composable
 

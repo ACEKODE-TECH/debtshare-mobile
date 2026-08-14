@@ -1,6 +1,6 @@
 package acekode.debtshare.navigation
 
-import acekode.debtshare.auth.GoogleAccount
+import acekode.debtshare.googleAuth.GoogleAccount
 import acekode.debtshare.presentation.SplashScreen
 import acekode.debtshare.presentation.googlealias.GoogleAliasScreen
 import acekode.debtshare.presentation.login.LoginScreen

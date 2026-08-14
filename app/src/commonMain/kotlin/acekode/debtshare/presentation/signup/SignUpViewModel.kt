@@ -22,12 +22,4 @@ class SignUpViewModel : ViewModel() {
     fun onSignUpClick(alias: String, email: String, password: String, termsAccepted: Boolean) {
         println("$alias $email $password $termsAccepted")
     }
-
-    fun onTermsClick() {
-        // Open terms
-    }
-
-    fun onPrivacyPolicyClick() {
-        // Open privacy policy
-    }
 }
