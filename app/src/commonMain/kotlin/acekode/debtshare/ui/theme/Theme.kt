@@ -65,7 +65,7 @@ fun DebtshareTheme(
 
 object DebtshareTheme {
 
-    val typography: DebtshareTypography
+    val typography: Typography
         @Composable
         @ReadOnlyComposable
         get() = LocalDebtshareTypography.current

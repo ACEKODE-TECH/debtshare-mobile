@@ -8,7 +8,7 @@ detekt {
     toolVersion = "1.23.8"
     config.setFrom(files("$rootDir/config/detekt.yml"))
     buildUponDefaultConfig = true
-    //source.setFrom(fileTree("src") { include("**/*.kt") })
+    source.setFrom(fileTree("src") { include("**/*.kt") })
 }
 
 dependencies {

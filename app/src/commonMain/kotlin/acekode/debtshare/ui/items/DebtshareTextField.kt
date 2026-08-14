@@ -121,6 +121,7 @@ fun DebtshareTextField(
     }
 }
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun DebtshareTextFieldBox(
     value: String,

@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 
 @Immutable
-data class DebtshareTypography(
+data class Typography(
     val displaySmall: TextStyle,
     val displayMedium: TextStyle,
     val displayLarge: TextStyle,
@@ -47,7 +47,7 @@ private fun mono(size: Double): TextStyle = TextStyle(
     lineHeight = LineHeight,
 )
 
-fun debtshareTypography(): DebtshareTypography = DebtshareTypography(
+fun debtshareTypography(): acekode.debtshare.ui.theme.Typography = Typography(
     displaySmall = display(size = 20.0, tracking = -0.3),
     displayMedium = display(size = 30.0, tracking = -1.0),
     displayLarge = display(size = 42.0, tracking = -1.0),
@@ -66,7 +66,7 @@ fun debtshareTypography(): DebtshareTypography = DebtshareTypography(
     ),
 )
 
-internal fun DebtshareTypography.toMaterialTypography(): Typography = Typography(
+internal fun acekode.debtshare.ui.theme.Typography.toMaterialTypography(): Typography = Typography(
     displayLarge = displayLarge,
     displayMedium = displayMedium,
     displaySmall = displaySmall,

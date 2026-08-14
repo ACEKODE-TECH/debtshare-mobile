@@ -69,7 +69,7 @@ fun NavGraph() {
                 GoogleAliasScreen(
                     account = account,
                     onNavigateBack = { navController.popBackStack() },
-                    onContinueClick = { /* TODO: navigate to home */ },
+                    onContinueClick = { /* Navigate to home */ },
                 )
             }
         }

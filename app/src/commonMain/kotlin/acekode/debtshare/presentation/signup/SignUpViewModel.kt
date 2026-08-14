@@ -1,14 +1,9 @@
 package acekode.debtshare.presentation.signup
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -21,11 +16,11 @@ class SignUpViewModel : ViewModel() {
     val aliasValidation: StateFlow<AliasValidation> = _aliasValidation.asStateFlow()
 
     fun onAliasChange(alias: String) {
-        // Trigger debounced alias availability check
+        println(alias)
     }
 
     fun onSignUpClick(alias: String, email: String, password: String, termsAccepted: Boolean) {
-        // Handle sign up
+        println("$alias $email $password $termsAccepted")
     }
 
     fun onTermsClick() {

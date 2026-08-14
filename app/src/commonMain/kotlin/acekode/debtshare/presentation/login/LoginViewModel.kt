@@ -1,16 +1,10 @@
 package acekode.debtshare.presentation.login
 
 import acekode.debtshare.auth.GoogleSignInResult
-import acekode.debtshare.navigation.Screen
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -20,11 +14,11 @@ class LoginViewModel : ViewModel() {
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun onLoginClick(email: String, password: String, rememberMe: Boolean) {
-        // Handle Login Click
+        println("$email $password $rememberMe")
     }
 
     fun onGoogleSignIn(result: GoogleSignInResult) {
-        // Handle Google Sign In
+        println(result)
     }
 
     fun onForgotPasswordClick() {

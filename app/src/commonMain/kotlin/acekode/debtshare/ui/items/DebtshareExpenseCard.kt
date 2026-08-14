@@ -103,7 +103,6 @@ fun DebtshareExpenseCard(
         ExpenseTexts(
             title = title,
             subtitle = subtitle,
-            compact = compact,
             settled = settled,
             modifier = Modifier.weight(1f),
         )
@@ -178,7 +177,6 @@ private fun CategoryGlyph(category: ExpenseCategory, compact: Boolean, settled: 
 private fun ExpenseTexts(
     title: String,
     subtitle: String,
-    compact: Boolean,
     settled: Boolean,
     modifier: Modifier = Modifier,
 ) {

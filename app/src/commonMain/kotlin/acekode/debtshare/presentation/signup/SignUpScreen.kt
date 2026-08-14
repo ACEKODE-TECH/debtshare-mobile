@@ -106,6 +106,7 @@ fun SignUpScreen(
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 fun SignUpContent(
     isLoading: Boolean,

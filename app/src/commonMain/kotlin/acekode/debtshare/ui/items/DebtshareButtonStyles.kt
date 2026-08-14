@@ -93,8 +93,16 @@ private fun secondaryStyle(
     elevation: DebtshareElevation,
     enabled: Boolean,
 ): ButtonStyle = ButtonStyle(
-    container = if (enabled) colors.card else colors.card.copy(alpha = DebtshareButtonDefaults.DISABLED_ALPHA_SECONDARY),
-    content = if (enabled) colors.textPrimary else DebtshareColors.Neutral.n400,
+    container = if (enabled) {
+        colors.card
+    } else {
+        colors.card.copy(alpha = DebtshareButtonDefaults.DISABLED_ALPHA_SECONDARY)
+    },
+    content = if (enabled) {
+        colors.textPrimary
+    } else {
+        DebtshareColors.Neutral.n400
+    },
     border = colors.border,
     ring = DebtshareColors.Brand.primary,
     elevation = elevation.none,
