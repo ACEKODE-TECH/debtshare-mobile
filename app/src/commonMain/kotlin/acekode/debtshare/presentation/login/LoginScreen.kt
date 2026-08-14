@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -53,6 +54,7 @@ import debtshare.app.generated.resources.create_account
 import debtshare.app.generated.resources.email
 import debtshare.app.generated.resources.email_placeholder
 import debtshare.app.generated.resources.forgot_password
+import debtshare.app.generated.resources.logo
 import debtshare.app.generated.resources.no_account
 import debtshare.app.generated.resources.or_with_email
 import debtshare.app.generated.resources.password
@@ -186,17 +188,13 @@ private fun DebtshareLogo(
         Box(
             modifier = Modifier
                 .size(48.dp)
-                .background(
-                    color = DebtshareColors.Brand.primary,
-                    shape = RoundedCornerShape(DebtshareTheme.radius.large),
-                ),
-            contentAlignment = Alignment.Center,
+                .clip(RoundedCornerShape(DebtshareTheme.radius.large)),
         ) {
             Icon(
-                painter = painterResource(Res.drawable.plus),
+                painter = painterResource(Res.drawable.logo),
                 contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(24.dp),
+                tint = Color.Unspecified,
+                modifier = Modifier.size(48.dp),
             )
         }
         Text(
