@@ -35,6 +35,14 @@
     <string name="privacy_policy_link">Política de privacidad</string>
     <string name="already_have_account">¿Ya tienes cuenta?</string>
 
+    <!-- Google Alias -->
+    <string name="google_alias_title">Elige tu alias</string>
+    <string name="google_alias_subtitle">Así te verán en tus grupos. Podrás cambiarlo cuando quieras.</string>
+    <string name="alias_public">Alias público</string>
+    <string name="suggestions">Sugerencias</string>
+    <string name="google_alias_continue">Continuar</string>
+    <string name="google_alias_terms_footer">Al continuar aceptas nuestros Términos y Política de privacidad</string>
+
     <!-- Expense card -->
     <string name="settled">Saldado</string>
     <string name="no_impact">Sin impacto</string>

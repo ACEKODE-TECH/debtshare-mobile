@@ -1,6 +1,7 @@
 package acekode.debtshare.presentation.login
 
 import acekode.debtshare.auth.ContinueWithGoogleButton
+import acekode.debtshare.auth.GoogleAccount
 import acekode.debtshare.auth.GoogleSignInResult
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
@@ -68,6 +69,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun LoginScreen(
     onNavigateToSignUp: () -> Unit,
+    onNavigateToGoogleAlias: (GoogleAccount) -> Unit,
 ) {
     val viewModel = koinViewModel<LoginViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -77,7 +79,12 @@ fun LoginScreen(
             isLoading = this is LoginUiState.Loading,
             errorMessage = (this as? LoginUiState.Error)?.message,
             onLoginClick = viewModel::onLoginClick,
-            onGoogleSignIn = viewModel::onGoogleSignIn,
+            onGoogleSignIn = { result ->
+                viewModel.onGoogleSignIn(result)
+                if (result is GoogleSignInResult.Success) {
+                    onNavigateToGoogleAlias(result.account)
+                }
+            },
             onForgotPasswordClick = viewModel::onForgotPasswordClick,
             onCreateAccountClick = onNavigateToSignUp,
         )
