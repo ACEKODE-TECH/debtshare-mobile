@@ -1,8 +1,8 @@
 package acekode.debtshare.presentation.login
 
-import acekode.debtshare.auth.ContinueWithGoogleButton
-import acekode.debtshare.auth.GoogleAccount
-import acekode.debtshare.auth.GoogleSignInResult
+import acekode.debtshare.googleAuth.ContinueWithGoogleButton
+import acekode.debtshare.googleAuth.GoogleAccount
+import acekode.debtshare.googleAuth.GoogleSignInResult
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareTextField
@@ -58,7 +58,6 @@ import debtshare.app.generated.resources.no_account
 import debtshare.app.generated.resources.or_with_email
 import debtshare.app.generated.resources.password
 import debtshare.app.generated.resources.password_placeholder
-import debtshare.app.generated.resources.plus
 import debtshare.app.generated.resources.remember_me
 import debtshare.app.generated.resources.sign_in
 import debtshare.app.generated.resources.welcome_back
@@ -74,29 +73,36 @@ fun LoginScreen(
 ) {
     val viewModel = koinViewModel<LoginViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val fieldErrors by viewModel.fieldErrors.collectAsStateWithLifecycle()
 
-    with(uiState) {
-        LoginContent(
-            isLoading = this is LoginUiState.Loading,
-            errorMessage = (this as? LoginUiState.Error)?.message,
-            onLoginClick = viewModel::onLoginClick,
-            onGoogleSignIn = { result ->
-                viewModel.onGoogleSignIn(result)
-                if (result is GoogleSignInResult.Success) {
-                    onNavigateToGoogleAlias(result.account)
-                }
-            },
-            onForgotPasswordClick = viewModel::onForgotPasswordClick,
-            onCreateAccountClick = onNavigateToSignUp,
-        )
-    }
+    LoginContent(
+        isLoading = uiState is LoginUiState.Loading,
+        errorMessage = (uiState as? LoginUiState.Error)?.message,
+        emailError = fieldErrors.emailError,
+        passwordError = fieldErrors.passwordError,
+        onLoginClick = viewModel::onLoginClick,
+        onEmailChange = viewModel::onEmailChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onGoogleSignIn = { result ->
+            viewModel.onGoogleSignIn(result)
+            if (result is GoogleSignInResult.Success) {
+                onNavigateToGoogleAlias(result.account)
+            }
+        },
+        onForgotPasswordClick = viewModel::onForgotPasswordClick,
+        onCreateAccountClick = onNavigateToSignUp,
+    )
 }
 
 @Composable
 fun LoginContent(
     isLoading: Boolean,
     errorMessage: String?,
+    emailError: String?,
+    passwordError: String?,
     onLoginClick: (email: String, password: String, rememberMe: Boolean) -> Unit,
+    onEmailChange: () -> Unit,
+    onPasswordChange: () -> Unit,
     onGoogleSignIn: (GoogleSignInResult) -> Unit,
     onForgotPasswordClick: () -> Unit,
     onCreateAccountClick: () -> Unit,
@@ -137,8 +143,16 @@ fun LoginContent(
                 email = email,
                 password = password,
                 rememberMe = rememberMe,
-                onEmailChange = { email = it },
-                onPasswordChange = { password = it },
+                emailError = emailError,
+                passwordError = passwordError,
+                onEmailChange = {
+                    email = it
+                    onEmailChange()
+                },
+                onPasswordChange = {
+                    password = it
+                    onPasswordChange()
+                },
                 onRememberMeChange = { rememberMe = it },
                 onForgotPasswordClick = onForgotPasswordClick,
             )
@@ -266,6 +280,8 @@ private fun EmailAndPasswordForm(
     email: String,
     password: String,
     rememberMe: Boolean,
+    emailError: String?,
+    passwordError: String?,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRememberMeChange: (Boolean) -> Unit,
@@ -282,6 +298,7 @@ private fun EmailAndPasswordForm(
             onValueChange = onEmailChange,
             label = stringResource(Res.string.email),
             placeholder = stringResource(Res.string.email_placeholder),
+            errorText = emailError,
         )
 
         Spacer(Modifier.height(16.dp))
@@ -292,6 +309,7 @@ private fun EmailAndPasswordForm(
             variant = DebtshareTextFieldVariant.Password,
             label = stringResource(Res.string.password),
             placeholder = stringResource(Res.string.password_placeholder),
+            errorText = passwordError,
         )
 
         Spacer(Modifier.height(32.dp))
@@ -381,7 +399,30 @@ private fun LoginScreenPreview(
         LoginContent(
             isLoading = uiState is LoginUiState.Loading,
             errorMessage = (uiState as? LoginUiState.Error)?.message,
+            emailError = null,
+            passwordError = null,
             onLoginClick = { _, _, _ -> },
+            onEmailChange = {},
+            onPasswordChange = {},
+            onGoogleSignIn = {},
+            onForgotPasswordClick = {},
+            onCreateAccountClick = {},
+        )
+    }
+}
+
+@DebtshareScreenPreview
+@Composable
+private fun LoginScreenValidationPreview() {
+    DebtshareTheme(darkTheme = false) {
+        LoginContent(
+            isLoading = false,
+            errorMessage = null,
+            emailError = "Email is required",
+            passwordError = "Password is required",
+            onLoginClick = { _, _, _ -> },
+            onEmailChange = {},
+            onPasswordChange = {},
             onGoogleSignIn = {},
             onForgotPasswordClick = {},
             onCreateAccountClick = {},
@@ -398,7 +439,11 @@ private fun LoginScreenDarkPreview(
         LoginContent(
             isLoading = uiState is LoginUiState.Loading,
             errorMessage = (uiState as? LoginUiState.Error)?.message,
+            emailError = null,
+            passwordError = null,
             onLoginClick = { _, _, _ -> },
+            onEmailChange = {},
+            onPasswordChange = {},
             onGoogleSignIn = {},
             onForgotPasswordClick = {},
             onCreateAccountClick = {},

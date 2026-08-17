@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -88,6 +89,7 @@ fun SignUpScreen(
     val viewModel = koinViewModel<SignUpViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val aliasValidation by viewModel.aliasValidation.collectAsStateWithLifecycle()
+    val uriHandler = LocalUriHandler.current
 
     with(uiState) {
         SignUpContent(
@@ -99,8 +101,8 @@ fun SignUpScreen(
             onSignUpClick = viewModel::onSignUpClick,
             onAliasChange = viewModel::onAliasChange,
             onLoginClick = onNavigateBack,
-            onTermsClick = viewModel::onTermsClick,
-            onPrivacyPolicyClick = viewModel::onPrivacyPolicyClick,
+            onTermsClick = { uriHandler.openUri("https://www.google.es") },
+            onPrivacyPolicyClick = { uriHandler.openUri("https://www.google.es") },
             onBackClick = onNavigateBack,
         )
     }

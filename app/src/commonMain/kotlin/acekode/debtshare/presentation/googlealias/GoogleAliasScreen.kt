@@ -1,6 +1,6 @@
 package acekode.debtshare.presentation.googlealias
 
-import acekode.debtshare.auth.GoogleAccount
+import acekode.debtshare.googleAuth.GoogleAccount
 import acekode.debtshare.ui.items.DebtshareAvatar
 import acekode.debtshare.ui.items.DebtshareAvatarSize
 import acekode.debtshare.ui.items.DebtshareButton
