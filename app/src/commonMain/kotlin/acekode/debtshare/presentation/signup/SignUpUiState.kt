@@ -6,6 +6,12 @@ sealed interface SignUpUiState {
     data class Error(val message: String) : SignUpUiState
 }
 
+data class SignUpFieldErrors(
+    val aliasError: String? = null,
+    val emailError: String? = null,
+    val passwordError: String? = null,
+)
+
 sealed interface AliasValidation {
     data object Idle : AliasValidation
     data object Checking : AliasValidation
