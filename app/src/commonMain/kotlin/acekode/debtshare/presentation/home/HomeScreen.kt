@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -50,7 +51,12 @@ fun HomeScreen() {
             startDestination = Screen.Home.Groups.route,
             modifier = Modifier.padding(paddingValues),
         ) {
-            composable(Screen.Home.Groups.route) { GroupsScreen() }
+            composable(Screen.Home.Groups.route) {
+                GroupsScreen(
+                    onCreateGroupClick = { },
+                    onJoinWithCodeClick = { },
+                )
+            }
             composable(Screen.Home.Activity.route) { ActivityScreen() }
             composable(Screen.Home.Profile.route) { ProfileScreen() }
         }
@@ -76,7 +82,7 @@ private fun HomeBottomBar(
                 onClick = { onNavigate(tab.route) },
                 icon = {
                     Icon(
-                        imageVector = tab.icon,
+                        painter = painterResource(tab.icon),
                         contentDescription = stringResource(tab.label),
                     )
                 },

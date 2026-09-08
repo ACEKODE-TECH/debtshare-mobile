@@ -1,35 +1,34 @@
 package acekode.debtshare.presentation.home
 
 import acekode.debtshare.navigation.Screen
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.ui.graphics.vector.ImageVector
 import debtshare.app.generated.resources.Res
+import debtshare.app.generated.resources.bell
+import debtshare.app.generated.resources.house
+import debtshare.app.generated.resources.person
 import debtshare.app.generated.resources.tab_activity
 import debtshare.app.generated.resources.tab_home
 import debtshare.app.generated.resources.tab_profile
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 internal enum class HomeTab(
     val route: String,
     val label: StringResource,
-    val icon: ImageVector,
+    val icon: DrawableResource,
 ) {
     Groups(
         route = Screen.Home.Groups.route,
         label = Res.string.tab_home,
-        icon = Icons.Default.Home,
+        icon = Res.drawable.house,
     ),
     Activity(
         route = Screen.Home.Activity.route,
         label = Res.string.tab_activity,
-        icon = Icons.Default.Notifications,
+        icon = Res.drawable.bell,
     ),
     Profile(
         route = Screen.Home.Profile.route,
         label = Res.string.tab_profile,
-        icon = Icons.Default.Person,
+        icon = Res.drawable.person,
     ),
 }

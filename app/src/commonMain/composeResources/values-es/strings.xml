@@ -48,6 +48,13 @@
     <string name="settled">Saldado</string>
     <string name="no_impact">Sin impacto</string>
 
+    <!-- Groups -->
+    <string name="groups_subtitle_empty">Empieza a compartir gastos</string>
+    <string name="groups_empty_title">Todavía no tienes grupos</string>
+    <string name="groups_empty_description">Crea uno para tu piso, viaje o cena y empieza a dividir gastos con quien quieras.</string>
+    <string name="groups_create_group">Crear grupo</string>
+    <string name="groups_join_with_code">Unirte con un código</string>
+
     <!-- Home Tabs -->
     <string name="tab_home">Inicio</string>
     <string name="tab_activity">Actividad</string>
