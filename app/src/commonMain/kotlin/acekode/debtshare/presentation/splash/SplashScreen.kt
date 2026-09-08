@@ -1,4 +1,4 @@
-package acekode.debtshare.presentation
+package acekode.debtshare.presentation.splash
 
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview

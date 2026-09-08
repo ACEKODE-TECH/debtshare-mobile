@@ -1,19 +1,19 @@
 package acekode.debtshare.presentation.googlealias
 
+import acekode.debtshare.presentation.AliasValidation
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class GoogleAliasViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow<GoogleAliasUiState>(GoogleAliasUiState.Idle)
-    val uiState: StateFlow<GoogleAliasUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<GoogleAliasUiState>
+        field = MutableStateFlow<GoogleAliasUiState>(GoogleAliasUiState.Idle)
 
-    private val _aliasValidation = MutableStateFlow<AliasValidation>(AliasValidation.Idle)
-    val aliasValidation: StateFlow<AliasValidation> = _aliasValidation.asStateFlow()
+    val aliasValidation: StateFlow<AliasValidation>
+        field = MutableStateFlow<AliasValidation>(AliasValidation.Idle)
 
     fun onAliasChange(alias: String) {
         println(alias)

@@ -1,6 +1,7 @@
 package acekode.debtshare.presentation.googlealias
 
 import acekode.debtshare.googleAuth.GoogleAccount
+import acekode.debtshare.presentation.AliasValidation
 import acekode.debtshare.ui.items.DebtshareAvatar
 import acekode.debtshare.ui.items.DebtshareAvatarSize
 import acekode.debtshare.ui.items.DebtshareButton
@@ -81,38 +82,32 @@ fun GoogleAliasScreen(
         generateAliasSuggestions(account.displayName).toPersistentList()
     }
 
-    with(uiState) {
-        GoogleAliasContent(
-            account = account,
-            isLoading = this is GoogleAliasUiState.Loading,
-            errorMessage = (this as? GoogleAliasUiState.Error)?.message,
-            isAliasAvailable = aliasValidation is AliasValidation.Available,
-            isAliasTaken = aliasValidation is AliasValidation.Taken,
-            suggestions = suggestedAliases,
-            onAliasChange = viewModel::onAliasChange,
-            onContinueClick = { alias ->
-                viewModel.onContinueClick(alias)
-                onContinueClick()
-            },
-            onBackClick = onNavigateBack,
-        )
-    }
+    GoogleAliasContent(
+        account = account,
+        uiState = uiState,
+        aliasValidation = aliasValidation,
+        suggestions = suggestedAliases,
+        onAliasChange = viewModel::onAliasChange,
+        onContinueClick = { alias ->
+            viewModel.onContinueClick(alias)
+            onContinueClick()
+        },
+        onBackClick = onNavigateBack,
+    )
 }
 
 @Composable
 fun GoogleAliasContent(
     account: GoogleAccount,
-    isLoading: Boolean,
-    errorMessage: String?,
-    isAliasAvailable: Boolean,
-    isAliasTaken: Boolean,
+    uiState: GoogleAliasUiState,
+    aliasValidation: AliasValidation,
     suggestions: ImmutableList<String>,
     onAliasChange: (String) -> Unit,
     onContinueClick: (alias: String) -> Unit,
     onBackClick: () -> Unit,
 ) {
     var alias by remember { mutableStateOf("") }
-    val canContinue = alias.isNotEmpty() && !isAliasTaken && !isLoading
+    val canContinue = alias.isNotEmpty() && !aliasValidation.isTaken && !uiState.isLoading
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -159,10 +154,10 @@ fun GoogleAliasContent(
                     variant = DebtshareTextFieldVariant.Alias,
                     label = stringResource(Res.string.alias_public),
                     placeholder = stringResource(Res.string.alias_placeholder),
-                    helpText = if (!isAliasTaken) stringResource(Res.string.alias_hint) else null,
-                    isAliasAvailable = isAliasAvailable,
+                    helpText = if (!aliasValidation.isTaken) stringResource(Res.string.alias_hint) else null,
+                    isAliasAvailable = aliasValidation.isAvailable,
                     aliasAvailableLabel = stringResource(Res.string.alias_available),
-                    isAliasTaken = isAliasTaken,
+                    isAliasTaken = aliasValidation.isTaken,
                 )
 
                 Spacer(Modifier.height(16.dp))
@@ -175,7 +170,7 @@ fun GoogleAliasContent(
                     },
                 )
 
-                if (errorMessage != null) {
+                uiState.errorMessage?.let { errorMessage ->
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = errorMessage,
@@ -186,7 +181,7 @@ fun GoogleAliasContent(
             }
 
             CtaSection(
-                isLoading = isLoading,
+                isLoading = uiState.isLoading,
                 canContinue = canContinue,
                 onContinueClick = { onContinueClick(alias) },
             )
@@ -409,10 +404,24 @@ private fun GoogleAliasScreenPreview(
     DebtshareTheme(darkTheme = false) {
         GoogleAliasContent(
             account = previewAccount,
-            isLoading = uiState is GoogleAliasUiState.Loading,
-            errorMessage = (uiState as? GoogleAliasUiState.Error)?.message,
-            isAliasAvailable = true,
-            isAliasTaken = false,
+            uiState = uiState,
+            aliasValidation = AliasValidation.Available,
+            suggestions = generateAliasSuggestions(previewAccount.displayName).toPersistentList(),
+            onAliasChange = {},
+            onContinueClick = {},
+            onBackClick = {},
+        )
+    }
+}
+
+@DebtshareScreenPreview
+@Composable
+private fun GoogleAliasScreenAliasTakenPreview() {
+    DebtshareTheme(darkTheme = false) {
+        GoogleAliasContent(
+            account = previewAccount,
+            uiState = GoogleAliasUiState.Idle,
+            aliasValidation = AliasValidation.Taken(listOf("anaG_28", "ana.gomez")),
             suggestions = generateAliasSuggestions(previewAccount.displayName).toPersistentList(),
             onAliasChange = {},
             onContinueClick = {},
@@ -429,10 +438,8 @@ private fun GoogleAliasScreenDarkPreview(
     DebtshareTheme(darkTheme = true) {
         GoogleAliasContent(
             account = previewAccount,
-            isLoading = uiState is GoogleAliasUiState.Loading,
-            errorMessage = (uiState as? GoogleAliasUiState.Error)?.message,
-            isAliasAvailable = true,
-            isAliasTaken = false,
+            uiState = uiState,
+            aliasValidation = AliasValidation.Available,
             suggestions = generateAliasSuggestions(previewAccount.displayName).toPersistentList(),
             onAliasChange = {},
             onContinueClick = {},

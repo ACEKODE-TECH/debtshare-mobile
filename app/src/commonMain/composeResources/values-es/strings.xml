@@ -25,6 +25,7 @@
     <string name="alias_hint">3-20 caracteres · letras, números, punto y guión bajo</string>
     <string name="alias_available">Disponible</string>
     <string name="alias_taken_prefix">Ese alias ya está en uso. Prueba</string>
+    <string name="alias_taken_separator"> o </string>
     <string name="password_strength_weak">Débil</string>
     <string name="password_strength_fair">Aceptable</string>
     <string name="password_strength_strong">Fuerte · 10+ caracteres, número, símbolo</string>
@@ -46,4 +47,24 @@
     <!-- Expense card -->
     <string name="settled">Saldado</string>
     <string name="no_impact">Sin impacto</string>
+
+    <!-- Home Tabs -->
+    <string name="tab_home">Inicio</string>
+    <string name="tab_activity">Actividad</string>
+    <string name="tab_profile">Perfil</string>
+
+    <!-- Errors - Validation -->
+    <string name="error_email_required">El email es obligatorio</string>
+    <string name="error_email_invalid">Formato de email inválido</string>
+    <string name="error_password_required">La contraseña es obligatoria</string>
+    <string name="error_password_invalid">La contraseña no cumple el formato requerido</string>
+    <string name="error_alias_required">El alias es obligatorio</string>
+    <string name="error_alias_invalid">Formato de alias inválido</string>
+
+    <!-- Errors - Network -->
+    <string name="error_network_unauthorized">Email o contraseña incorrectos</string>
+    <string name="error_network_forbidden">No tienes permiso de acceso</string>
+    <string name="error_network_timeout">Sin conexión, inténtalo de nuevo</string>
+    <string name="error_network_unavailable">Servicio no disponible, inténtalo más tarde</string>
+    <string name="error_generic">Ha ocurrido un error inesperado</string>
 </resources>

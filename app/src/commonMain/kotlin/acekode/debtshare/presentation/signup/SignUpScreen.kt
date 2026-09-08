@@ -1,5 +1,7 @@
 package acekode.debtshare.presentation.signup
 
+import acekode.debtshare.presentation.AliasValidation
+import acekode.debtshare.presentation.ValidationError
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareTextField
@@ -57,12 +59,19 @@ import debtshare.app.generated.resources.alias_available
 import debtshare.app.generated.resources.alias_hint
 import debtshare.app.generated.resources.alias_placeholder
 import debtshare.app.generated.resources.alias_taken_prefix
+import debtshare.app.generated.resources.alias_taken_separator
 import debtshare.app.generated.resources.already_have_account
 import debtshare.app.generated.resources.arrow_left
 import debtshare.app.generated.resources.close
 import debtshare.app.generated.resources.create_account
 import debtshare.app.generated.resources.email
 import debtshare.app.generated.resources.email_placeholder
+import debtshare.app.generated.resources.error_alias_invalid
+import debtshare.app.generated.resources.error_alias_required
+import debtshare.app.generated.resources.error_email_invalid
+import debtshare.app.generated.resources.error_email_required
+import debtshare.app.generated.resources.error_password_invalid
+import debtshare.app.generated.resources.error_password_required
 import debtshare.app.generated.resources.password
 import debtshare.app.generated.resources.password_placeholder
 import debtshare.app.generated.resources.password_strength_fair
@@ -92,35 +101,27 @@ fun SignUpScreen(
     val fieldErrors by viewModel.fieldErrors.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
 
-    with(uiState) {
-        SignUpContent(
-            isLoading = this is SignUpUiState.Loading,
-            errorMessage = (this as? SignUpUiState.Error)?.message,
-            fieldErrors = fieldErrors,
-            isAliasAvailable = aliasValidation is AliasValidation.Available,
-            isAliasTaken = aliasValidation is AliasValidation.Taken,
-            aliasSuggestions = (aliasValidation as? AliasValidation.Taken)?.suggestions.orEmpty().toPersistentList(),
-            onSignUpClick = viewModel::onSignUpClick,
-            onAliasChange = viewModel::onAliasChange,
-            onEmailChange = viewModel::onEmailChange,
-            onPasswordChange = viewModel::onPasswordChange,
-            onLoginClick = onNavigateBack,
-            onTermsClick = { uriHandler.openUri("https://www.google.es") },
-            onPrivacyPolicyClick = { uriHandler.openUri("https://www.google.es") },
-            onBackClick = onNavigateBack,
-        )
-    }
+    SignUpContent(
+        uiState = uiState,
+        fieldErrors = fieldErrors,
+        aliasValidation = aliasValidation,
+        onSignUpClick = viewModel::onSignUpClick,
+        onAliasChange = viewModel::onAliasChange,
+        onEmailChange = viewModel::onEmailChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onLoginClick = onNavigateBack,
+        onTermsClick = { uriHandler.openUri("https://www.google.es") },
+        onPrivacyPolicyClick = { uriHandler.openUri("https://www.google.es") },
+        onBackClick = onNavigateBack,
+    )
 }
 
 @Suppress("LongMethod")
 @Composable
 fun SignUpContent(
-    isLoading: Boolean,
-    errorMessage: String?,
+    uiState: SignUpUiState,
     fieldErrors: SignUpFieldErrors,
-    isAliasAvailable: Boolean,
-    isAliasTaken: Boolean,
-    aliasSuggestions: ImmutableList<String>,
+    aliasValidation: AliasValidation,
     onSignUpClick: (alias: String, email: String, password: String, termsAccepted: Boolean) -> Unit,
     onAliasChange: (String) -> Unit,
     onEmailChange: () -> Unit,
@@ -136,7 +137,7 @@ fun SignUpContent(
     var termsAccepted by remember { mutableStateOf(false) }
 
     val passwordStrength = remember(password) { computePasswordStrength(password) }
-    val canSignUp = !isAliasTaken && termsAccepted && !isLoading
+    val canSignUp = !aliasValidation.isTaken && termsAccepted && !uiState.isLoading
 
     Scaffold(
         modifier = Modifier
@@ -177,9 +178,9 @@ fun SignUpContent(
                     alias = it
                     onAliasChange(it)
                 },
-                isAvailable = isAliasAvailable,
-                isTaken = isAliasTaken,
-                suggestions = aliasSuggestions,
+                isAvailable = aliasValidation.isAvailable,
+                isTaken = aliasValidation.isTaken,
+                suggestions = remember(aliasValidation) { aliasValidation.takenSuggestions.toPersistentList() },
                 aliasError = fieldErrors.aliasError,
             )
 
@@ -193,7 +194,12 @@ fun SignUpContent(
                 },
                 label = stringResource(Res.string.email),
                 placeholder = stringResource(Res.string.email_placeholder),
-                errorText = fieldErrors.emailError,
+                errorText = fieldErrors.emailError?.let {
+                    when (it) {
+                        ValidationError.Required -> stringResource(Res.string.error_email_required)
+                        ValidationError.InvalidFormat -> stringResource(Res.string.error_email_invalid)
+                    }
+                },
             )
 
             Spacer(Modifier.height(16.dp))
@@ -205,7 +211,12 @@ fun SignUpContent(
                     onPasswordChange()
                 },
                 strength = passwordStrength,
-                errorText = fieldErrors.passwordError,
+                errorText = fieldErrors.passwordError?.let {
+                    when (it) {
+                        ValidationError.Required -> stringResource(Res.string.error_password_required)
+                        ValidationError.InvalidFormat -> stringResource(Res.string.error_password_invalid)
+                    }
+                },
             )
 
             Spacer(Modifier.height(32.dp))
@@ -219,7 +230,7 @@ fun SignUpContent(
 
             Spacer(Modifier.height(32.dp))
 
-            if (errorMessage != null) {
+            uiState.errorMessage?.let { errorMessage ->
                 Text(
                     text = errorMessage,
                     style = DebtshareTheme.typography.bodySmall,
@@ -234,7 +245,7 @@ fun SignUpContent(
                 modifier = Modifier.fillMaxWidth(),
                 size = DebtshareButtonSize.Large,
                 enabled = canSignUp,
-                loading = isLoading,
+                loading = uiState.isLoading,
             )
 
             Spacer(Modifier.height(16.dp))
@@ -273,7 +284,7 @@ private fun AliasField(
     isAvailable: Boolean,
     isTaken: Boolean,
     suggestions: ImmutableList<String>,
-    aliasError: String?,
+    aliasError: ValidationError?,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -284,7 +295,16 @@ private fun AliasField(
             label = stringResource(Res.string.alias),
             placeholder = stringResource(Res.string.alias_placeholder),
             helpText = if (!isTaken) stringResource(Res.string.alias_hint) else null,
-            errorText = if (!isTaken) aliasError else null,
+            errorText = if (!isTaken) {
+                aliasError?.let {
+                    when (it) {
+                        ValidationError.Required -> stringResource(Res.string.error_alias_required)
+                        ValidationError.InvalidFormat -> stringResource(Res.string.error_alias_invalid)
+                    }
+                }
+            } else {
+                null
+            },
             isAliasAvailable = isAvailable,
             aliasAvailableLabel = stringResource(Res.string.alias_available),
             isAliasTaken = isTaken,
@@ -304,6 +324,7 @@ private fun AliasTakenError(
     val linkColor = DebtshareColors.Brand.primary
     val errorColor = DebtshareColors.Semantic.error
     val baseText = stringResource(Res.string.alias_taken_prefix)
+    val separatorText = stringResource(Res.string.alias_taken_separator)
 
     val annotatedText = buildAnnotatedString {
         withStyle(SpanStyle(color = errorColor)) {
@@ -315,7 +336,7 @@ private fun AliasTakenError(
             }
             if (index < suggestions.lastIndex) {
                 withStyle(SpanStyle(color = errorColor)) {
-                    append(" o ")
+                    append(separatorText)
                 }
             }
         }
@@ -530,12 +551,9 @@ private fun SignUpScreenPreview(
 ) {
     DebtshareTheme(darkTheme = false) {
         SignUpContent(
-            isLoading = uiState is SignUpUiState.Loading,
-            errorMessage = (uiState as? SignUpUiState.Error)?.message,
+            uiState = uiState,
             fieldErrors = SignUpFieldErrors(),
-            isAliasAvailable = true,
-            isAliasTaken = false,
-            aliasSuggestions = emptyList<String>().toPersistentList(),
+            aliasValidation = AliasValidation.Available,
             onSignUpClick = { _, _, _, _ -> },
             onAliasChange = {},
             onEmailChange = {},
@@ -555,12 +573,9 @@ private fun SignUpScreenDarkPreview(
 ) {
     DebtshareTheme(darkTheme = true) {
         SignUpContent(
-            isLoading = uiState is SignUpUiState.Loading,
-            errorMessage = (uiState as? SignUpUiState.Error)?.message,
+            uiState = uiState,
             fieldErrors = SignUpFieldErrors(),
-            isAliasAvailable = false,
-            isAliasTaken = true,
-            aliasSuggestions = listOf("anaG_28", "ana.gomez").toPersistentList(),
+            aliasValidation = AliasValidation.Taken(listOf("anaG_28", "ana.gomez")),
             onSignUpClick = { _, _, _, _ -> },
             onAliasChange = {},
             onEmailChange = {},
@@ -578,12 +593,9 @@ private fun SignUpScreenDarkPreview(
 private fun SignUpScreenAliasTakenPreview() {
     DebtshareTheme(darkTheme = false) {
         SignUpContent(
-            isLoading = false,
-            errorMessage = null,
+            uiState = SignUpUiState.Idle,
             fieldErrors = SignUpFieldErrors(),
-            isAliasAvailable = false,
-            isAliasTaken = true,
-            aliasSuggestions = listOf("anaG_28", "ana.gomez").toPersistentList(),
+            aliasValidation = AliasValidation.Taken(listOf("anaG_28", "ana.gomez")),
             onSignUpClick = { _, _, _, _ -> },
             onAliasChange = {},
             onEmailChange = {},
@@ -601,16 +613,13 @@ private fun SignUpScreenAliasTakenPreview() {
 private fun SignUpScreenValidationPreview() {
     DebtshareTheme(darkTheme = false) {
         SignUpContent(
-            isLoading = false,
-            errorMessage = null,
+            uiState = SignUpUiState.Idle,
             fieldErrors = SignUpFieldErrors(
-                aliasError = "Alias is required",
-                emailError = "Email is required",
-                passwordError = "Password is required",
+                aliasError = ValidationError.Required,
+                emailError = ValidationError.Required,
+                passwordError = ValidationError.Required,
             ),
-            isAliasAvailable = false,
-            isAliasTaken = false,
-            aliasSuggestions = emptyList<String>().toPersistentList(),
+            aliasValidation = AliasValidation.Idle,
             onSignUpClick = { _, _, _, _ -> },
             onAliasChange = {},
             onEmailChange = {},

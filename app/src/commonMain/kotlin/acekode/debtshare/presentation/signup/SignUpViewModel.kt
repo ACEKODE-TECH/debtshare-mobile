@@ -1,9 +1,10 @@
 package acekode.debtshare.presentation.signup
 
+import acekode.debtshare.presentation.AliasValidation
+import acekode.debtshare.presentation.ValidationError
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.koin.android.annotation.KoinViewModel
 
@@ -12,40 +13,40 @@ private val emailRegex = Regex("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]
 @KoinViewModel
 class SignUpViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Idle)
-    val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<SignUpUiState>
+        field = MutableStateFlow<SignUpUiState>(SignUpUiState.Idle)
 
-    private val _aliasValidation = MutableStateFlow<AliasValidation>(AliasValidation.Idle)
-    val aliasValidation: StateFlow<AliasValidation> = _aliasValidation.asStateFlow()
+    val aliasValidation: StateFlow<AliasValidation>
+        field = MutableStateFlow<AliasValidation>(AliasValidation.Idle)
 
-    private val _fieldErrors = MutableStateFlow(SignUpFieldErrors())
-    val fieldErrors: StateFlow<SignUpFieldErrors> = _fieldErrors.asStateFlow()
+    val fieldErrors: StateFlow<SignUpFieldErrors>
+        field = MutableStateFlow(SignUpFieldErrors())
 
     fun onAliasChange(alias: String) {
         println(alias)
-        _fieldErrors.update { it.copy(aliasError = null) }
+        fieldErrors.update { it.copy(aliasError = null) }
     }
 
     fun onEmailChange() {
-        _fieldErrors.update { it.copy(emailError = null) }
+        fieldErrors.update { it.copy(emailError = null) }
     }
 
     fun onPasswordChange() {
-        _fieldErrors.update { it.copy(passwordError = null) }
+        fieldErrors.update { it.copy(passwordError = null) }
     }
 
     fun onSignUpClick(alias: String, email: String, password: String, termsAccepted: Boolean) {
         println(termsAccepted)
-        val aliasError = if (alias.isBlank()) "Alias is required" else null
+        val aliasError = if (alias.isBlank()) ValidationError.Required else null
         val emailError = when {
-            email.isBlank() -> "Email is required"
-            !emailRegex.matches(email) -> "Invalid email format"
+            email.isBlank() -> ValidationError.Required
+            !emailRegex.matches(email) -> ValidationError.InvalidFormat
             else -> null
         }
-        val passwordError = if (password.isBlank()) "Password is required" else null
+        val passwordError = if (password.isBlank()) ValidationError.Required else null
 
         if (aliasError != null || emailError != null || passwordError != null) {
-            _fieldErrors.value = SignUpFieldErrors(
+            fieldErrors.value = SignUpFieldErrors(
                 aliasError = aliasError,
                 emailError = emailError,
                 passwordError = passwordError,

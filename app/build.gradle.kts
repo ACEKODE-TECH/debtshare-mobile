@@ -29,6 +29,10 @@ android {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-XXLanguage:+ExplicitBackingFields")
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
@@ -61,6 +65,7 @@ kotlin {
             implementation(libs.koin.annotations)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.navigation.compose)
+            implementation(compose.materialIconsExtended)
             implementation(libs.compottie)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)

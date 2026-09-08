@@ -25,6 +25,7 @@
     <string name="alias_hint">3-20 characters · letters, numbers, dot and underscore</string>
     <string name="alias_available">Available</string>
     <string name="alias_taken_prefix">That alias is already in use. Try</string>
+    <string name="alias_taken_separator"> or </string>
     <string name="password_strength_weak">Weak</string>
     <string name="password_strength_fair">Fair</string>
     <string name="password_strength_strong">Strong · 10+ chars, number, symbol</string>
@@ -46,4 +47,24 @@
     <!-- Expense card -->
     <string name="settled">Settled</string>
     <string name="no_impact">No impact</string>
+
+    <!-- Home Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_activity">Activity</string>
+    <string name="tab_profile">Profile</string>
+
+    <!-- Errors - Validation -->
+    <string name="error_email_required">Email is required</string>
+    <string name="error_email_invalid">Invalid email format</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_password_invalid">Password does not meet the required format</string>
+    <string name="error_alias_required">Alias is required</string>
+    <string name="error_alias_invalid">Invalid alias format</string>
+
+    <!-- Errors - Network -->
+    <string name="error_network_unauthorized">Incorrect email or password</string>
+    <string name="error_network_forbidden">You don\'t have permission to access</string>
+    <string name="error_network_timeout">No connection, please try again</string>
+    <string name="error_network_unavailable">Service unavailable, please try later</string>
+    <string name="error_generic">An unexpected error occurred</string>
 </resources>
