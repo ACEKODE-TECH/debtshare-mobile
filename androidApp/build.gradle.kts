@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose.stability)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.wickkit)
     id("jacoco-convention")
     id("detekt-convention")
     id("spotless-convention")
@@ -119,10 +120,20 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+
+    debugImplementation(libs.wickkit.core)
+    debugImplementation(libs.wickkit.network)
+    debugImplementation(libs.wickkit.flags)
+    debugImplementation(libs.wickkit.compose)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    releaseImplementation(libs.wickkit.no.op)
+    releaseImplementation(libs.wickkit.compose.no.op)
 }
