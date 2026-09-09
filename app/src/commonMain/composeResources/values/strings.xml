@@ -54,6 +54,17 @@
     <string name="groups_empty_description">Create one for your apartment, trip, or dinner and start splitting expenses with whoever you want.</string>
     <string name="groups_create_group">Create group</string>
     <string name="groups_join_with_code">Join with a code</string>
+    <string name="groups_subtitle_content">%1$d active · balance %2$s</string>
+    <string name="groups_filter_all">All · %1$d</string>
+    <string name="groups_filter_with_activity">With activity</string>
+    <string name="groups_filter_archived">Archived</string>
+    <string name="groups_global_balance">Global balance</string>
+    <string name="groups_balance_across">Across %1$d groups</string>
+    <string name="groups_members_expenses">%1$d members · %2$d expenses</string>
+    <string name="groups_balance_owed">owed to you</string>
+    <string name="groups_balance_owing">you owe</string>
+    <string name="groups_balance_settled">Settled</string>
+    <string name="groups_balance_settled_label">settled</string>
 
     <!-- Home Tabs -->
     <string name="tab_home">Home</string>

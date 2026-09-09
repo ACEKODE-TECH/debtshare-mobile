@@ -54,6 +54,17 @@
     <string name="groups_empty_description">Crea uno para tu piso, viaje o cena y empieza a dividir gastos con quien quieras.</string>
     <string name="groups_create_group">Crear grupo</string>
     <string name="groups_join_with_code">Unirte con un código</string>
+    <string name="groups_subtitle_content">%1$d activos · balance %2$s</string>
+    <string name="groups_filter_all">Todos · %1$d</string>
+    <string name="groups_filter_with_activity">Con actividad</string>
+    <string name="groups_filter_archived">Archivados</string>
+    <string name="groups_global_balance">Balance global</string>
+    <string name="groups_balance_across">A través de %1$d grupos</string>
+    <string name="groups_members_expenses">%1$d miembros · %2$d gastos</string>
+    <string name="groups_balance_owed">te deben</string>
+    <string name="groups_balance_owing">debes</string>
+    <string name="groups_balance_settled">Al día</string>
+    <string name="groups_balance_settled_label">liquidado</string>
 
     <!-- Home Tabs -->
     <string name="tab_home">Inicio</string>
