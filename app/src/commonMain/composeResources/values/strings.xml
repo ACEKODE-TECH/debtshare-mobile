@@ -66,6 +66,20 @@
     <string name="groups_balance_settled">Settled</string>
     <string name="groups_balance_settled_label">settled</string>
 
+    <!-- Activity -->
+    <string name="activity_title">Notifications</string>
+    <string name="activity_mark_read">Mark as read</string>
+    <string name="activity_tab_activity">Activity</string>
+    <string name="activity_tab_invitations">Invitations</string>
+    <string name="activity_section_recent">RECENT</string>
+    <string name="activity_invitation_new">NEW</string>
+    <string name="activity_invitation_members">%1$d members · %2$s</string>
+    <string name="activity_invitation_invited_by">%1$s invited you %2$s</string>
+    <string name="activity_invitation_and_more">%1$s and %2$d more</string>
+    <string name="activity_invitation_decline">Decline</string>
+    <string name="activity_invitation_accept">Accept</string>
+    <string name="activity_invitation_accepted">Accepted</string>
+
     <!-- Home Tabs -->
     <string name="tab_home">Home</string>
     <string name="tab_activity">Activity</string>
