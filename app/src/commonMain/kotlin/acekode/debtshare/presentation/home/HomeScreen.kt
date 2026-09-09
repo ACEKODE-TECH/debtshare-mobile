@@ -1,6 +1,7 @@
 package acekode.debtshare.presentation.home
 
 import acekode.debtshare.navigation.Screen
+import acekode.debtshare.presentation.groupdetail.GroupDetailScreen
 import acekode.debtshare.presentation.home.activity.ActivityScreen
 import acekode.debtshare.presentation.home.activity.ActivityUiState
 import acekode.debtshare.presentation.home.activity.ActivityViewModel
@@ -45,10 +46,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -91,18 +94,26 @@ fun HomeScreen() {
                     onCreateGroupClick = { },
                     onJoinWithCodeClick = { },
                     onSearchClick = { },
-                    onGroupClick = { },
+                    onGroupClick = { groupId ->
+                        navController.navigate(Screen.Home.GroupDetail.createRoute(groupId))
+                    },
+                )
+            }
+            composable(
+                route = Screen.Home.GroupDetail.route,
+                arguments = listOf(
+                    navArgument("groupId") { type = NavType.StringType },
+                ),
+            ) {
+                GroupDetailScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onAddExpenseClick = { },
+                    onBalancesClick = { },
+                    onMenuClick = { },
                 )
             }
             composable(Screen.Home.Activity.route) {
-                ActivityScreen(
-                    onBackClick = {
-                        navController.navigate(Screen.Home.Groups.route) {
-                            popUpTo(Screen.Home.Groups.route) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    },
-                )
+                ActivityScreen()
             }
             composable(Screen.Home.Profile.route) {
                 ProfileScreen(
@@ -136,7 +147,8 @@ private fun HomeBottomBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HomeTab.entries.forEach { tab ->
-                val selected = currentRoute == tab.route
+                val selected = currentRoute == tab.route ||
+                    (tab == HomeTab.Groups && currentRoute?.startsWith("group_detail") == true)
                 val badgeCount = if (tab == HomeTab.Activity) activityBadgeCount else 0
                 BottomBarItem(
                     tab = tab,

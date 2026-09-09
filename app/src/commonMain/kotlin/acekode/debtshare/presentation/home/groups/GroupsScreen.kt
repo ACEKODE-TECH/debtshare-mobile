@@ -3,7 +3,7 @@ package acekode.debtshare.presentation.home.groups
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareButtonVariant
-import acekode.debtshare.ui.items.DebtshareIconButton
+import acekode.debtshare.ui.items.DebtshareTabHeader
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
@@ -128,21 +128,10 @@ private fun GroupsEmptyContent(
 
 @Composable
 private fun GroupsEmptyHeader() {
-    Column {
-        Text(
-            text = stringResource(Res.string.tab_home),
-            style = DebtshareTheme.typography.displayMedium,
-            color = DebtshareTheme.colors.textPrimary,
-        )
-
-        Spacer(Modifier.height(4.dp))
-
-        Text(
-            text = stringResource(Res.string.groups_subtitle_empty),
-            style = DebtshareTheme.typography.bodyMedium,
-            color = DebtshareTheme.colors.textSecondary,
-        )
-    }
+    DebtshareTabHeader(
+        title = stringResource(Res.string.tab_home),
+        subtitle = stringResource(Res.string.groups_subtitle_empty),
+    )
 }
 
 @Composable
@@ -255,41 +244,28 @@ private fun GroupsContentHeader(
     onSearchClick: () -> Unit,
     onCreateGroupClick: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
+    DebtshareTabHeader(
+        title = stringResource(Res.string.tab_home),
+        subtitle = stringResource(Res.string.groups_subtitle_content, activeCount, globalBalance),
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = stringResource(Res.string.tab_home),
-                style = DebtshareTheme.typography.displayMedium,
-                color = DebtshareTheme.colors.textPrimary,
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = stringResource(Res.string.groups_subtitle_content, activeCount, globalBalance),
-                style = DebtshareTheme.typography.bodyMedium,
-                color = DebtshareTheme.colors.textSecondary,
-            )
-        }
-
-        DebtshareIconButton(
-            icon = Res.drawable.search,
+        Icon(
+            painter = painterResource(Res.drawable.search),
             contentDescription = null,
-            onClick = onSearchClick,
-            size = DebtshareButtonSize.Large,
+            tint = DebtshareTheme.colors.textPrimary,
+            modifier = Modifier
+                .size(24.dp)
+                .clickable(onClick = onSearchClick),
         )
 
-        Spacer(Modifier.width(8.dp))
+        Spacer(Modifier.width(16.dp))
 
-        DebtshareIconButton(
-            icon = Res.drawable.plus,
+        Icon(
+            painter = painterResource(Res.drawable.plus),
             contentDescription = null,
-            onClick = onCreateGroupClick,
-            variant = DebtshareButtonVariant.Primary,
-            size = DebtshareButtonSize.Large,
+            tint = DebtshareTheme.colors.textPrimary,
+            modifier = Modifier
+                .size(24.dp)
+                .clickable(onClick = onCreateGroupClick),
         )
     }
 }

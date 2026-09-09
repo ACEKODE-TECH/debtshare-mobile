@@ -113,6 +113,19 @@
     <string name="profile_payment_method">Método de pago</string>
     <string name="profile_logout">Cerrar sesión</string>
 
+    <!-- Group Detail -->
+    <string name="group_detail_label">GRUPO</string>
+    <string name="group_detail_members_since">%1$d miembros · desde %2$s</string>
+    <string name="group_detail_your_balance">TU BALANCE</string>
+    <string name="group_detail_in_favor">a favor</string>
+    <string name="group_detail_you_owe">debes</string>
+    <string name="group_detail_add_expense">Añadir gasto</string>
+    <string name="group_detail_balances">Balances</string>
+    <string name="group_detail_tab_expenses">Gastos · %1$d</string>
+    <string name="group_detail_tab_activity">Actividad</string>
+    <string name="group_detail_tab_notes">Notas</string>
+    <string name="group_detail_settled_badge">SALDADO</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">El email es obligatorio</string>
     <string name="error_email_invalid">Formato de email inválido</string>
