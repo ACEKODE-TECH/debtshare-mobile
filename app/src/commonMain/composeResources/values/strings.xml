@@ -71,6 +71,34 @@
     <string name="tab_activity">Activity</string>
     <string name="tab_profile">Profile</string>
 
+    <!-- Profile -->
+    <string name="profile_user_groups">%1$d groups</string>
+    <string name="profile_user_expenses">%1$d expenses</string>
+    <string name="profile_global_balance">YOUR GLOBAL BALANCE</string>
+    <string name="profile_balance_in_favor">in your favor</string>
+    <string name="profile_balance_you_owe">you owe</string>
+    <string name="profile_owed_to_you">OWED TO YOU</string>
+    <string name="profile_you_owe_label">YOU OWE</string>
+    <string name="profile_this_month">THIS MONTH</string>
+    <string name="profile_analytics">Analytics</string>
+    <string name="profile_last_90_days">Last 90 days</string>
+    <string name="profile_analytics_subtitle">Aggregated from your %1$d groups. To see time trends, go to each group's panel.</string>
+    <string name="profile_total_spent">TOTAL SPENT</string>
+    <string name="profile_average_ticket">AVERAGE TICKET</string>
+    <string name="profile_expenses_count">%1$d expenses</string>
+    <string name="profile_by_category">By category</string>
+    <string name="profile_all_groups">All groups</string>
+    <string name="profile_category_subtitle">%1$s · %2$d groups</string>
+    <string name="profile_group_comparison">Group comparison</string>
+    <string name="profile_total">Total</string>
+    <string name="profile_group_comparison_subtitle">How much you spend in each · your share</string>
+    <string name="profile_tip">See a spike? Go to the group for its monthly evolution.</string>
+    <string name="profile_account">ACCOUNT</string>
+    <string name="profile_email_password">Email and password</string>
+    <string name="profile_notifications">Notifications</string>
+    <string name="profile_payment_method">Payment method</string>
+    <string name="profile_logout">Log out</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">Email is required</string>
     <string name="error_email_invalid">Invalid email format</string>

@@ -7,18 +7,31 @@ import acekode.debtshare.presentation.home.profile.ProfileScreen
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareComponentPreview
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -33,6 +46,7 @@ fun HomeScreen() {
     val currentRoute = currentEntry?.destination?.route
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
             HomeBottomBar(
                 currentRoute = currentRoute,
@@ -49,7 +63,9 @@ fun HomeScreen() {
         NavHost(
             navController = navController,
             startDestination = Screen.Home.Groups.route,
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier
+                .padding(paddingValues)
+                .windowInsetsPadding(WindowInsets.statusBars),
         ) {
             composable(Screen.Home.Groups.route) {
                 GroupsScreen(
@@ -60,7 +76,12 @@ fun HomeScreen() {
                 )
             }
             composable(Screen.Home.Activity.route) { ActivityScreen() }
-            composable(Screen.Home.Profile.route) { ProfileScreen() }
+            composable(Screen.Home.Profile.route) {
+                ProfileScreen(
+                    onSettingsClick = { },
+                    onLogoutClick = { },
+                )
+            }
         }
     }
 }
@@ -71,33 +92,65 @@ private fun HomeBottomBar(
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    NavigationBar(
-        modifier = modifier,
-        containerColor = DebtshareTheme.colors.card,
-        contentColor = DebtshareTheme.colors.textTertiary,
-        tonalElevation = 0.dp,
-    ) {
-        HomeTab.entries.forEach { tab ->
-            val selected = currentRoute == tab.route
-            NavigationBarItem(
-                selected = selected,
-                onClick = { onNavigate(tab.route) },
-                icon = {
-                    Icon(
-                        painter = painterResource(tab.icon),
-                        contentDescription = stringResource(tab.label),
-                    )
-                },
-                label = { Text(text = stringResource(tab.label)) },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = DebtshareColors.Brand.primary,
-                    selectedTextColor = DebtshareColors.Brand.primary,
-                    indicatorColor = Color.Transparent,
-                    unselectedIconColor = DebtshareTheme.colors.textTertiary,
-                    unselectedTextColor = DebtshareTheme.colors.textTertiary,
-                ),
-            )
+    Column(modifier = modifier.fillMaxWidth()) {
+        HorizontalDivider(
+            thickness = 0.5.dp,
+            color = DebtshareTheme.colors.textTertiary.copy(alpha = 0.3f),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(DebtshareTheme.colors.card)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            HomeTab.entries.forEach { tab ->
+                val selected = currentRoute == tab.route
+                BottomBarItem(
+                    tab = tab,
+                    selected = selected,
+                    onClick = { onNavigate(tab.route) },
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun BottomBarItem(
+    tab: HomeTab,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    val color = if (selected) {
+        DebtshareColors.Brand.primary
+    } else {
+        DebtshareTheme.colors.textTertiary
+    }
+    Column(
+        modifier = Modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick,
+            )
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Icon(
+            painter = painterResource(tab.icon),
+            contentDescription = stringResource(tab.label),
+            tint = color,
+            modifier = Modifier.size(20.dp),
+        )
+        Text(
+            text = stringResource(tab.label),
+            color = color,
+            fontSize = 10.sp,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+        )
     }
 }
 

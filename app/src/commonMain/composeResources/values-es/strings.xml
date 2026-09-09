@@ -71,6 +71,34 @@
     <string name="tab_activity">Actividad</string>
     <string name="tab_profile">Perfil</string>
 
+    <!-- Profile -->
+    <string name="profile_user_groups">%1$d grupos</string>
+    <string name="profile_user_expenses">%1$d gastos</string>
+    <string name="profile_global_balance">TU BALANCE GLOBAL</string>
+    <string name="profile_balance_in_favor">a favor</string>
+    <string name="profile_balance_you_owe">debes</string>
+    <string name="profile_owed_to_you">TE DEBEN</string>
+    <string name="profile_you_owe_label">DEBES</string>
+    <string name="profile_this_month">ESTE MES</string>
+    <string name="profile_analytics">Analítica</string>
+    <string name="profile_last_90_days">Últimos 90 días</string>
+    <string name="profile_analytics_subtitle">Agregado de tus %1$d grupos. Para ver la evolución temporal, entra al panel de cada grupo.</string>
+    <string name="profile_total_spent">TOTAL GASTADO</string>
+    <string name="profile_average_ticket">TICKET MEDIO</string>
+    <string name="profile_expenses_count">%1$d gastos</string>
+    <string name="profile_by_category">Por categoría</string>
+    <string name="profile_all_groups">Todos los grupos</string>
+    <string name="profile_category_subtitle">%1$s · %2$d grupos</string>
+    <string name="profile_group_comparison">Comparativa por grupo</string>
+    <string name="profile_total">Total</string>
+    <string name="profile_group_comparison_subtitle">Cuánto gastas en cada uno · tu parte</string>
+    <string name="profile_tip">¿Ves un pico raro? Entra al grupo para su evolución mensual.</string>
+    <string name="profile_account">CUENTA</string>
+    <string name="profile_email_password">Email y contraseña</string>
+    <string name="profile_notifications">Notificaciones</string>
+    <string name="profile_payment_method">Método de pago</string>
+    <string name="profile_logout">Cerrar sesión</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">El email es obligatorio</string>
     <string name="error_email_invalid">Formato de email inválido</string>
