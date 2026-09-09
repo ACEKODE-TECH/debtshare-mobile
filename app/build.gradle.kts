@@ -31,6 +31,7 @@ android {
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-XXLanguage:+ExplicitBackingFields")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
     androidTarget {
@@ -65,7 +66,7 @@ kotlin {
             implementation(libs.koin.annotations)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.navigation.compose)
-            implementation(compose.materialIconsExtended)
+
             implementation(libs.compottie)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)

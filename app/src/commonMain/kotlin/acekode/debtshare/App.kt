@@ -11,24 +11,30 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.koin.compose.KoinApplication
+import org.koin.dsl.koinConfiguration
 import org.koin.ksp.generated.module
 
 @Composable
 fun App() {
     KoinApplication(
-        application = {
-            modules(AppModule().module, ktorModule, localSettingsModule)
-        },
-    ) {
-        DebtshareTheme {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = DebtshareTheme.colors.background,
-            ) {
-                NavGraph()
+        configuration = koinConfiguration(declaration = {
+            modules(
+                AppModule().module,
+                ktorModule,
+                localSettingsModule,
+            )
+        }),
+        content = {
+            DebtshareTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = DebtshareTheme.colors.background,
+                ) {
+                    NavGraph()
+                }
             }
-        }
-    }
+        },
+    )
 }
 
 @DebtshareScreenPreview

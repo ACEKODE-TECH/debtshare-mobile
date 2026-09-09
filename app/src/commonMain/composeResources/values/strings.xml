@@ -48,6 +48,13 @@
     <string name="settled">Settled</string>
     <string name="no_impact">No impact</string>
 
+    <!-- Groups -->
+    <string name="groups_subtitle_empty">Start sharing expenses</string>
+    <string name="groups_empty_title">You don't have any groups yet</string>
+    <string name="groups_empty_description">Create one for your apartment, trip, or dinner and start splitting expenses with whoever you want.</string>
+    <string name="groups_create_group">Create group</string>
+    <string name="groups_join_with_code">Join with a code</string>
+
     <!-- Home Tabs -->
     <string name="tab_home">Home</string>
     <string name="tab_activity">Activity</string>
@@ -63,7 +70,7 @@
 
     <!-- Errors - Network -->
     <string name="error_network_unauthorized">Incorrect email or password</string>
-    <string name="error_network_forbidden">You don\'t have permission to access</string>
+    <string name="error_network_forbidden">You don't have permission to access</string>
     <string name="error_network_timeout">No connection, please try again</string>
     <string name="error_network_unavailable">Service unavailable, please try later</string>
     <string name="error_generic">An unexpected error occurred</string>
