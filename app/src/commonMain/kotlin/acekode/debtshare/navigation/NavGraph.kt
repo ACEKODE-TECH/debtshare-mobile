@@ -1,10 +1,11 @@
 package acekode.debtshare.navigation
 
 import acekode.debtshare.googleAuth.GoogleAccount
-import acekode.debtshare.presentation.SplashScreen
 import acekode.debtshare.presentation.googlealias.GoogleAliasScreen
+import acekode.debtshare.presentation.home.HomeScreen
 import acekode.debtshare.presentation.login.LoginScreen
 import acekode.debtshare.presentation.signup.SignUpScreen
+import acekode.debtshare.presentation.splash.SplashScreen
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -69,9 +70,16 @@ fun NavGraph() {
                 GoogleAliasScreen(
                     account = account,
                     onNavigateBack = { navController.popBackStack() },
-                    onContinueClick = { /* Navigate to home */ },
+                    onContinueClick = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Login.route) { inclusive = true }
+                        }
+                    },
                 )
             }
+        }
+        composable(route = Screen.Home.route) {
+            HomeScreen()
         }
     }
 }

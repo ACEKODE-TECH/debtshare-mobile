@@ -3,6 +3,7 @@ package acekode.debtshare.presentation.login
 import acekode.debtshare.googleAuth.ContinueWithGoogleButton
 import acekode.debtshare.googleAuth.GoogleAccount
 import acekode.debtshare.googleAuth.GoogleSignInResult
+import acekode.debtshare.presentation.ValidationError
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareTextField
@@ -52,6 +53,10 @@ import debtshare.app.generated.resources.Res
 import debtshare.app.generated.resources.create_account
 import debtshare.app.generated.resources.email
 import debtshare.app.generated.resources.email_placeholder
+import debtshare.app.generated.resources.error_email_invalid
+import debtshare.app.generated.resources.error_email_required
+import debtshare.app.generated.resources.error_password_invalid
+import debtshare.app.generated.resources.error_password_required
 import debtshare.app.generated.resources.forgot_password
 import debtshare.app.generated.resources.logo
 import debtshare.app.generated.resources.no_account
@@ -76,10 +81,8 @@ fun LoginScreen(
     val fieldErrors by viewModel.fieldErrors.collectAsStateWithLifecycle()
 
     LoginContent(
-        isLoading = uiState is LoginUiState.Loading,
-        errorMessage = (uiState as? LoginUiState.Error)?.message,
-        emailError = fieldErrors.emailError,
-        passwordError = fieldErrors.passwordError,
+        uiState = uiState,
+        fieldErrors = fieldErrors,
         onLoginClick = viewModel::onLoginClick,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
@@ -96,10 +99,8 @@ fun LoginScreen(
 
 @Composable
 fun LoginContent(
-    isLoading: Boolean,
-    errorMessage: String?,
-    emailError: String?,
-    passwordError: String?,
+    uiState: LoginUiState,
+    fieldErrors: LoginFieldErrors,
     onLoginClick: (email: String, password: String, rememberMe: Boolean) -> Unit,
     onEmailChange: () -> Unit,
     onPasswordChange: () -> Unit,
@@ -110,6 +111,19 @@ fun LoginContent(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
+
+    val emailError = fieldErrors.emailError?.let {
+        when (it) {
+            ValidationError.Required -> stringResource(Res.string.error_email_required)
+            ValidationError.InvalidFormat -> stringResource(Res.string.error_email_invalid)
+        }
+    }
+    val passwordError = fieldErrors.passwordError?.let {
+        when (it) {
+            ValidationError.Required -> stringResource(Res.string.error_password_required)
+            ValidationError.InvalidFormat -> stringResource(Res.string.error_password_invalid)
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -159,7 +173,7 @@ fun LoginContent(
 
             Spacer(Modifier.height(32.dp))
 
-            if (errorMessage != null) {
+            uiState.errorMessage?.let { errorMessage ->
                 Text(
                     text = errorMessage,
                     style = DebtshareTheme.typography.bodySmall,
@@ -174,8 +188,8 @@ fun LoginContent(
                 modifier = Modifier
                     .fillMaxWidth(),
                 size = DebtshareButtonSize.Large,
-                enabled = !isLoading,
-                loading = isLoading,
+                enabled = !uiState.isLoading,
+                loading = uiState.isLoading,
             )
 
             Spacer(Modifier.height(16.dp))
@@ -256,7 +270,7 @@ private fun ContinueWithGoogleOrEmail(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(DebtshareTheme.spacing.medium),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             HorizontalDivider(
                 modifier = Modifier.weight(1f),
@@ -386,7 +400,7 @@ private class LoginUiStateProvider : PreviewParameterProvider<LoginUiState> {
     override val values = sequenceOf(
         LoginUiState.Idle,
         LoginUiState.Loading,
-        LoginUiState.Error("Invalid email or password."),
+        LoginUiState.Error("Incorrect email or password"),
     )
 }
 
@@ -397,10 +411,8 @@ private fun LoginScreenPreview(
 ) {
     DebtshareTheme(darkTheme = false) {
         LoginContent(
-            isLoading = uiState is LoginUiState.Loading,
-            errorMessage = (uiState as? LoginUiState.Error)?.message,
-            emailError = null,
-            passwordError = null,
+            uiState = uiState,
+            fieldErrors = LoginFieldErrors(),
             onLoginClick = { _, _, _ -> },
             onEmailChange = {},
             onPasswordChange = {},
@@ -416,10 +428,11 @@ private fun LoginScreenPreview(
 private fun LoginScreenValidationPreview() {
     DebtshareTheme(darkTheme = false) {
         LoginContent(
-            isLoading = false,
-            errorMessage = null,
-            emailError = "Email is required",
-            passwordError = "Password is required",
+            uiState = LoginUiState.Idle,
+            fieldErrors = LoginFieldErrors(
+                emailError = ValidationError.Required,
+                passwordError = ValidationError.Required,
+            ),
             onLoginClick = { _, _, _ -> },
             onEmailChange = {},
             onPasswordChange = {},
@@ -437,10 +450,8 @@ private fun LoginScreenDarkPreview(
 ) {
     DebtshareTheme(darkTheme = true) {
         LoginContent(
-            isLoading = uiState is LoginUiState.Loading,
-            errorMessage = (uiState as? LoginUiState.Error)?.message,
-            emailError = null,
-            passwordError = null,
+            uiState = uiState,
+            fieldErrors = LoginFieldErrors(),
             onLoginClick = { _, _, _ -> },
             onEmailChange = {},
             onPasswordChange = {},

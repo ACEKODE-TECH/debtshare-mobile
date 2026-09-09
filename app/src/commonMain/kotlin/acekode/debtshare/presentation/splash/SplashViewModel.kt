@@ -1,4 +1,4 @@
-package acekode.debtshare.presentation
+package acekode.debtshare.presentation.splash
 
 import acekode.debtshare.domain.repository.SessionRepository
 import acekode.debtshare.utils.logDebug
