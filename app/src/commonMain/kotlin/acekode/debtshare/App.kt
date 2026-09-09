@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.koin.compose.KoinApplication
+import org.koin.core.KoinApplication
 import org.koin.dsl.koinConfiguration
 import org.koin.ksp.generated.module
 

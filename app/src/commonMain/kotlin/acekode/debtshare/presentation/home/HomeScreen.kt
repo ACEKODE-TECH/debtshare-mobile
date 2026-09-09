@@ -55,6 +55,8 @@ fun HomeScreen() {
                 GroupsScreen(
                     onCreateGroupClick = { },
                     onJoinWithCodeClick = { },
+                    onSearchClick = { },
+                    onGroupClick = { },
                 )
             }
             composable(Screen.Home.Activity.route) { ActivityScreen() }
