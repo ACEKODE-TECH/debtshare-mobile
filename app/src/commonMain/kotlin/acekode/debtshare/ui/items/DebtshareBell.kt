@@ -48,21 +48,28 @@ import org.jetbrains.compose.resources.painterResource
 fun DebtshareBell(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    size: DebtshareBellSize = DebtshareBellSize.Medium,
     count: Int = 0,
     dotOnly: Boolean = false,
     expanded: Boolean = false,
     enabled: Boolean = true,
 ) {
+    val sizeValues = size.values()
     Box(modifier = modifier) {
-        BellButton(onClick = onClick, expanded = expanded, enabled = enabled)
+        BellButton(
+            onClick = onClick,
+            expanded = expanded,
+            enabled = enabled,
+            sizeValues = sizeValues,
+        )
         BellBadge(
             count = count,
             dotOnly = dotOnly,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .offset(
-                    x = DebtshareBellDefaults.badgeOffsetX,
-                    y = DebtshareBellDefaults.badgeOffsetY,
+                    x = sizeValues.badgeOffsetX,
+                    y = sizeValues.badgeOffsetY,
                 ),
         )
     }
@@ -73,6 +80,7 @@ private fun BellButton(
     onClick: () -> Unit,
     expanded: Boolean,
     enabled: Boolean,
+    sizeValues: BellSizeValues,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val focused by interactionSource.collectIsFocusedAsState()
@@ -80,7 +88,7 @@ private fun BellButton(
 
     Box(
         modifier = Modifier
-            .size(DebtshareBellDefaults.buttonSize)
+            .size(sizeValues.buttonSize)
             .clip(shape)
             .background(if (expanded) DebtshareColors.Brand.primaryTint else DebtshareTheme.colors.card)
             .border(
@@ -104,7 +112,7 @@ private fun BellButton(
             painter = painterResource(Res.drawable.bell),
             contentDescription = null,
             tint = if (expanded) DebtshareColors.Brand.primary else DebtshareTheme.colors.textSecondary,
-            modifier = Modifier.size(DebtshareBellDefaults.iconSize),
+            modifier = Modifier.size(sizeValues.iconSize),
         )
     }
 }
@@ -141,13 +149,11 @@ private fun BellBadge(
 
 @Composable
 private fun BellBadgeContent(count: Int, dotOnly: Boolean, scale: Float) {
-    val card = DebtshareTheme.colors.card
     if (dotOnly) {
         Box(
             modifier = Modifier
                 .scale(scale)
                 .size(DebtshareBellDefaults.dotSize)
-                .border(DebtshareBellDefaults.badgeCutOut, card, CircleShape)
                 .clip(CircleShape)
                 .background(DebtshareColors.Semantic.error),
         )
@@ -159,7 +165,6 @@ private fun BellBadgeContent(count: Int, dotOnly: Boolean, scale: Float) {
                     minWidth = DebtshareBellDefaults.badgeSize,
                     minHeight = DebtshareBellDefaults.badgeSize,
                 )
-                .border(DebtshareBellDefaults.badgeCutOut, card, CircleShape)
                 .clip(CircleShape)
                 .background(DebtshareColors.Semantic.error)
                 .padding(horizontal = DebtshareBellDefaults.badgeHorizontalPadding),
@@ -179,14 +184,11 @@ private fun BellBadgeContent(count: Int, dotOnly: Boolean, scale: Float) {
     }
 }
 
+enum class DebtshareBellSize { Medium, Large }
+
 object DebtshareBellDefaults {
-    val buttonSize: Dp = 32.dp
-    val iconSize: Dp = 16.dp
     val badgeSize: Dp = 16.dp
     val dotSize: Dp = 8.dp
-    val badgeOffsetX: Dp = 4.dp
-    val badgeOffsetY: Dp = (-4).dp
-    val badgeCutOut: Dp = 2.dp
     val badgeHorizontalPadding: Dp = 4.dp
     val borderWidth: Dp = 1.dp
     val focusRingWidth: Dp = 2.dp
@@ -194,6 +196,29 @@ object DebtshareBellDefaults {
     const val ENTER_MILLIS = 200
     const val EXIT_MILLIS = 150
     const val ENTER_SCALE = 0.5f
+}
+
+private data class BellSizeValues(
+    val buttonSize: Dp,
+    val iconSize: Dp,
+    val badgeOffsetX: Dp,
+    val badgeOffsetY: Dp,
+)
+
+private fun DebtshareBellSize.values(): BellSizeValues = when (this) {
+    DebtshareBellSize.Medium -> BellSizeValues(
+        buttonSize = 32.dp,
+        iconSize = 16.dp,
+        badgeOffsetX = 4.dp,
+        badgeOffsetY = (-4).dp,
+    )
+
+    DebtshareBellSize.Large -> BellSizeValues(
+        buttonSize = 48.dp,
+        iconSize = 20.dp,
+        badgeOffsetX = 6.dp,
+        badgeOffsetY = (-4).dp,
+    )
 }
 
 private val bellPreviewCounts = listOf(0, 1, 5, 42, 99, 150)

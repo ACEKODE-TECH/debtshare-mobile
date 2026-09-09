@@ -66,6 +66,20 @@
     <string name="groups_balance_settled">Al día</string>
     <string name="groups_balance_settled_label">liquidado</string>
 
+    <!-- Activity -->
+    <string name="activity_title">Notificaciones</string>
+    <string name="activity_mark_read">Marcar leído</string>
+    <string name="activity_tab_activity">Actividad</string>
+    <string name="activity_tab_invitations">Invitaciones</string>
+    <string name="activity_section_recent">RECIENTES</string>
+    <string name="activity_invitation_new">NUEVA</string>
+    <string name="activity_invitation_members">%1$d miembros · %2$s</string>
+    <string name="activity_invitation_invited_by">%1$s te ha invitado %2$s</string>
+    <string name="activity_invitation_and_more">%1$s y %2$d más</string>
+    <string name="activity_invitation_decline">Rechazar</string>
+    <string name="activity_invitation_accept">Aceptar</string>
+    <string name="activity_invitation_accepted">Aceptada</string>
+
     <!-- Home Tabs -->
     <string name="tab_home">Inicio</string>
     <string name="tab_activity">Actividad</string>
