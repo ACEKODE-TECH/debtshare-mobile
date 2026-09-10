@@ -3,6 +3,7 @@ package acekode.debtshare.presentation.home.groups
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareButtonVariant
+import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.items.DebtshareTabHeader
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
@@ -26,7 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -67,7 +67,6 @@ import debtshare.app.generated.resources.tab_home
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -248,25 +247,11 @@ private fun GroupsContentHeader(
         title = stringResource(Res.string.tab_home),
         subtitle = stringResource(Res.string.groups_subtitle_content, activeCount, globalBalance),
     ) {
-        Icon(
-            painter = painterResource(Res.drawable.search),
-            contentDescription = null,
-            tint = DebtshareTheme.colors.textPrimary,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onSearchClick),
-        )
+        DebtshareIcon(icon = Res.drawable.search, onClick = onSearchClick)
 
         Spacer(Modifier.width(16.dp))
 
-        Icon(
-            painter = painterResource(Res.drawable.plus),
-            contentDescription = null,
-            tint = DebtshareTheme.colors.textPrimary,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onCreateGroupClick),
-        )
+        DebtshareIcon(icon = Res.drawable.plus, onClick = onCreateGroupClick)
     }
 }
 
@@ -427,12 +412,7 @@ private fun GroupItemIcon(
             .background(tint.copy(alpha = 0.12f), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.size(20.dp),
-        )
+        DebtshareIcon(icon = icon, tint = tint)
     }
 }
 

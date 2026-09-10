@@ -1,13 +1,16 @@
 package acekode.debtshare.presentation.home
 
 import acekode.debtshare.navigation.Screen
-import acekode.debtshare.presentation.groupdetail.GroupDetailScreen
 import acekode.debtshare.presentation.home.activity.ActivityScreen
 import acekode.debtshare.presentation.home.activity.ActivityUiState
 import acekode.debtshare.presentation.home.activity.ActivityViewModel
 import acekode.debtshare.presentation.home.groups.GroupsScreen
+import acekode.debtshare.presentation.home.groups.groupdetail.GroupDetailScreen
+import acekode.debtshare.presentation.home.groups.invitations.InvitationScreen
 import acekode.debtshare.presentation.home.profile.ProfileScreen
 import acekode.debtshare.ui.items.DebtshareBellDefaults
+import acekode.debtshare.ui.items.DebtshareBottomSheet
+import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareComponentPreview
@@ -28,17 +31,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +55,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -105,12 +107,22 @@ fun HomeScreen() {
                     navArgument("groupId") { type = NavType.StringType },
                 ),
             ) {
+                var showInvitation by remember { mutableStateOf(false) }
+
                 GroupDetailScreen(
                     onBackClick = { navController.popBackStack() },
                     onAddExpenseClick = { },
                     onBalancesClick = { },
+                    onInviteClick = { showInvitation = true },
                     onMenuClick = { },
                 )
+
+                DebtshareBottomSheet(
+                    visible = showInvitation,
+                    onDismissRequest = { showInvitation = false },
+                ) {
+                    InvitationScreen(onCloseClick = { showInvitation = false })
+                }
             }
             composable(Screen.Home.Activity.route) {
                 ActivityScreen()
@@ -148,7 +160,10 @@ private fun HomeBottomBar(
         ) {
             HomeTab.entries.forEach { tab ->
                 val selected = currentRoute == tab.route ||
-                    (tab == HomeTab.Groups && currentRoute?.startsWith("group_detail") == true)
+                    (
+                        tab == HomeTab.Groups &&
+                            currentRoute?.startsWith("group_detail") == true
+                        )
                 val badgeCount = if (tab == HomeTab.Activity) activityBadgeCount else 0
                 BottomBarItem(
                     tab = tab,
@@ -184,11 +199,10 @@ private fun BottomBarItem(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box {
-            Icon(
-                painter = painterResource(tab.icon),
+            DebtshareIcon(
+                icon = tab.icon,
                 contentDescription = stringResource(tab.label),
                 tint = color,
-                modifier = Modifier.size(20.dp),
             )
             BottomBarBadge(
                 count = badgeCount,

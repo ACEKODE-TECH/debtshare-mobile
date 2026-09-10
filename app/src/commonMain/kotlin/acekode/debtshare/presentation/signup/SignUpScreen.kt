@@ -4,6 +4,7 @@ import acekode.debtshare.presentation.AliasValidation
 import acekode.debtshare.presentation.ValidationError
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
+import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.items.DebtshareTextField
 import acekode.debtshare.ui.items.DebtshareTextFieldVariant
 import acekode.debtshare.ui.theme.DebtshareColors
@@ -155,16 +156,7 @@ fun SignUpContent(
         ) {
             Spacer(Modifier.height(32.dp))
 
-            Icon(
-                painter = painterResource(Res.drawable.arrow_left),
-                contentDescription = null,
-                tint = DebtshareTheme.colors.textPrimary,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable {
-                        onBackClick()
-                    },
-            )
+            DebtshareIcon(icon = Res.drawable.arrow_left, onClick = onBackClick)
 
             Spacer(Modifier.height(40.dp))
 

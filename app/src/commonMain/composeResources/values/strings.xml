@@ -126,6 +126,30 @@
     <string name="group_detail_tab_notes">Notes</string>
     <string name="group_detail_settled_badge">SETTLED</string>
 
+    <!-- Group Invitation -->
+    <string name="invitation_title">Invite to %1$s</string>
+    <string name="invitation_members_subtitle">%1$d members · share with whoever pays</string>
+    <string name="invitation_tab_link">Link</string>
+    <string name="invitation_tab_alias">Alias</string>
+    <string name="invitation_link_header">INVITATION LINK</string>
+    <string name="invitation_copy">Copy</string>
+    <string name="invitation_copied">Copied</string>
+    <string name="invitation_expires">Expires in 7 days</string>
+    <string name="invitation_regenerate">Regenerate</string>
+    <string name="invitation_share_header">SHARE VIA</string>
+    <string name="invitation_share_whatsapp">WhatsApp</string>
+    <string name="invitation_share_telegram">Telegram</string>
+    <string name="invitation_share_qr">QR</string>
+    <string name="invitation_share_more">More</string>
+    <string name="invitation_search_hint">Search by alias</string>
+    <string name="invitation_matches_header">MATCHES</string>
+    <string name="invitation_status_invite">Invite</string>
+    <string name="invitation_status_in_group">In group</string>
+    <string name="invitation_status_pending">Pending</string>
+    <string name="invitation_not_found">Can't find them? Send them the</string>
+    <string name="invitation_not_found_link">invitation link</string>
+    <string name="invitation_groups_in_common">%1$d groups in common</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">Email is required</string>
     <string name="error_email_invalid">Invalid email format</string>

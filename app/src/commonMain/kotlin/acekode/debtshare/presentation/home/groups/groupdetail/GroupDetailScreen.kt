@@ -1,9 +1,10 @@
-package acekode.debtshare.presentation.groupdetail
+package acekode.debtshare.presentation.home.groups.groupdetail
 
 import acekode.debtshare.presentation.home.groups.MemberBadge
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareButtonVariant
+import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
@@ -27,7 +28,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -61,7 +61,6 @@ import debtshare.app.generated.resources.star
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -70,6 +69,7 @@ fun GroupDetailScreen(
     onBackClick: () -> Unit,
     onAddExpenseClick: () -> Unit,
     onBalancesClick: () -> Unit,
+    onInviteClick: () -> Unit,
     onMenuClick: () -> Unit,
 ) {
     val viewModel = koinViewModel<GroupDetailViewModel>()
@@ -84,6 +84,7 @@ fun GroupDetailScreen(
             onBackClick = onBackClick,
             onAddExpenseClick = onAddExpenseClick,
             onBalancesClick = onBalancesClick,
+            onInviteClick = onInviteClick,
             onMenuClick = onMenuClick,
         )
 
@@ -101,6 +102,7 @@ private fun GroupDetailBody(
     onBackClick: () -> Unit,
     onAddExpenseClick: () -> Unit,
     onBalancesClick: () -> Unit,
+    onInviteClick: () -> Unit,
     onMenuClick: () -> Unit,
 ) {
     Column(
@@ -117,6 +119,7 @@ private fun GroupDetailBody(
             badges = uiState.memberBadges,
             memberCount = uiState.memberCount,
             createdDate = uiState.createdDate,
+            onInviteClick = onInviteClick,
         )
         GroupBalanceSection(uiState.balance, uiState.debtSummary)
         GroupActionButtons(
@@ -155,14 +158,7 @@ private fun GroupDetailTopBar(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            painter = painterResource(Res.drawable.arrow_left),
-            contentDescription = null,
-            tint = DebtshareTheme.colors.textPrimary,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onBackClick),
-        )
+        DebtshareIcon(icon = Res.drawable.arrow_left, onClick = onBackClick)
 
         Column(
             modifier = Modifier.weight(1f),
@@ -180,14 +176,7 @@ private fun GroupDetailTopBar(
             )
         }
 
-        Icon(
-            painter = painterResource(Res.drawable.dots),
-            contentDescription = null,
-            tint = DebtshareTheme.colors.textPrimary,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onMenuClick),
-        )
+        DebtshareIcon(icon = Res.drawable.dots, onClick = onMenuClick)
     }
 }
 
@@ -196,12 +185,15 @@ private fun GroupMembersInfo(
     badges: ImmutableList<MemberBadge>,
     memberCount: Int,
     createdDate: String,
+    onInviteClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .background(DebtshareTheme.colors.card, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(DebtshareTheme.colors.card)
+            .clickable(onClick = onInviteClick)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -213,7 +205,10 @@ private fun GroupMembersInfo(
             text = stringResource(Res.string.group_detail_members_since, memberCount, createdDate),
             style = DebtshareTheme.typography.bodySmall,
             color = DebtshareTheme.colors.textSecondary,
+            modifier = Modifier.weight(1f),
         )
+
+        DebtshareIcon(icon = Res.drawable.plus, tint = DebtshareColors.Neutral.n0)
     }
 }
 
@@ -465,12 +460,7 @@ private fun ExpenseIcon(icon: DrawableResource, tint: Color) {
             .background(tint.copy(alpha = 0.12f), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.size(20.dp),
-        )
+        DebtshareIcon(icon = icon, tint = tint)
     }
 }
 
@@ -559,6 +549,7 @@ private fun GroupDetailPreview() {
             onBackClick = {},
             onAddExpenseClick = {},
             onBalancesClick = {},
+            onInviteClick = {},
             onMenuClick = {},
         )
     }
@@ -575,6 +566,7 @@ private fun GroupDetailDarkPreview() {
             onBackClick = {},
             onAddExpenseClick = {},
             onBalancesClick = {},
+            onInviteClick = {},
             onMenuClick = {},
         )
     }

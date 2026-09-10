@@ -6,6 +6,7 @@ import acekode.debtshare.ui.items.DebtshareAvatar
 import acekode.debtshare.ui.items.DebtshareAvatarSize
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
+import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.items.DebtshareTextField
 import acekode.debtshare.ui.items.DebtshareTextFieldVariant
 import acekode.debtshare.ui.theme.DebtshareColors
@@ -32,7 +33,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -126,14 +126,7 @@ fun GoogleAliasContent(
             ) {
                 Spacer(Modifier.height(32.dp))
 
-                Icon(
-                    painter = painterResource(Res.drawable.arrow_left),
-                    contentDescription = null,
-                    tint = DebtshareTheme.colors.textPrimary,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onBackClick() },
-                )
+                DebtshareIcon(icon = Res.drawable.arrow_left, onClick = onBackClick)
 
                 Spacer(Modifier.height(24.dp))
 
@@ -225,12 +218,7 @@ private fun GoogleAccountCard(
             )
         }
 
-        Icon(
-            painter = painterResource(Res.drawable.check_circle),
-            contentDescription = null,
-            tint = DebtshareColors.Semantic.success,
-            modifier = Modifier.size(20.dp),
-        )
+        DebtshareIcon(icon = Res.drawable.check_circle, tint = DebtshareColors.Semantic.success)
     }
 }
 

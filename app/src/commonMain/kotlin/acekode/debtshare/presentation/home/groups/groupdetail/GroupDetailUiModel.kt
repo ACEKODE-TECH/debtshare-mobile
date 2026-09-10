@@ -1,4 +1,4 @@
-package acekode.debtshare.presentation.groupdetail
+package acekode.debtshare.presentation.home.groups.groupdetail
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color

@@ -10,6 +10,7 @@ import acekode.debtshare.ui.items.DebtshareBadgeVariant
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareButtonVariant
+import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.items.DebtshareTabHeader
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
@@ -438,12 +439,7 @@ private fun InvitationCardHeader(invitation: InvitationUiModel) {
                 .background(invitation.groupIconContainer, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                painter = painterResource(invitation.groupIcon),
-                contentDescription = null,
-                tint = invitation.groupIconTint,
-                modifier = Modifier.size(20.dp),
-            )
+            DebtshareIcon(icon = invitation.groupIcon, tint = invitation.groupIconTint)
         }
 
         Spacer(Modifier.width(12.dp))
@@ -575,12 +571,7 @@ private fun RecentInvitationCard(recent: RecentInvitationUiModel) {
                 .background(recent.groupIconContainer, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                painter = painterResource(recent.groupIcon),
-                contentDescription = null,
-                tint = recent.groupIconTint,
-                modifier = Modifier.size(20.dp),
-            )
+            DebtshareIcon(icon = recent.groupIcon, tint = recent.groupIconTint)
         }
 
         Spacer(Modifier.width(12.dp))

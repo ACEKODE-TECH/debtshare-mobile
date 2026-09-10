@@ -107,45 +107,6 @@ fun DebtshareButton(
 }
 
 @Composable
-fun DebtshareIconButton(
-    icon: DrawableResource,
-    contentDescription: String?,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    variant: DebtshareButtonVariant = DebtshareButtonVariant.Secondary,
-    size: DebtshareButtonSize = DebtshareButtonSize.Medium,
-    enabled: Boolean = true,
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val focused by interactionSource.collectIsFocusedAsState()
-    val style = buttonStyle(variant, enabled)
-    val buttonSize = size.buttonSize()
-    val shape = RoundedCornerShape(DebtshareTheme.radius.large)
-
-    Box(
-        modifier = modifier
-            .size(buttonSize.minHeight)
-            .clip(shape)
-            .background(style.container)
-            .buttonOutline(focused && enabled, style, shape)
-            .clickable(
-                enabled = enabled,
-                interactionSource = interactionSource,
-                indication = LocalIndication.current,
-                onClick = onClick,
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = contentDescription,
-            tint = style.content,
-            modifier = Modifier.size(buttonSize.iconSize),
-        )
-    }
-}
-
-@Composable
 private fun ButtonContent(
     text: String,
     icon: DrawableResource?,
@@ -237,30 +198,13 @@ private fun ButtonSizesGallery(darkTheme: Boolean) {
         DebtshareButton(text = "Small", onClick = {}, size = DebtshareButtonSize.Small)
         DebtshareButton(text = "Medium", onClick = {}, size = DebtshareButtonSize.Medium)
         DebtshareButton(text = "Large", onClick = {}, size = DebtshareButtonSize.Large)
-        PreviewLabel("Icon only")
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(DebtshareTheme.spacing.small),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            DebtshareIconButton(
-                icon = Res.drawable.plus,
-                contentDescription = "Add",
-                onClick = {},
-                size = DebtshareButtonSize.Small,
-            )
-            DebtshareIconButton(
-                icon = Res.drawable.plus,
-                contentDescription = "Add",
-                onClick = {},
-            )
-            DebtshareIconButton(
-                icon = Res.drawable.plus,
-                contentDescription = "Add",
-                onClick = {},
-                variant = DebtshareButtonVariant.Primary,
-                size = DebtshareButtonSize.Large,
-            )
-        }
+        PreviewLabel("With icon")
+        DebtshareButton(
+            text = "Add expense",
+            onClick = {},
+            icon = Res.drawable.plus,
+            size = DebtshareButtonSize.Large,
+        )
     }
 }
 
