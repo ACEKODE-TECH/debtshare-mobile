@@ -7,11 +7,10 @@ import acekode.debtshare.ui.items.DebtshareAvatarSize
 import acekode.debtshare.ui.items.DebtshareBadge
 import acekode.debtshare.ui.items.DebtshareBadgeSize
 import acekode.debtshare.ui.items.DebtshareBadgeVariant
-import acekode.debtshare.ui.items.DebtshareBell
-import acekode.debtshare.ui.items.DebtshareBellSize
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareButtonVariant
+import acekode.debtshare.ui.items.DebtshareTabHeader
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
@@ -60,7 +59,6 @@ import debtshare.app.generated.resources.activity_section_recent
 import debtshare.app.generated.resources.activity_tab_activity
 import debtshare.app.generated.resources.activity_tab_invitations
 import debtshare.app.generated.resources.activity_title
-import debtshare.app.generated.resources.arrow_left
 import debtshare.app.generated.resources.bag
 import debtshare.app.generated.resources.check
 import debtshare.app.generated.resources.check_circle
@@ -76,9 +74,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ActivityScreen(
-    onBackClick: () -> Unit,
-) {
+fun ActivityScreen() {
     val viewModel = koinViewModel<ActivityViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedTab by viewModel.selectedTab.collectAsStateWithLifecycle()
@@ -91,7 +87,6 @@ fun ActivityScreen(
             onMarkReadClick = viewModel::onMarkReadClick,
             onAcceptInvitation = viewModel::onAcceptInvitation,
             onDeclineInvitation = viewModel::onDeclineInvitation,
-            onBackClick = onBackClick,
         )
 
         is ActivityUiState.Loading -> {}
@@ -108,7 +103,6 @@ private fun ActivityContent(
     onMarkReadClick: () -> Unit,
     onAcceptInvitation: (String) -> Unit,
     onDeclineInvitation: (String) -> Unit,
-    onBackClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -116,8 +110,6 @@ private fun ActivityContent(
             .background(DebtshareTheme.colors.background),
     ) {
         ActivityHeader(
-            unreadCount = uiState.unreadCount,
-            onBackClick = onBackClick,
             onMarkReadClick = onMarkReadClick,
         )
 
@@ -145,43 +137,14 @@ private fun ActivityContent(
 
 @Composable
 private fun ActivityHeader(
-    unreadCount: Int,
-    onBackClick: () -> Unit,
     onMarkReadClick: () -> Unit,
 ) {
-    Row(
+    DebtshareTabHeader(
+        title = stringResource(Res.string.activity_title),
         modifier = Modifier
-            .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            painter = painterResource(Res.drawable.arrow_left),
-            contentDescription = null,
-            tint = DebtshareTheme.colors.textPrimary,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { onBackClick() },
-        )
-
-        Spacer(Modifier.width(8.dp))
-
-        DebtshareBell(
-            onClick = {},
-            size = DebtshareBellSize.Large,
-            count = unreadCount,
-        )
-
-        Spacer(Modifier.width(8.dp))
-
-        Text(
-            text = stringResource(Res.string.activity_title),
-            style = DebtshareTheme.typography.displaySmall,
-            color = DebtshareTheme.colors.textPrimary,
-            modifier = Modifier.weight(1f),
-        )
-
         Text(
             text = stringResource(Res.string.activity_mark_read),
             style = DebtshareTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
@@ -657,7 +620,6 @@ private fun ActivityContentActivityTabPreview() {
             onMarkReadClick = {},
             onAcceptInvitation = {},
             onDeclineInvitation = {},
-            onBackClick = {},
         )
     }
 }
@@ -673,7 +635,6 @@ private fun ActivityContentInvitationsTabPreview() {
             onMarkReadClick = {},
             onAcceptInvitation = {},
             onDeclineInvitation = {},
-            onBackClick = {},
         )
     }
 }
@@ -689,7 +650,6 @@ private fun ActivityContentDarkPreview() {
             onMarkReadClick = {},
             onAcceptInvitation = {},
             onDeclineInvitation = {},
-            onBackClick = {},
         )
     }
 }
@@ -705,7 +665,6 @@ private fun ActivityContentInvitationsDarkPreview() {
             onMarkReadClick = {},
             onAcceptInvitation = {},
             onDeclineInvitation = {},
-            onBackClick = {},
         )
     }
 }

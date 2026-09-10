@@ -2,8 +2,7 @@ package acekode.debtshare.presentation.home.profile
 
 import acekode.debtshare.ui.items.DebtshareAvatar
 import acekode.debtshare.ui.items.DebtshareAvatarSize
-import acekode.debtshare.ui.items.DebtshareButtonSize
-import acekode.debtshare.ui.items.DebtshareIconButton
+import acekode.debtshare.ui.items.DebtshareTabHeader
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
@@ -151,21 +150,16 @@ private fun ProfileContent(
 
 @Composable
 private fun ProfileHeader(onSettingsClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+    DebtshareTabHeader(
+        title = stringResource(Res.string.tab_profile),
     ) {
-        Text(
-            text = stringResource(Res.string.tab_profile),
-            style = DebtshareTheme.typography.displayMedium,
-            color = DebtshareTheme.colors.textPrimary,
-        )
-        DebtshareIconButton(
-            icon = Res.drawable.settings,
+        Icon(
+            painter = painterResource(Res.drawable.settings),
             contentDescription = null,
-            onClick = onSettingsClick,
-            size = DebtshareButtonSize.Large,
+            tint = DebtshareTheme.colors.textPrimary,
+            modifier = Modifier
+                .size(24.dp)
+                .clickable(onClick = onSettingsClick),
         )
     }
 }

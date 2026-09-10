@@ -113,6 +113,19 @@
     <string name="profile_payment_method">Payment method</string>
     <string name="profile_logout">Log out</string>
 
+    <!-- Group Detail -->
+    <string name="group_detail_label">GROUP</string>
+    <string name="group_detail_members_since">%1$d members · since %2$s</string>
+    <string name="group_detail_your_balance">YOUR BALANCE</string>
+    <string name="group_detail_in_favor">in your favor</string>
+    <string name="group_detail_you_owe">you owe</string>
+    <string name="group_detail_add_expense">Add expense</string>
+    <string name="group_detail_balances">Balances</string>
+    <string name="group_detail_tab_expenses">Expenses · %1$d</string>
+    <string name="group_detail_tab_activity">Activity</string>
+    <string name="group_detail_tab_notes">Notes</string>
+    <string name="group_detail_settled_badge">SETTLED</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">Email is required</string>
     <string name="error_email_invalid">Invalid email format</string>
