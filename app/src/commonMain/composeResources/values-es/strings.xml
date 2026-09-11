@@ -150,6 +150,26 @@
     <string name="invitation_not_found_link">enlace de invitación</string>
     <string name="invitation_groups_in_common">%1$d grupos en común</string>
 
+    <!-- Join Group -->
+    <string name="join_group_label">INVITACIÓN AL GRUPO</string>
+    <string name="join_group_description">Gastos compartidos</string>
+    <string name="join_group_invited_by">%1$s te ha invitado</string>
+    <string name="join_group_members">%1$d miembros</string>
+    <string name="join_group_expenses">%1$d gastos</string>
+    <string name="join_group_active">Activo</string>
+    <string name="join_group_inactive">Inactivo</string>
+    <string name="join_group_join">Unirme al grupo</string>
+    <string name="join_group_decline">Ahora no</string>
+    <string name="join_group_disclaimer">Al aceptar aparecerás como miembro y podrás añadir gastos.</string>
+    <string name="join_group_expired_label">ENLACE CADUCADO</string>
+    <string name="join_group_expired_title">Esta invitación ya no es válida</string>
+    <string name="join_group_expired_description">Los enlaces caducan 7 días después de generarse. Pide a quien te invitó que te envíe uno nuevo.</string>
+    <string name="join_group_details">DETALLES</string>
+    <string name="join_group_details_group">Grupo</string>
+    <string name="join_group_details_generated_by">Generado por</string>
+    <string name="join_group_details_expired">Caducó</string>
+    <string name="join_group_go_home">Ir al inicio</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">El email es obligatorio</string>
     <string name="error_email_invalid">Formato de email inválido</string>
