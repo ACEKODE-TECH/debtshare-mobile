@@ -182,6 +182,42 @@
     <string name="balances_footer_subtitle">Reduced from %1$d possible transactions</string>
     <string name="balances_your_payment">YOUR PAYMENT</string>
 
+    <!-- Add Expense -->
+    <string name="add_expense_title">New expense</string>
+    <string name="add_expense_autocomplete">AUTOCOMPLETE WITH AI</string>
+    <string name="add_expense_scan_title">Scan the receipt</string>
+    <string name="add_expense_scan_description">We extract the amount, merchant, date and category. You review and save.</string>
+    <string name="add_expense_take_photo">Take photo</string>
+    <string name="add_expense_choose_file">Choose file</string>
+    <string name="add_expense_or_manual">or fill in manually</string>
+    <string name="add_expense_manual">Enter manually</string>
+    <string name="add_expense_how_it_works">HOW IT WORKS</string>
+    <string name="add_expense_step_1">Upload or take a photo of the receipt</string>
+    <string name="add_expense_step_2">We extract the data automatically</string>
+    <string name="add_expense_step_3">You review, adjust members and save</string>
+
+    <!-- Scan Analysis -->
+    <string name="scan_analysis_title">Analyzing expenses</string>
+    <string name="scan_analysis_step_1">Getting date and amount</string>
+    <string name="scan_analysis_step_2">Detecting merchant</string>
+    <string name="scan_analysis_step_3">Classifying category</string>
+    <string name="scan_analysis_step_4">Preparing split</string>
+    <string name="scan_analysis_hint">Usually takes a few seconds</string>
+
+    <!-- Expense Review -->
+    <string name="review_title">Review expense</string>
+    <string name="review_save">Save</string>
+    <string name="review_extracted_title">Data extracted from receipt</string>
+    <string name="review_extracted_subtitle">Review and adjust if something doesn\'t match</string>
+    <string name="review_amount_label">AMOUNT</string>
+    <string name="review_ia_badge">AI</string>
+    <string name="review_description_label">Description</string>
+    <string name="review_category_label">Category</string>
+    <string name="review_date_label">Date</string>
+    <string name="review_paid_by_label">Paid by</string>
+    <string name="review_split_title">Split between %1$d</string>
+    <string name="review_per_person">%1$s/person</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">Email is required</string>
     <string name="error_email_invalid">Invalid email format</string>

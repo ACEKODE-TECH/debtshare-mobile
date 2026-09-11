@@ -5,6 +5,10 @@ import acekode.debtshare.presentation.home.activity.ActivityScreen
 import acekode.debtshare.presentation.home.activity.ActivityUiState
 import acekode.debtshare.presentation.home.activity.ActivityViewModel
 import acekode.debtshare.presentation.home.groups.GroupsScreen
+import acekode.debtshare.presentation.home.groups.addexpense.AddExpenseScreen
+import acekode.debtshare.presentation.home.groups.addexpense.AddExpenseViewModel
+import acekode.debtshare.presentation.home.groups.addexpense.ExpenseReviewScreen
+import acekode.debtshare.presentation.home.groups.addexpense.ExpenseReviewViewModel
 import acekode.debtshare.presentation.home.groups.balances.BalancesScreen
 import acekode.debtshare.presentation.home.groups.balances.BalancesViewModel
 import acekode.debtshare.presentation.home.groups.groupdetail.GroupDetailScreen
@@ -51,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -86,66 +91,87 @@ fun HomeScreen() {
             )
         },
     ) { paddingValues ->
-        NavHost(
+        HomeNavHost(
             navController = navController,
-            startDestination = Screen.Home.Groups.route,
             modifier = Modifier
                 .padding(paddingValues)
                 .windowInsetsPadding(WindowInsets.statusBars),
+        )
+    }
+}
+
+@Composable
+private fun HomeNavHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Home.Groups.route,
+        modifier = modifier,
+    ) {
+        composable(Screen.Home.Groups.route) {
+            GroupsScreen(
+                onCreateGroupClick = { },
+                onJoinWithCodeClick = { },
+                onSearchClick = { },
+                onGroupClick = { groupId ->
+                    navController.navigate(Screen.Home.GroupDetail.createRoute(groupId))
+                },
+            )
+        }
+        composable(
+            route = Screen.Home.GroupDetail.route,
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getString("groupId").orEmpty()
+            GroupDetailDestination(
+                onBackClick = { navController.popBackStack() },
+                onAddExpenseClick = {
+                    navController.navigate(Screen.Home.AddExpense.createRoute(groupId))
+                },
+                onBalancesClick = {
+                    navController.navigate(Screen.Home.Balances.createRoute(groupId))
+                },
+            )
+        }
+        composable(
+            route = Screen.Home.AddExpense.route,
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getString("groupId").orEmpty()
+            AddExpenseDestination(
+                onBackClick = { navController.popBackStack() },
+                onNavigateToReview = { mode ->
+                    navController.navigate(
+                        Screen.Home.ExpenseReview.createRoute(groupId, mode),
+                    )
+                },
+            )
+        }
+        composable(
+            route = Screen.Home.ExpenseReview.route,
+            arguments = listOf(
+                navArgument("groupId") { type = NavType.StringType },
+                navArgument("mode") { type = NavType.StringType },
+            ),
         ) {
-            composable(Screen.Home.Groups.route) {
-                GroupsScreen(
-                    onCreateGroupClick = { },
-                    onJoinWithCodeClick = { },
-                    onSearchClick = { },
-                    onGroupClick = { groupId ->
-                        navController.navigate(Screen.Home.GroupDetail.createRoute(groupId))
-                    },
-                )
-            }
-            composable(
-                route = Screen.Home.GroupDetail.route,
-                arguments = listOf(
-                    navArgument("groupId") { type = NavType.StringType },
-                ),
-            ) { backStackEntry ->
-                val groupId = backStackEntry.arguments?.getString("groupId").orEmpty()
-                var showInvitation by remember { mutableStateOf(false) }
-
-                GroupDetailScreen(
-                    onBackClick = { navController.popBackStack() },
-                    onAddExpenseClick = { },
-                    onBalancesClick = {
-                        navController.navigate(Screen.Home.Balances.createRoute(groupId))
-                    },
-                    onInviteClick = { showInvitation = true },
-                    onMenuClick = { },
-                )
-
-                DebtshareBottomSheet(
-                    visible = showInvitation,
-                    onDismissRequest = { showInvitation = false },
-                ) {
-                    InvitationScreen(onCloseClick = { showInvitation = false })
-                }
-            }
-            composable(
-                route = Screen.Home.Balances.route,
-                arguments = listOf(
-                    navArgument("groupId") { type = NavType.StringType },
-                ),
-            ) {
-                BalancesDestination(onBackClick = { navController.popBackStack() })
-            }
-            composable(Screen.Home.Activity.route) {
-                ActivityScreen()
-            }
-            composable(Screen.Home.Profile.route) {
-                ProfileScreen(
-                    onSettingsClick = { },
-                    onLogoutClick = { },
-                )
-            }
+            ExpenseReviewDestination(onBackClick = { navController.popBackStack() })
+        }
+        composable(
+            route = Screen.Home.Balances.route,
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType }),
+        ) {
+            BalancesDestination(onBackClick = { navController.popBackStack() })
+        }
+        composable(Screen.Home.Activity.route) {
+            ActivityScreen()
+        }
+        composable(Screen.Home.Profile.route) {
+            ProfileScreen(
+                onSettingsClick = { },
+                onLogoutClick = { },
+            )
         }
     }
 }
@@ -177,7 +203,9 @@ private fun HomeBottomBar(
                         tab == HomeTab.Groups &&
                             (
                                 currentRoute?.startsWith("group_detail") == true ||
-                                    currentRoute?.startsWith("balances") == true
+                                    currentRoute?.startsWith("balances") == true ||
+                                    currentRoute?.startsWith("add_expense") == true ||
+                                    currentRoute?.startsWith("expense_review") == true
                                 )
                         )
                 val badgeCount = if (tab == HomeTab.Activity) activityBadgeCount else 0
@@ -273,6 +301,65 @@ private fun BottomBarBadge(
             )
         }
     }
+}
+
+@Composable
+private fun GroupDetailDestination(
+    onBackClick: () -> Unit,
+    onAddExpenseClick: () -> Unit,
+    onBalancesClick: () -> Unit,
+) {
+    var showInvitation by remember { mutableStateOf(false) }
+
+    GroupDetailScreen(
+        onBackClick = onBackClick,
+        onAddExpenseClick = onAddExpenseClick,
+        onBalancesClick = onBalancesClick,
+        onInviteClick = { showInvitation = true },
+        onMenuClick = { },
+    )
+
+    DebtshareBottomSheet(
+        visible = showInvitation,
+        onDismissRequest = { showInvitation = false },
+    ) {
+        InvitationScreen(onCloseClick = { showInvitation = false })
+    }
+}
+
+@Composable
+private fun AddExpenseDestination(
+    onBackClick: () -> Unit,
+    onNavigateToReview: (String) -> Unit,
+) {
+    val viewModel = koinViewModel<AddExpenseViewModel>()
+    val groupName by viewModel.groupName.collectAsStateWithLifecycle()
+
+    AddExpenseScreen(
+        groupName = groupName,
+        onBackClick = onBackClick,
+        onImageCaptured = { bytes ->
+            if (bytes != null) {
+                viewModel.onImageCaptured(bytes)
+                onNavigateToReview("scan")
+            }
+        },
+        onManualEntryClick = { onNavigateToReview("manual") },
+    )
+}
+
+@Composable
+private fun ExpenseReviewDestination(onBackClick: () -> Unit) {
+    val viewModel = koinViewModel<ExpenseReviewViewModel>()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    ExpenseReviewScreen(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onSaveClick = { },
+        onToggleMember = viewModel::onToggleMember,
+        onFieldChanged = viewModel::onFieldChanged,
+    )
 }
 
 @Composable

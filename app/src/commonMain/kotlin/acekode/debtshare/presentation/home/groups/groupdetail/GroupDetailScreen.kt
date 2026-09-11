@@ -156,7 +156,7 @@ private fun GroupDetailTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
     ) {
         DebtshareIcon(icon = Res.drawable.arrow_left, onClick = onBackClick)
 

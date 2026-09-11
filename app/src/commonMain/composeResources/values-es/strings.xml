@@ -182,6 +182,42 @@
     <string name="balances_footer_subtitle">Reducido desde %1$d posibles movimientos</string>
     <string name="balances_your_payment">TU PAGO</string>
 
+    <!-- Add Expense -->
+    <string name="add_expense_title">Nuevo gasto</string>
+    <string name="add_expense_autocomplete">AUTOCOMPLETA CON IA</string>
+    <string name="add_expense_scan_title">Escanea el ticket</string>
+    <string name="add_expense_scan_description">Nosotros extraemos importe, comercio, fecha y categoría. Tú revisas y guardas.</string>
+    <string name="add_expense_take_photo">Hacer foto</string>
+    <string name="add_expense_choose_file">Elegir archivo</string>
+    <string name="add_expense_or_manual">o rellena a mano</string>
+    <string name="add_expense_manual">Introducir manualmente</string>
+    <string name="add_expense_how_it_works">CÓMO FUNCIONA</string>
+    <string name="add_expense_step_1">Sube o haz foto del ticket</string>
+    <string name="add_expense_step_2">Extraemos los datos automáticamente</string>
+    <string name="add_expense_step_3">Revisas, ajustas miembros y guardas</string>
+
+    <!-- Scan Analysis -->
+    <string name="scan_analysis_title">Analizando gastos</string>
+    <string name="scan_analysis_step_1">Obteniendo fecha e importe</string>
+    <string name="scan_analysis_step_2">Detectando comercio</string>
+    <string name="scan_analysis_step_3">Clasificando categoría</string>
+    <string name="scan_analysis_step_4">Preparando reparto</string>
+    <string name="scan_analysis_hint">Suele tardar unos segundos</string>
+
+    <!-- Expense Review -->
+    <string name="review_title">Revisa el gasto</string>
+    <string name="review_save">Guardar</string>
+    <string name="review_extracted_title">Datos extraídos del ticket</string>
+    <string name="review_extracted_subtitle">Revisa y ajusta si algo no cuadra</string>
+    <string name="review_amount_label">IMPORTE</string>
+    <string name="review_ia_badge">IA</string>
+    <string name="review_description_label">Descripción</string>
+    <string name="review_category_label">Categoría</string>
+    <string name="review_date_label">Fecha</string>
+    <string name="review_paid_by_label">Pagó</string>
+    <string name="review_split_title">Reparto entre %1$d</string>
+    <string name="review_per_person">%1$s/persona</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">El email es obligatorio</string>
     <string name="error_email_invalid">Formato de email inválido</string>
