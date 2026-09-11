@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_invite_body">%1$s te ha invitado</string>
+    <string name="notification_expired_body">La invitación ha caducado</string>
+    <string name="notification_channel_invites">Invitaciones de grupo</string>
+</resources>
