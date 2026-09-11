@@ -126,6 +126,30 @@
     <string name="group_detail_tab_notes">Notas</string>
     <string name="group_detail_settled_badge">SALDADO</string>
 
+    <!-- Group Invitation -->
+    <string name="invitation_title">Invitar a %1$s</string>
+    <string name="invitation_members_subtitle">%1$d miembros · comparte con quien pague algo</string>
+    <string name="invitation_tab_link">Enlace</string>
+    <string name="invitation_tab_alias">Alias</string>
+    <string name="invitation_link_header">ENLACE DE INVITACIÓN</string>
+    <string name="invitation_copy">Copiar</string>
+    <string name="invitation_copied">Copiado</string>
+    <string name="invitation_expires">Caduca en 7 días</string>
+    <string name="invitation_regenerate">Regenerar</string>
+    <string name="invitation_share_header">COMPARTIR POR</string>
+    <string name="invitation_share_whatsapp">WhatsApp</string>
+    <string name="invitation_share_telegram">Telegram</string>
+    <string name="invitation_share_qr">QR</string>
+    <string name="invitation_share_more">Más</string>
+    <string name="invitation_search_hint">Buscar por alias</string>
+    <string name="invitation_matches_header">COINCIDENCIAS</string>
+    <string name="invitation_status_invite">Invitar</string>
+    <string name="invitation_status_in_group">En grupo</string>
+    <string name="invitation_status_pending">Pendiente</string>
+    <string name="invitation_not_found">¿No lo encuentras? Envíale el</string>
+    <string name="invitation_not_found_link">enlace de invitación</string>
+    <string name="invitation_groups_in_common">%1$d grupos en común</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">El email es obligatorio</string>
     <string name="error_email_invalid">Formato de email inválido</string>

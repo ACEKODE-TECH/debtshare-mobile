@@ -2,6 +2,7 @@ package acekode.debtshare.presentation.home.profile
 
 import acekode.debtshare.ui.items.DebtshareAvatar
 import acekode.debtshare.ui.items.DebtshareAvatarSize
+import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.items.DebtshareTabHeader
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
@@ -153,14 +154,7 @@ private fun ProfileHeader(onSettingsClick: () -> Unit) {
     DebtshareTabHeader(
         title = stringResource(Res.string.tab_profile),
     ) {
-        Icon(
-            painter = painterResource(Res.drawable.settings),
-            contentDescription = null,
-            tint = DebtshareTheme.colors.textPrimary,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onSettingsClick),
-        )
+        DebtshareIcon(icon = Res.drawable.settings, onClick = onSettingsClick)
     }
 }
 
@@ -496,12 +490,7 @@ private fun CategoryIcon(icon: DrawableResource, tint: Color) {
             .background(tint.copy(alpha = 0.12f), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.size(20.dp),
-        )
+        DebtshareIcon(icon = icon, tint = tint)
     }
 }
 
@@ -744,12 +733,7 @@ private fun AccountItem(
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
-            tint = DebtshareTheme.colors.textTertiary,
-            modifier = Modifier.size(20.dp),
-        )
+        DebtshareIcon(icon = icon, tint = DebtshareTheme.colors.textTertiary)
 
         Spacer(Modifier.width(12.dp))
 
@@ -798,12 +782,7 @@ private fun LogoutItem(onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            painter = painterResource(Res.drawable.logout),
-            contentDescription = null,
-            tint = DebtshareColors.Semantic.error,
-            modifier = Modifier.size(20.dp),
-        )
+        DebtshareIcon(icon = Res.drawable.logout, tint = DebtshareColors.Semantic.error)
 
         Spacer(Modifier.width(12.dp))
 

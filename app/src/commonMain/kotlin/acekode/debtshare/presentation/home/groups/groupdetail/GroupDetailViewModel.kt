@@ -1,4 +1,4 @@
-package acekode.debtshare.presentation.groupdetail
+package acekode.debtshare.presentation.home.groups.groupdetail
 
 import acekode.debtshare.presentation.home.groups.MemberBadge
 import acekode.debtshare.ui.theme.DebtshareColors
