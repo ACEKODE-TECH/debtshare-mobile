@@ -170,6 +170,18 @@
     <string name="join_group_details_expired">Expired</string>
     <string name="join_group_go_home">Go to home</string>
 
+    <!-- Balances -->
+    <string name="balances_title">Balances</string>
+    <string name="balances_tab_simplified">Simplified</string>
+    <string name="balances_tab_detailed">Detailed</string>
+    <string name="balances_you_label">YOU</string>
+    <string name="balances_confirm_payment">Confirm payment received</string>
+    <string name="balances_remind">Remind %1$s</string>
+    <string name="balances_settle">Settle %1$s</string>
+    <string name="balances_footer_title">With these %1$d payments, everything is settled</string>
+    <string name="balances_footer_subtitle">Reduced from %1$d possible transactions</string>
+    <string name="balances_your_payment">YOUR PAYMENT</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">Email is required</string>
     <string name="error_email_invalid">Invalid email format</string>

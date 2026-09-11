@@ -5,6 +5,8 @@ import acekode.debtshare.presentation.home.activity.ActivityScreen
 import acekode.debtshare.presentation.home.activity.ActivityUiState
 import acekode.debtshare.presentation.home.activity.ActivityViewModel
 import acekode.debtshare.presentation.home.groups.GroupsScreen
+import acekode.debtshare.presentation.home.groups.balances.BalancesScreen
+import acekode.debtshare.presentation.home.groups.balances.BalancesViewModel
 import acekode.debtshare.presentation.home.groups.groupdetail.GroupDetailScreen
 import acekode.debtshare.presentation.home.groups.invitations.InvitationScreen
 import acekode.debtshare.presentation.home.profile.ProfileScreen
@@ -106,13 +108,16 @@ fun HomeScreen() {
                 arguments = listOf(
                     navArgument("groupId") { type = NavType.StringType },
                 ),
-            ) {
+            ) { backStackEntry ->
+                val groupId = backStackEntry.arguments?.getString("groupId").orEmpty()
                 var showInvitation by remember { mutableStateOf(false) }
 
                 GroupDetailScreen(
                     onBackClick = { navController.popBackStack() },
                     onAddExpenseClick = { },
-                    onBalancesClick = { },
+                    onBalancesClick = {
+                        navController.navigate(Screen.Home.Balances.createRoute(groupId))
+                    },
                     onInviteClick = { showInvitation = true },
                     onMenuClick = { },
                 )
@@ -123,6 +128,14 @@ fun HomeScreen() {
                 ) {
                     InvitationScreen(onCloseClick = { showInvitation = false })
                 }
+            }
+            composable(
+                route = Screen.Home.Balances.route,
+                arguments = listOf(
+                    navArgument("groupId") { type = NavType.StringType },
+                ),
+            ) {
+                BalancesDestination(onBackClick = { navController.popBackStack() })
             }
             composable(Screen.Home.Activity.route) {
                 ActivityScreen()
@@ -162,7 +175,10 @@ private fun HomeBottomBar(
                 val selected = currentRoute == tab.route ||
                     (
                         tab == HomeTab.Groups &&
-                            currentRoute?.startsWith("group_detail") == true
+                            (
+                                currentRoute?.startsWith("group_detail") == true ||
+                                    currentRoute?.startsWith("balances") == true
+                                )
                         )
                 val badgeCount = if (tab == HomeTab.Activity) activityBadgeCount else 0
                 BottomBarItem(
@@ -257,6 +273,20 @@ private fun BottomBarBadge(
             )
         }
     }
+}
+
+@Composable
+private fun BalancesDestination(onBackClick: () -> Unit) {
+    val viewModel = koinViewModel<BalancesViewModel>()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    BalancesScreen(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onConfirmPaymentClick = { },
+        onRemindClick = { },
+        onSettleClick = { },
+    )
 }
 
 @DebtshareComponentPreview

@@ -63,7 +63,7 @@ object DebtshareTabsDefaults {
     val segmentedTrackPadding: Dp = 4.dp
     val underlineTopPadding: Dp = 16.dp
     val underlineBottomPadding: Dp = 16.dp
-    val segmentedVerticalPadding: Dp = 4.dp
+    val segmentedVerticalPadding: Dp = 8.dp
     const val TRANSITION_MILLIS = 150
     const val DISABLED_ALPHA = 0.5f
 }
@@ -194,6 +194,7 @@ private fun SegmentedTabs(
 
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .clip(trackShape)
             .background(segmentedTrack)
             .padding(DebtshareTabsDefaults.segmentedTrackPadding),
@@ -204,6 +205,7 @@ private fun SegmentedTabs(
             val selected = index == selectedIndex
             Box(
                 modifier = Modifier
+                    .weight(1f)
                     .alpha(if (item.enabled) 1f else DebtshareTabsDefaults.DISABLED_ALPHA)
                     .shadow(
                         elevation = if (selected) DebtshareTheme.elevation.verySmall else DebtshareTheme.elevation.none,
@@ -216,6 +218,7 @@ private fun SegmentedTabs(
                         horizontal = DebtshareTheme.spacing.medium,
                         vertical = DebtshareTabsDefaults.segmentedVerticalPadding,
                     ),
+                contentAlignment = Alignment.Center,
             ) {
                 TabLabel(
                     item = item,

@@ -41,21 +41,21 @@ internal fun Modifier.buttonOutline(focused: Boolean, style: ButtonStyle, shape:
 internal fun DebtshareButtonSize.buttonSize(): ButtonSize = when (this) {
     DebtshareButtonSize.Small -> ButtonSize(
         minHeight = DebtshareButtonDefaults.heightSmall,
-        horizontalPadding = DebtshareTheme.spacing.medium,
+        horizontalPadding = DebtshareTheme.spacing.small,
         iconSize = DebtshareButtonDefaults.iconSmall,
         textStyle = DebtshareTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
     )
 
     DebtshareButtonSize.Medium -> ButtonSize(
         minHeight = DebtshareButtonDefaults.heightMedium,
-        horizontalPadding = DebtshareTheme.spacing.large,
+        horizontalPadding = DebtshareTheme.spacing.medium,
         iconSize = DebtshareButtonDefaults.iconMedium,
         textStyle = DebtshareTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
     )
 
     DebtshareButtonSize.Large -> ButtonSize(
         minHeight = DebtshareButtonDefaults.heightLarge,
-        horizontalPadding = DebtshareTheme.spacing.veryLarge,
+        horizontalPadding = DebtshareTheme.spacing.large,
         iconSize = DebtshareButtonDefaults.iconLarge,
         textStyle = DebtshareTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
     )

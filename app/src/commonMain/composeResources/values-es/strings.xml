@@ -170,6 +170,18 @@
     <string name="join_group_details_expired">Caducó</string>
     <string name="join_group_go_home">Ir al inicio</string>
 
+    <!-- Balances -->
+    <string name="balances_title">Balances</string>
+    <string name="balances_tab_simplified">Simplificado</string>
+    <string name="balances_tab_detailed">Detallado</string>
+    <string name="balances_you_label">TÚ</string>
+    <string name="balances_confirm_payment">Confirmar pago recibido</string>
+    <string name="balances_remind">Recordar a %1$s</string>
+    <string name="balances_settle">Liquidar %1$s</string>
+    <string name="balances_footer_title">Con estos %1$d pagos, todo cuadra</string>
+    <string name="balances_footer_subtitle">Reducido desde %1$d posibles movimientos</string>
+    <string name="balances_your_payment">TU PAGO</string>
+
     <!-- Errors - Validation -->
     <string name="error_email_required">El email es obligatorio</string>
     <string name="error_email_invalid">Formato de email inválido</string>
