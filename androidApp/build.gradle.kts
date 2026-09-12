@@ -56,9 +56,11 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isDebuggable = true
+            isProfileable = false
 
             val buildDate = project.findProperty("buildDate") as String?
             val buildNumberToday = project.findProperty("buildNumberToday") as String?
@@ -73,6 +75,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
+            isProfileable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -124,10 +127,12 @@ dependencies {
 
     testImplementation(libs.junit)
 
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 
+    debugImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.wickkit.core)
     debugImplementation(libs.wickkit.network)
     debugImplementation(libs.wickkit.flags)

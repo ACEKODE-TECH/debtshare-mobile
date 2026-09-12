@@ -12,14 +12,11 @@ class SessionRepositoryImpl(
     private var inMemorySession: AuthSession? = null
 
     override fun saveSession(session: AuthSession, rememberMe: Boolean) {
-        if (rememberMe) {
-            sessionLocalDataSource.saveSession(session)
-        } else {
-            inMemorySession = session
-        }
+        inMemorySession = null
+        sessionLocalDataSource.clearSession()
     }
 
-    override fun getSession(): AuthSession? = inMemorySession ?: sessionLocalDataSource.getSession()
+    override fun getSession(): AuthSession? = null
 
     override fun clearSession() {
         inMemorySession = null

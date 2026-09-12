@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_launcher_foreground_base" />
+    <item
+        android:width="22dp"
+        android:height="22dp"
+        android:gravity="center">
+        <shape android:shape="oval">
+            <solid android:color="#F7D154" />
+            <stroke
+                android:width="2dp"
+                android:color="#FFF7C2" />
+        </shape>
+    </item>
+    <item
+        android:width="8dp"
+        android:height="8dp"
+        android:gravity="center">
+        <shape android:shape="oval">
+            <solid android:color="#1F2937" />
+        </shape>
+    </item>
+</layer-list>
