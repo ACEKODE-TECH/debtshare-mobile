@@ -18,6 +18,12 @@ private const val TAG = "GoogleSignIn"
 
 actual class GoogleSignInClient(private val context: Context) {
     actual suspend fun signIn(): GoogleSignInResult {
+        // CredentialManager requires an Activity to show UI (account chooser). Ensure context is an Activity.
+        if (context !is android.app.Activity) {
+            logError(TAG, "Context is not an Activity — cannot show Google sign-in UI")
+            return GoogleSignInResult.Error("Google sign-in requires an Activity context")
+        }
+
         val option =
             GetGoogleIdOption.Builder()
                 .setServerClientId(GoogleSignInConfig.WEB_CLIENT_ID)
@@ -26,6 +32,7 @@ actual class GoogleSignInClient(private val context: Context) {
         val request = GetCredentialRequest.Builder().addCredentialOption(option).build()
 
         return try {
+            // Pass the Activity so the CredentialManager can launch the account chooser UI.
             val credential = CredentialManager.create(context).getCredential(context, request).credential
             if (credential !is CustomCredential ||
                 credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
