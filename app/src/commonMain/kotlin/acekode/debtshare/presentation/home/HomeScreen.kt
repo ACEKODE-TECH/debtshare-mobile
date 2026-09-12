@@ -20,6 +20,7 @@ import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareComponentPreview
+import acekode.debtshare.utils.logDebug
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -112,9 +113,9 @@ private fun HomeNavHost(
     ) {
         composable(Screen.Home.Groups.route) {
             GroupsScreen(
-                onCreateGroupClick = { },
-                onJoinWithCodeClick = { },
-                onSearchClick = { },
+                onCreateGroupClick = { logDebug("HomeScreen", "Create group clicked") },
+                onJoinWithCodeClick = { logDebug("HomeScreen", "Join with code clicked") },
+                onSearchClick = { logDebug("HomeScreen", "Search clicked") },
                 onGroupClick = { groupId ->
                     navController.navigate(Screen.Home.GroupDetail.createRoute(groupId))
                 },
@@ -258,8 +259,10 @@ private fun BottomBarItem(
         Text(
             text = stringResource(tab.label),
             color = color,
-            fontSize = 10.sp,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+            style = DebtshareTheme.typography.bodySmall.copy(
+                fontSize = 10.sp,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+            ),
         )
     }
 }
@@ -316,7 +319,7 @@ private fun GroupDetailDestination(
         onAddExpenseClick = onAddExpenseClick,
         onBalancesClick = onBalancesClick,
         onInviteClick = { showInvitation = true },
-        onMenuClick = { },
+        onMenuClick = { logDebug("HomeScreen", "Group menu clicked") },
     )
 
     DebtshareBottomSheet(
@@ -356,7 +359,7 @@ private fun ExpenseReviewDestination(onBackClick: () -> Unit) {
     ExpenseReviewScreen(
         uiState = uiState,
         onBackClick = onBackClick,
-        onSaveClick = { },
+        onSaveClick = { logDebug("HomeScreen", "Save expense clicked") },
         onToggleMember = viewModel::onToggleMember,
         onFieldChanged = viewModel::onFieldChanged,
     )

@@ -4,6 +4,7 @@ import acekode.debtshare.presentation.AliasValidation
 import acekode.debtshare.presentation.ValidationError
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
+import acekode.debtshare.ui.items.DebtshareCheckbox
 import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.items.DebtshareTextField
 import acekode.debtshare.ui.items.DebtshareTextFieldVariant
@@ -29,8 +30,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -459,12 +458,9 @@ private fun TermsCheckbox(
         ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Checkbox(
+        DebtshareCheckbox(
             checked = checked,
             onCheckedChange = null,
-            colors = CheckboxDefaults.colors(
-                checkedColor = DebtshareColors.Brand.primary,
-            ),
         )
         Spacer(Modifier.width(4.dp))
         Text(

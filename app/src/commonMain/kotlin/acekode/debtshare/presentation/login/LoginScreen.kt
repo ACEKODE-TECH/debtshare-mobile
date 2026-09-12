@@ -6,6 +6,7 @@ import acekode.debtshare.googleAuth.GoogleSignInResult
 import acekode.debtshare.presentation.ValidationError
 import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
+import acekode.debtshare.ui.items.DebtshareCheckbox
 import acekode.debtshare.ui.items.DebtshareTextField
 import acekode.debtshare.ui.items.DebtshareTextFieldVariant
 import acekode.debtshare.ui.theme.DebtshareColors
@@ -30,13 +31,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import debtshare.app.generated.resources.Res
+import debtshare.app.generated.resources.app_name
 import debtshare.app.generated.resources.create_account
 import debtshare.app.generated.resources.email
 import debtshare.app.generated.resources.email_placeholder
@@ -75,10 +76,17 @@ import org.koin.compose.viewmodel.koinViewModel
 fun LoginScreen(
     onNavigateToSignUp: () -> Unit,
     onNavigateToGoogleAlias: (GoogleAccount) -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
     val viewModel = koinViewModel<LoginViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val fieldErrors by viewModel.fieldErrors.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState) {
+        if (uiState is LoginUiState.Success) {
+            onNavigateToHome()
+        }
+    }
 
     LoginContent(
         uiState = uiState,
@@ -173,9 +181,9 @@ fun LoginContent(
 
             Spacer(Modifier.height(32.dp))
 
-            uiState.errorMessage?.let { errorMessage ->
+            if (uiState is LoginUiState.Error) {
                 Text(
-                    text = errorMessage,
+                    text = stringResource(uiState.error.toStringResource()),
                     style = DebtshareTheme.typography.bodySmall,
                     color = DebtshareColors.Semantic.error,
                 )
@@ -225,7 +233,7 @@ private fun DebtshareLogo(
             )
         }
         Text(
-            text = "Debtshare",
+            text = stringResource(Res.string.app_name),
             style = DebtshareTheme.typography.displayLarge,
             color = DebtshareTheme.colors.textPrimary,
         )
@@ -341,12 +349,9 @@ private fun EmailAndPasswordForm(
                     onClick = { onRememberMeChange(!rememberMe) },
                 ),
             ) {
-                Checkbox(
+                DebtshareCheckbox(
                     checked = rememberMe,
                     onCheckedChange = null,
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = DebtshareColors.Brand.primary,
-                    ),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
@@ -400,7 +405,7 @@ private class LoginUiStateProvider : PreviewParameterProvider<LoginUiState> {
     override val values = sequenceOf(
         LoginUiState.Idle,
         LoginUiState.Loading,
-        LoginUiState.Error("Incorrect email or password"),
+        LoginUiState.Error(LoginError.Unauthorized),
     )
 }
 

@@ -20,13 +20,16 @@ import debtshare.app.generated.resources.share
 import org.jetbrains.compose.resources.painterResource
 import platform.UIKit.UIActivityViewController
 import platform.UIKit.UIApplication
+import platform.UIKit.UIWindowScene
 
 actual fun shareText(text: String, title: String) {
     val activityController = UIActivityViewController(
         activityItems = listOf(text),
         applicationActivities = null,
     )
-    val rootViewController = UIApplication.sharedApplication.keyWindow?.rootViewController
+    val windowScene = UIApplication.sharedApplication.connectedScenes
+        .firstOrNull { it is UIWindowScene } as? UIWindowScene
+    val rootViewController = windowScene?.windows?.firstOrNull()?.rootViewController
     rootViewController?.presentViewController(activityController, animated = true, completion = null)
 }
 

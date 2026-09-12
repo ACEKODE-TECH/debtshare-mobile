@@ -4,6 +4,7 @@ import acekode.debtshare.data.datasource.remote.NetworkException
 import acekode.debtshare.domain.usecase.LoginUseCase
 import acekode.debtshare.googleAuth.GoogleSignInResult
 import acekode.debtshare.presentation.ValidationError
+import acekode.debtshare.utils.logDebug
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,25 +50,25 @@ class LoginViewModel(
         viewModelScope.launch {
             uiState.value = LoginUiState.Loading
             loginUseCase(email, password, rememberMe)
-                .onSuccess { uiState.value = LoginUiState.Idle }
+                .onSuccess { uiState.value = LoginUiState.Success }
                 .onFailure { error ->
-                    val message = when (error) {
-                        is NetworkException.Unauthorized -> "Incorrect email or password"
-                        is NetworkException.Forbidden -> "You don't have permission to access"
-                        is NetworkException.Timeout -> "No connection, please try again"
-                        is NetworkException.ServiceUnavailable -> "Service unavailable, please try later"
-                        else -> "An unexpected error occurred"
+                    val loginError = when (error) {
+                        is NetworkException.Unauthorized -> LoginError.Unauthorized
+                        is NetworkException.Forbidden -> LoginError.Forbidden
+                        is NetworkException.Timeout -> LoginError.Timeout
+                        is NetworkException.ServiceUnavailable -> LoginError.ServiceUnavailable
+                        else -> LoginError.Unknown
                     }
-                    uiState.value = LoginUiState.Error(message)
+                    uiState.value = LoginUiState.Error(loginError)
                 }
         }
     }
 
     fun onGoogleSignIn(result: GoogleSignInResult) {
-        println(result)
+        logDebug("LoginViewModel", "Google sign in result: $result")
     }
 
     fun onForgotPasswordClick() {
-        // Handle Password Click
+        logDebug("LoginViewModel", "Forgot password clicked")
     }
 }

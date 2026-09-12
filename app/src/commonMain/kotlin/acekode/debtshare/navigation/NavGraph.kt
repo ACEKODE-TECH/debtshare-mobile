@@ -9,6 +9,7 @@ import acekode.debtshare.presentation.home.groups.joingroup.JoinGroupUiState
 import acekode.debtshare.presentation.login.LoginScreen
 import acekode.debtshare.presentation.signup.SignUpScreen
 import acekode.debtshare.presentation.splash.SplashScreen
+import acekode.debtshare.utils.logDebug
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.collections.immutable.persistentListOf
 
+@Suppress("LongMethod")
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
@@ -30,7 +32,7 @@ fun NavGraph() {
     val pendingNotification by NotificationRouter.pending.collectAsStateWithLifecycle()
     val initialNotification = remember { NotificationRouter.pending.value }
     val startDestination = remember {
-        if (initialNotification != null) Screen.JoinGroup.route else Screen.Home.route
+        if (initialNotification != null) Screen.JoinGroup.route else Screen.Splash.route
     }
 
     LaunchedEffect(pendingNotification) {
@@ -68,6 +70,11 @@ fun NavGraph() {
                     googleAccount = account
                     navController.navigate(Screen.GoogleAlias.route)
                 },
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
             )
         }
         composable(
@@ -86,7 +93,8 @@ fun NavGraph() {
             enterTransition = { slideInHorizontally { it } },
             popExitTransition = { slideOutHorizontally { it } },
         ) {
-            googleAccount?.let { account ->
+            val account = googleAccount
+            if (account != null) {
                 GoogleAliasScreen(
                     account = account,
                     onNavigateBack = { navController.popBackStack() },
@@ -96,6 +104,10 @@ fun NavGraph() {
                         }
                     },
                 )
+            } else {
+                LaunchedEffect(Unit) {
+                    navController.popBackStack(Screen.Login.route, inclusive = false)
+                }
             }
         }
         composable(route = Screen.Home.route) {
@@ -119,34 +131,40 @@ private fun JoinGroupDestination(
     pendingNotification: PendingNotification?,
     onDismiss: () -> Unit,
 ) {
-    val uiState = when (val notification = pendingNotification) {
+    val uiState = when (pendingNotification) {
         is PendingNotification.GroupInvite -> JoinGroupUiState.Valid(
-            inviteCode = notification.inviteCode,
-            groupName = notification.groupName,
-            groupDescription = notification.groupDescription,
-            inviterName = notification.inviterName,
+            inviteCode = pendingNotification.inviteCode,
+            groupName = pendingNotification.groupName,
+            groupDescription = pendingNotification.groupDescription,
+            inviterName = pendingNotification.inviterName,
             members = persistentListOf(),
-            membersCount = notification.membersCount,
+            membersCount = pendingNotification.membersCount,
             tags = GroupTagsUiModel(
-                currency = notification.stats.currency,
-                expenseCount = notification.stats.expenseCount,
-                isActive = notification.stats.isActive,
+                currency = pendingNotification.stats.currency,
+                expenseCount = pendingNotification.stats.expenseCount,
+                isActive = pendingNotification.stats.isActive,
             ),
         )
 
         is PendingNotification.ExpiredGroupInvite -> JoinGroupUiState.Expired(
-            inviteCode = notification.inviteCode,
-            groupName = notification.groupName,
-            generatedBy = notification.generatedBy,
-            expiredAgo = notification.expiredAgo,
+            inviteCode = pendingNotification.inviteCode,
+            groupName = pendingNotification.groupName,
+            generatedBy = pendingNotification.generatedBy,
+            expiredAgo = pendingNotification.expiredAgo,
         )
 
         null -> return
     }
     JoinGroupScreen(
         uiState = uiState,
-        onJoinClick = onDismiss,
-        onDeclineClick = onDismiss,
+        onJoinClick = {
+            logDebug("NavGraph", "Join group clicked")
+            onDismiss()
+        },
+        onDeclineClick = {
+            logDebug("NavGraph", "Decline group clicked")
+            onDismiss()
+        },
         onGoHomeClick = onDismiss,
     )
 }

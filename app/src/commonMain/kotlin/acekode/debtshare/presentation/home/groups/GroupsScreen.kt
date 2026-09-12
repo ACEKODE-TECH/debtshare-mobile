@@ -514,8 +514,10 @@ private fun BadgeCircle(
     ) {
         Text(
             text = text,
-            fontSize = 9.sp,
-            fontWeight = FontWeight.Bold,
+            style = DebtshareTheme.typography.bodySmall.copy(
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold,
+            ),
             color = textColor,
         )
     }
@@ -668,5 +670,3 @@ private fun previewContent() = GroupsUiState.Content(
         ),
     ),
 )
-
-// endregion

@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import debtshare.app.generated.resources.Res
+import debtshare.app.generated.resources.app_name
 import debtshare.app.generated.resources.calendar
 import debtshare.app.generated.resources.check
 import debtshare.app.generated.resources.clock
@@ -332,7 +333,7 @@ private fun JoinGroupTopBar(inviteCode: String) {
         )
         Spacer(Modifier.width(12.dp))
         Text(
-            text = "Debtshare",
+            text = stringResource(Res.string.app_name),
             style = DebtshareTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
             color = DebtshareTheme.colors.textPrimary,
         )
@@ -369,7 +370,7 @@ private fun InvitationCard(
             Box(
                 modifier = Modifier
                     .size(80.dp)
-                    .background(Color.White, RoundedCornerShape(20.dp)),
+                    .background(DebtshareColors.Neutral.n0, RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 heroContent()

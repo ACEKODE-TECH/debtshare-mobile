@@ -8,6 +8,7 @@ import acekode.debtshare.ui.items.DebtshareIcon
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
+import acekode.debtshare.utils.logDebug
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -235,8 +236,10 @@ private fun DetailMemberBadgeRow(badges: ImmutableList<MemberBadge>) {
             ) {
                 Text(
                     text = member.initials,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = DebtshareTheme.typography.bodySmall.copy(
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                    ),
                     color = DebtshareColors.Neutral.n0,
                 )
             }
@@ -425,7 +428,7 @@ private fun ExpenseItemCard(expense: ExpenseItemUiModel.Expense) {
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .background(DebtshareTheme.colors.card, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
-            .clickable { }
+            .clickable { logDebug("GroupDetailScreen", "Expense item clicked: ${expense.title}") }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -492,7 +495,7 @@ private fun SettlementItemCard(settlement: ExpenseItemUiModel.Settlement) {
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .background(DebtshareTheme.colors.card, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
-            .clickable { }
+            .clickable { logDebug("GroupDetailScreen", "Settlement item clicked: ${settlement.title}") }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
