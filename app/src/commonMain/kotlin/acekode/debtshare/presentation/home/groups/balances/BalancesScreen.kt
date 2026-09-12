@@ -7,6 +7,7 @@ import acekode.debtshare.ui.items.DebtshareButton
 import acekode.debtshare.ui.items.DebtshareButtonSize
 import acekode.debtshare.ui.items.DebtshareButtonVariant
 import acekode.debtshare.ui.items.DebtshareIcon
+import acekode.debtshare.ui.items.DebtshareIconSize
 import acekode.debtshare.ui.items.DebtshareTabItem
 import acekode.debtshare.ui.items.DebtshareTabs
 import acekode.debtshare.ui.items.DebtshareTabsVariant
@@ -296,7 +297,7 @@ private fun AvatarWithLabel(
     modifier: Modifier = Modifier,
     alignEnd: Boolean = false,
 ) {
-    val alignment = if (alignEnd) Alignment.CenterHorizontally else Alignment.CenterHorizontally
+    val alignment = if (alignEnd) Alignment.End else Alignment.Start
     Column(
         modifier = modifier,
         horizontalAlignment = alignment,
@@ -387,11 +388,10 @@ private fun BalancesFooter(
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            painter = painterResource(Res.drawable.check_circle),
-            contentDescription = null,
+        DebtshareIcon(
+            icon = Res.drawable.check_circle,
             tint = DebtshareColors.Semantic.success,
-            modifier = Modifier.size(24.dp),
+            size = DebtshareIconSize.Medium,
         )
         Spacer(Modifier.width(12.dp))
         Column {

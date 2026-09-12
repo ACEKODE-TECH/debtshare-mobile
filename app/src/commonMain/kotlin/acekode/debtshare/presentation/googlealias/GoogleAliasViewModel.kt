@@ -1,6 +1,7 @@
 package acekode.debtshare.presentation.googlealias
 
 import acekode.debtshare.presentation.AliasValidation
+import acekode.debtshare.utils.logDebug
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,10 +17,10 @@ class GoogleAliasViewModel : ViewModel() {
         field = MutableStateFlow<AliasValidation>(AliasValidation.Idle)
 
     fun onAliasChange(alias: String) {
-        println(alias)
+        logDebug("GoogleAliasViewModel", "Alias changed: $alias")
     }
 
     fun onContinueClick(alias: String) {
-        println(alias)
+        logDebug("GoogleAliasViewModel", "Continue clicked with alias: $alias")
     }
 }

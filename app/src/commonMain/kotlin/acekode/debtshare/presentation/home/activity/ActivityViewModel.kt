@@ -1,6 +1,7 @@
 package acekode.debtshare.presentation.home.activity
 
 import acekode.debtshare.ui.theme.DebtshareColors
+import acekode.debtshare.utils.logDebug
 import androidx.lifecycle.ViewModel
 import debtshare.app.generated.resources.Res
 import debtshare.app.generated.resources.bag
@@ -40,9 +41,13 @@ class ActivityViewModel : ViewModel() {
         )
     }
 
-    fun onAcceptInvitation(id: String) = println(id)
+    fun onAcceptInvitation(id: String) {
+        logDebug("ActivityViewModel", "Invitation accepted: $id")
+    }
 
-    fun onDeclineInvitation(id: String) = println(id)
+    fun onDeclineInvitation(id: String) {
+        logDebug("ActivityViewModel", "Invitation declined: $id")
+    }
 }
 
 private fun mockContent(): ActivityUiState.Content = ActivityUiState.Content(

@@ -3,10 +3,12 @@ package acekode.debtshare.presentation.home.profile
 import acekode.debtshare.ui.items.DebtshareAvatar
 import acekode.debtshare.ui.items.DebtshareAvatarSize
 import acekode.debtshare.ui.items.DebtshareIcon
+import acekode.debtshare.ui.items.DebtshareIconSize
 import acekode.debtshare.ui.items.DebtshareTabHeader
 import acekode.debtshare.ui.theme.DebtshareColors
 import acekode.debtshare.ui.theme.DebtshareTheme
 import acekode.debtshare.ui.utils.DebtshareScreenPreview
+import acekode.debtshare.utils.logDebug
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -662,11 +664,10 @@ private fun TipText() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Icon(
-            painter = painterResource(Res.drawable.alert),
-            contentDescription = null,
+        DebtshareIcon(
+            icon = Res.drawable.alert,
             tint = DebtshareTheme.colors.textTertiary,
-            modifier = Modifier.size(16.dp),
+            size = DebtshareIconSize.Small,
         )
         Text(
             text = stringResource(Res.string.profile_tip),
@@ -698,20 +699,20 @@ private fun AccountSection(
             AccountItem(
                 icon = Res.drawable.mail,
                 text = stringResource(Res.string.profile_email_password),
-                onClick = {},
+                onClick = { logDebug("ProfileScreen", "Email & password clicked") },
             )
             AccountDivider()
             AccountItem(
                 icon = Res.drawable.bell,
                 text = stringResource(Res.string.profile_notifications),
-                onClick = {},
+                onClick = { logDebug("ProfileScreen", "Notifications clicked") },
             )
             AccountDivider()
             AccountItem(
                 icon = Res.drawable.credit_card,
                 text = stringResource(Res.string.profile_payment_method),
                 trailingText = paymentMethod,
-                onClick = {},
+                onClick = { logDebug("ProfileScreen", "Payment method clicked") },
             )
             AccountDivider()
             LogoutItem(onClick = onLogoutClick)
@@ -753,11 +754,10 @@ private fun AccountItem(
             Spacer(Modifier.width(8.dp))
         }
 
-        Icon(
-            painter = painterResource(Res.drawable.chevron_right),
-            contentDescription = null,
+        DebtshareIcon(
+            icon = Res.drawable.chevron_right,
             tint = DebtshareTheme.colors.textMuted,
-            modifier = Modifier.size(16.dp),
+            size = DebtshareIconSize.Small,
         )
     }
 }

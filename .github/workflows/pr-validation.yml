@@ -105,7 +105,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: stability-report
-          path: app/stability/
+          path: |
+            androidApp/stability/
+            app/stability/
           retention-days: 7
 
   build-and-test:

@@ -20,6 +20,7 @@ import platform.UIKit.UIImagePickerControllerEditedImage
 import platform.UIKit.UIImagePickerControllerOriginalImage
 import platform.UIKit.UIImagePickerControllerSourceType
 import platform.UIKit.UINavigationControllerDelegateProtocol
+import platform.UIKit.UIWindowScene
 import platform.darwin.NSObject
 import platform.posix.memcpy
 
@@ -32,7 +33,9 @@ actual fun rememberCameraLauncher(onResult: (ByteArray?) -> Unit): () -> Unit {
             sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera
             this.delegate = delegate
         }
-        UIApplication.sharedApplication.keyWindow?.rootViewController
+        val windowScene = UIApplication.sharedApplication.connectedScenes
+            .firstOrNull { it is UIWindowScene } as? UIWindowScene
+        windowScene?.windows?.firstOrNull()?.rootViewController
             ?.presentViewController(controller, animated = true, completion = null)
     }
 }
@@ -49,7 +52,9 @@ actual fun rememberFilePickerLauncher(onResult: (ByteArray?) -> Unit): () -> Uni
         val controller = PHPickerViewController(configuration = config).apply {
             this.delegate = delegate
         }
-        UIApplication.sharedApplication.keyWindow?.rootViewController
+        val windowScene = UIApplication.sharedApplication.connectedScenes
+            .firstOrNull { it is UIWindowScene } as? UIWindowScene
+        windowScene?.windows?.firstOrNull()?.rootViewController
             ?.presentViewController(controller, animated = true, completion = null)
     }
 }

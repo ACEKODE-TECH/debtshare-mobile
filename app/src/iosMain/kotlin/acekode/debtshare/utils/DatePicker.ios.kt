@@ -15,6 +15,7 @@ import platform.UIKit.UIDatePickerStyle
 import platform.UIKit.UIModalPresentationStyle
 import platform.UIKit.UINavigationController
 import platform.UIKit.UIViewController
+import platform.UIKit.UIWindowScene
 import platform.darwin.NSObject
 import platform.objc.sel_registerName
 
@@ -36,7 +37,9 @@ private class DatePickerHandler(
     private var presentingVC: UIViewController? = null
 
     fun show() {
-        val rootVC = UIApplication.sharedApplication.keyWindow?.rootViewController ?: return
+        val windowScene = UIApplication.sharedApplication.connectedScenes
+            .firstOrNull { it is UIWindowScene } as? UIWindowScene
+        val rootVC = windowScene?.windows?.firstOrNull()?.rootViewController ?: return
         val topVC = findTopViewController(rootVC)
 
         val picker = UIDatePicker().apply {

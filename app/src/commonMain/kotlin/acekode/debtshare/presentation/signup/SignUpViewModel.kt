@@ -2,6 +2,7 @@ package acekode.debtshare.presentation.signup
 
 import acekode.debtshare.presentation.AliasValidation
 import acekode.debtshare.presentation.ValidationError
+import acekode.debtshare.utils.logDebug
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,7 @@ class SignUpViewModel : ViewModel() {
         field = MutableStateFlow(SignUpFieldErrors())
 
     fun onAliasChange(alias: String) {
-        println(alias)
+        logDebug("SignUpViewModel", "Alias changed: $alias")
         fieldErrors.update { it.copy(aliasError = null) }
     }
 
@@ -36,7 +37,6 @@ class SignUpViewModel : ViewModel() {
     }
 
     fun onSignUpClick(alias: String, email: String, password: String, termsAccepted: Boolean) {
-        println(termsAccepted)
         val aliasError = if (alias.isBlank()) ValidationError.Required else null
         val emailError = when {
             email.isBlank() -> ValidationError.Required
@@ -53,5 +53,8 @@ class SignUpViewModel : ViewModel() {
             )
             return
         }
+
+        logDebug("SignUpViewModel", "Sign up requested for alias=$alias, email=$email, termsAccepted=$termsAccepted")
+        uiState.value = SignUpUiState.Loading
     }
 }

@@ -1,8 +1,7 @@
 package acekode.debtshare.domain.usecase
 
-import acekode.debtshare.data.repository.LoginRepository
 import acekode.debtshare.domain.model.AuthSession
-import acekode.debtshare.domain.repository.SessionRepository
+import kotlinx.coroutines.delay
 import org.koin.core.annotation.Factory
 
 interface LoginUseCase {
@@ -10,20 +9,13 @@ interface LoginUseCase {
 }
 
 @Factory
-class LoginUseCaseImpl(
-    private val loginRepository: LoginRepository,
-    private val sessionRepository: SessionRepository,
-) : LoginUseCase {
+class LoginUseCaseImpl : LoginUseCase {
     override suspend fun invoke(
         email: String,
         password: String,
         rememberMe: Boolean,
-    ): Result<AuthSession> = loginRepository.login(email, password, rememberMe).also { result ->
-        result.onSuccess { token ->
-            sessionRepository.saveSession(
-                AuthSession(token.accessToken, token.refreshToken),
-                rememberMe,
-            )
-        }
+    ): Result<AuthSession> {
+        delay(1000)
+        return Result.success(AuthSession(accessToken = "mock-access-token", refreshToken = "mock-refresh-token"))
     }
 }

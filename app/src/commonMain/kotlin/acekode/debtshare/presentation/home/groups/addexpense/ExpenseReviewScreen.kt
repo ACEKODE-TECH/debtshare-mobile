@@ -206,7 +206,7 @@ private fun ReviewTopBar(onBackClick: () -> Unit, onSaveClick: () -> Unit) {
             style = DebtshareTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
             color = DebtshareTheme.colors.textPrimary,
             modifier = Modifier.weight(1f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            textAlign = TextAlign.Center,
         )
 
         Text(
