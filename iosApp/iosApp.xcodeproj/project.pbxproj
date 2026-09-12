@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		5B822D993025D37100674887 /* set-ios-version.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5B822D983025D36A00674887 /* set-ios-version.sh */; };
+		5B822DB4302A34D900674887 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 5B822DB3302A34D900674887 /* FirebaseAnalytics */; };
+		5B822DB6302A34D900674887 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 5B822DB5302A34D900674887 /* FirebaseCrashlytics */; };
+		A1B2C3D4E5F60718091A2B3C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F60718091A2B3D /* FirebaseMessaging */; };
+		F707F5DBBE9B7B6F925EE412 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 45D5A65DE1ADFCA49E7E4946 /* GoogleSignIn */; };
+		D60FDEE6D6C879508B8A5F19 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3B6EC13C9EA05F1241179FF6 /* GoogleSignInSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +51,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B822DB4302A34D900674887 /* FirebaseAnalytics in Frameworks */,
+				5B822DB6302A34D900674887 /* FirebaseCrashlytics in Frameworks */,
+				A1B2C3D4E5F60718091A2B3C /* FirebaseMessaging in Frameworks */,
+				F707F5DBBE9B7B6F925EE412 /* GoogleSignIn in Frameworks */,
+				D60FDEE6D6C879508B8A5F19 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +91,7 @@
 				D73CDBCB58C6FA86FEF236BF /* Sources */,
 				E1DBB0E6479C88C0FF6533ED /* Frameworks */,
 				51E2FDEA2C3A2B51AF2DBA1D /* Resources */,
+				5BB1E38B302A3C6A00B76797 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -91,6 +102,11 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				5B822DB3302A34D900674887 /* FirebaseAnalytics */,
+				5B822DB5302A34D900674887 /* FirebaseCrashlytics */,
+				A1B2C3D4E5F60718091A2B3D /* FirebaseMessaging */,
+				45D5A65DE1ADFCA49E7E4946 /* GoogleSignIn */,
+				3B6EC13C9EA05F1241179FF6 /* GoogleSignInSwift */,
 			);
 			productName = iosApp;
 			productReference = 98A9B558EBA5ECCF838DA75F /* Debtshare.app */;
@@ -120,6 +136,10 @@
 			);
 			mainGroup = 3CE34CE816AE64F0D635DA3E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5B822DB2302A34D900674887 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				2124BA2135E07BCF3B8FF1EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2C7615940C20680ECC7A8D3E /* Products */;
 			projectDirPath = "";
@@ -161,6 +181,25 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\nexport JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\ncd \"$SRCROOT/..\"\n./gradlew :app:embedAndSignAppleFrameworkForXcode --no-configuration-cache\n";
 		};
+		5BB1E38B302A3C6A00B76797 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -179,6 +218,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iosApp/iosApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
@@ -187,7 +227,9 @@
 				INFOPLIST_FILE = iosApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_BackgroundColor = LaunchBackground;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Image = LaunchIcon;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -265,6 +307,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iosApp/iosApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
@@ -273,7 +316,9 @@
 				INFOPLIST_FILE = iosApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_BackgroundColor = LaunchBackground;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Image = LaunchIcon;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -322,7 +367,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "${TEAM_ID}";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -375,6 +420,53 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5B822DB2302A34D900674887 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.17.0;
+			};
+		};
+		2124BA2135E07BCF3B8FF1EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5B822DB3302A34D900674887 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B822DB2302A34D900674887 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		5B822DB5302A34D900674887 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B822DB2302A34D900674887 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		45D5A65DE1ADFCA49E7E4946 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2124BA2135E07BCF3B8FF1EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		3B6EC13C9EA05F1241179FF6 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2124BA2135E07BCF3B8FF1EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		A1B2C3D4E5F60718091A2B3D /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B822DB2302A34D900674887 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FA098B512D2ADB14B0ADF73E /* Project object */;
 }

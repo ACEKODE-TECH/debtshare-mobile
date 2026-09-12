@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Debtshare</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Sign in with Google</string>
+
+    <!-- Login -->
+    <string name="sign_in">Sign in</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="welcome_subtitle">Manage your group's shared expenses in seconds.</string>
+    <string name="or_with_email">or with your email</string>
+    <string name="email">Email</string>
+    <string name="email_placeholder">your@email.com</string>
+    <string name="password">Password</string>
+    <string name="password_placeholder">Enter your password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="no_account">Don't have an account?</string>
+    <string name="create_account">Create account</string>
+
+    <!-- Sign Up -->
+    <string name="signup_title">Create your account</string>
+    <string name="signup_subtitle">Choose an alias that identifies you in your groups. You can change it later.</string>
+    <string name="alias">Alias</string>
+    <string name="alias_placeholder">your_alias</string>
+    <string name="alias_hint">3-20 characters · letters, numbers, dot and underscore</string>
+    <string name="alias_available">Available</string>
+    <string name="alias_taken_prefix">That alias is already in use. Try</string>
+    <string name="alias_taken_separator"> or </string>
+    <string name="password_strength_weak">Weak</string>
+    <string name="password_strength_fair">Fair</string>
+    <string name="password_strength_strong">Strong · 10+ chars, number, symbol</string>
+    <string name="password_strength_very_strong">Very strong</string>
+    <string name="terms_accept_prefix">I accept the </string>
+    <string name="terms_link">Terms</string>
+    <string name="terms_and_conjunction"> and the </string>
+    <string name="privacy_policy_link">Privacy Policy</string>
+    <string name="already_have_account">Already have an account?</string>
+
+    <!-- Google Alias -->
+    <string name="google_alias_title">Choose your alias</string>
+    <string name="google_alias_subtitle">This is how you'll appear in your groups. You can change it anytime.</string>
+    <string name="alias_public">Public alias</string>
+    <string name="suggestions">Suggestions</string>
+    <string name="google_alias_continue">Continue</string>
+    <string name="google_alias_terms_footer">By continuing you accept our Terms and Privacy Policy</string>
+
+    <!-- Expense card -->
+    <string name="settled">Settled</string>
+    <string name="no_impact">No impact</string>
+
+    <!-- Groups -->
+    <string name="groups_subtitle_empty">Start sharing expenses</string>
+    <string name="groups_empty_title">You don't have any groups yet</string>
+    <string name="groups_empty_description">Create one for your apartment, trip, or dinner and start splitting expenses with whoever you want.</string>
+    <string name="groups_create_group">Create group</string>
+    <string name="groups_join_with_code">Join with a code</string>
+    <string name="groups_subtitle_content">%1$d active · balance %2$s</string>
+    <string name="groups_filter_all">All · %1$d</string>
+    <string name="groups_filter_with_activity">With activity</string>
+    <string name="groups_filter_archived">Archived</string>
+    <string name="groups_global_balance">Global balance</string>
+    <string name="groups_balance_across">Across %1$d groups</string>
+    <string name="groups_members_expenses">%1$d members · %2$d expenses</string>
+    <string name="groups_balance_owed">owed to you</string>
+    <string name="groups_balance_owing">you owe</string>
+    <string name="groups_balance_settled">Settled</string>
+    <string name="groups_balance_settled_label">settled</string>
+
+    <!-- Activity -->
+    <string name="activity_title">Notifications</string>
+    <string name="activity_mark_read">Mark as read</string>
+    <string name="activity_tab_activity">Activity</string>
+    <string name="activity_tab_invitations">Invitations</string>
+    <string name="activity_section_recent">RECENT</string>
+    <string name="activity_invitation_new">NEW</string>
+    <string name="activity_invitation_members">%1$d members · %2$s</string>
+    <string name="activity_invitation_invited_by">%1$s invited you %2$s</string>
+    <string name="activity_invitation_and_more">%1$s and %2$d more</string>
+    <string name="activity_invitation_decline">Decline</string>
+    <string name="activity_invitation_accept">Accept</string>
+    <string name="activity_invitation_accepted">Accepted</string>
+
+    <!-- Home Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_activity">Activity</string>
+    <string name="tab_profile">Profile</string>
+
+    <!-- Profile -->
+    <string name="profile_user_groups">%1$d groups</string>
+    <string name="profile_user_expenses">%1$d expenses</string>
+    <string name="profile_global_balance">YOUR GLOBAL BALANCE</string>
+    <string name="profile_balance_in_favor">in your favor</string>
+    <string name="profile_balance_you_owe">you owe</string>
+    <string name="profile_owed_to_you">OWED TO YOU</string>
+    <string name="profile_you_owe_label">YOU OWE</string>
+    <string name="profile_this_month">THIS MONTH</string>
+    <string name="profile_analytics">Analytics</string>
+    <string name="profile_last_90_days">Last 90 days</string>
+    <string name="profile_analytics_subtitle">Aggregated from your %1$d groups. To see time trends, go to each group's panel.</string>
+    <string name="profile_total_spent">TOTAL SPENT</string>
+    <string name="profile_average_ticket">AVERAGE TICKET</string>
+    <string name="profile_expenses_count">%1$d expenses</string>
+    <string name="profile_by_category">By category</string>
+    <string name="profile_all_groups">All groups</string>
+    <string name="profile_category_subtitle">%1$s · %2$d groups</string>
+    <string name="profile_group_comparison">Group comparison</string>
+    <string name="profile_total">Total</string>
+    <string name="profile_group_comparison_subtitle">How much you spend in each · your share</string>
+    <string name="profile_tip">See a spike? Go to the group for its monthly evolution.</string>
+    <string name="profile_account">ACCOUNT</string>
+    <string name="profile_email_password">Email and password</string>
+    <string name="profile_notifications">Notifications</string>
+    <string name="profile_payment_method">Payment method</string>
+    <string name="profile_logout">Log out</string>
+
+    <!-- Group Detail -->
+    <string name="group_detail_label">GROUP</string>
+    <string name="group_detail_members_since">%1$d members · since %2$s</string>
+    <string name="group_detail_your_balance">YOUR BALANCE</string>
+    <string name="group_detail_in_favor">in your favor</string>
+    <string name="group_detail_you_owe">you owe</string>
+    <string name="group_detail_add_expense">Add expense</string>
+    <string name="group_detail_balances">Balances</string>
+    <string name="group_detail_tab_expenses">Expenses · %1$d</string>
+    <string name="group_detail_tab_activity">Activity</string>
+    <string name="group_detail_tab_notes">Notes</string>
+    <string name="group_detail_settled_badge">SETTLED</string>
+
+    <!-- Group Invitation -->
+    <string name="invitation_title">Invite to %1$s</string>
+    <string name="invitation_members_subtitle">%1$d members · share with whoever pays</string>
+    <string name="invitation_tab_link">Link</string>
+    <string name="invitation_tab_alias">Alias</string>
+    <string name="invitation_link_header">INVITATION LINK</string>
+    <string name="invitation_copy">Copy</string>
+    <string name="invitation_copied">Copied</string>
+    <string name="invitation_expires">Expires in 7 days</string>
+    <string name="invitation_regenerate">Regenerate</string>
+    <string name="invitation_share_header">SHARE VIA</string>
+    <string name="invitation_share_whatsapp">WhatsApp</string>
+    <string name="invitation_share_telegram">Telegram</string>
+    <string name="invitation_share_qr">QR</string>
+    <string name="invitation_share_more">More</string>
+    <string name="invitation_search_hint">Search by alias</string>
+    <string name="invitation_matches_header">MATCHES</string>
+    <string name="invitation_status_invite">Invite</string>
+    <string name="invitation_status_in_group">In group</string>
+    <string name="invitation_status_pending">Pending</string>
+    <string name="invitation_not_found">Can't find them? Send them the</string>
+    <string name="invitation_not_found_link">invitation link</string>
+    <string name="invitation_groups_in_common">%1$d groups in common</string>
+
+    <!-- Join Group -->
+    <string name="join_group_label">GROUP INVITATION</string>
+    <string name="join_group_description">Shared expenses</string>
+    <string name="join_group_invited_by">%1$s invited you</string>
+    <string name="join_group_members">%1$d members</string>
+    <string name="join_group_expenses">%1$d expenses</string>
+    <string name="join_group_active">Active</string>
+    <string name="join_group_inactive">Inactive</string>
+    <string name="join_group_join">Join group</string>
+    <string name="join_group_decline">Not now</string>
+    <string name="join_group_disclaimer">By accepting you will appear as a member and can add expenses.</string>
+    <string name="join_group_expired_label">LINK EXPIRED</string>
+    <string name="join_group_expired_title">This invitation is no longer valid</string>
+    <string name="join_group_expired_description">Links expire 7 days after being generated. Ask the person who invited you to send a new one.</string>
+    <string name="join_group_details">DETAILS</string>
+    <string name="join_group_details_group">Group</string>
+    <string name="join_group_details_generated_by">Generated by</string>
+    <string name="join_group_details_expired">Expired</string>
+    <string name="join_group_go_home">Go to home</string>
+
+    <!-- Balances -->
+    <string name="balances_title">Balances</string>
+    <string name="balances_tab_simplified">Simplified</string>
+    <string name="balances_tab_detailed">Detailed</string>
+    <string name="balances_you_label">YOU</string>
+    <string name="balances_confirm_payment">Confirm payment received</string>
+    <string name="balances_remind">Remind %1$s</string>
+    <string name="balances_settle">Settle %1$s</string>
+    <string name="balances_footer_title">With these %1$d payments, everything is settled</string>
+    <string name="balances_footer_subtitle">Reduced from %1$d possible transactions</string>
+    <string name="balances_your_payment">YOUR PAYMENT</string>
+
+    <!-- Add Expense -->
+    <string name="add_expense_title">New expense</string>
+    <string name="add_expense_autocomplete">AUTOCOMPLETE WITH AI</string>
+    <string name="add_expense_scan_title">Scan the receipt</string>
+    <string name="add_expense_scan_description">We extract the amount, merchant, date and category. You review and save.</string>
+    <string name="add_expense_take_photo">Take photo</string>
+    <string name="add_expense_choose_file">Choose file</string>
+    <string name="add_expense_or_manual">or fill in manually</string>
+    <string name="add_expense_manual">Enter manually</string>
+    <string name="add_expense_how_it_works">HOW IT WORKS</string>
+    <string name="add_expense_step_1">Upload or take a photo of the receipt</string>
+    <string name="add_expense_step_2">We extract the data automatically</string>
+    <string name="add_expense_step_3">You review, adjust members and save</string>
+
+    <!-- Scan Analysis -->
+    <string name="scan_analysis_title">Analyzing expenses</string>
+    <string name="scan_analysis_step_1">Getting date and amount</string>
+    <string name="scan_analysis_step_2">Detecting merchant</string>
+    <string name="scan_analysis_step_3">Classifying category</string>
+    <string name="scan_analysis_step_4">Preparing split</string>
+    <string name="scan_analysis_hint">Usually takes a few seconds</string>
+
+    <!-- Expense Review -->
+    <string name="review_title">Review expense</string>
+    <string name="review_save">Save</string>
+    <string name="review_extracted_title">Data extracted from receipt</string>
+    <string name="review_extracted_subtitle">Review and adjust if something doesn\'t match</string>
+    <string name="review_amount_label">AMOUNT</string>
+    <string name="review_ia_badge">AI</string>
+    <string name="review_description_label">Description</string>
+    <string name="review_category_label">Category</string>
+    <string name="review_date_label">Date</string>
+    <string name="review_paid_by_label">Paid by</string>
+    <string name="review_split_title">Split between %1$d</string>
+    <string name="review_per_person">%1$s/person</string>
+
+    <!-- Errors - Validation -->
+    <string name="error_email_required">Email is required</string>
+    <string name="error_email_invalid">Invalid email format</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_password_invalid">Password does not meet the required format</string>
+    <string name="error_alias_required">Alias is required</string>
+    <string name="error_alias_invalid">Invalid alias format</string>
+
+    <!-- Errors - Network -->
+    <string name="error_network_unauthorized">Incorrect email or password</string>
+    <string name="error_network_forbidden">You don't have permission to access</string>
+    <string name="error_network_timeout">No connection, please try again</string>
+    <string name="error_network_unavailable">Service unavailable, please try later</string>
+    <string name="error_generic">An unexpected error occurred</string>
+</resources>

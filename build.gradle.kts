@@ -1,11 +1,14 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.androidLibraryKmp) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.compose.stability) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.spotless) apply false
     id("jacoco")
 }
 
@@ -75,7 +78,7 @@ tasks.register("testAndroid") {
     group = "verification"
     description = "Runs all Android unit tests in androidApp and app modules"
     dependsOn(":androidApp:testDebugUnitTest")
-    dependsOn(":app:testAndroidHostTest")
+    dependsOn(":app:testDebugUnitTest")
 }
 
 tasks.register("testIos") {
